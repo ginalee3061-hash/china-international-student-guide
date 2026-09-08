@@ -1,0 +1,18 @@
+[
+  {
+    "relation_id": "REL-001",
+    "from_id": "GUIDE-004",
+    "to_id": "GUIDE-001",
+    "relation_type": "related",
+    "label": "Set up Alipay first",
+    "order": 1
+  },
+  {
+    "relation_id": "REL-002",
+    "from_id": "GUIDE-004",
+    "to_id": "GUIDE-002",
+    "relation_type": "related",
+    "label": "Add a bank card",
+    "order": 1
+  }
+]

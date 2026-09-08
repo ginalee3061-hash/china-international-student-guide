@@ -1,0 +1,20 @@
+[
+  {
+    "faq_id": "FAQ-001",
+    "category_id": "CAT-003",
+    "item_id": "APP-001",
+    "question": "Which apps should I learn first?",
+    "answer": "Start with the apps you need for the tasks you actually do: payments, transport, parcels, campus services and communication.",
+    "related_guide_id": "GUIDE-001",
+    "status": "published"
+  },
+  {
+    "faq_id": "FAQ-002",
+    "category_id": "CAT-005",
+    "item_id": "TRA-001",
+    "question": "Can I use Alipay to take the metro?",
+    "answer": "See the metro guide for the current flow and screenshots used in this guide.",
+    "related_guide_id": "GUIDE-004",
+    "status": "published"
+  }
+]
