@@ -1,0 +1,36 @@
+
+:root{
+  --cream:#f8f4e8;
+  --ink:#292b2d;
+  --muted:#696866;
+  --white:#fffefa;
+  --line:#2d2d2d;
+  --blue:#9bc0d5;
+  --blue-dark:#667f91;
+  --rose:#d59a9e;
+  --rose-dark:#91686a;
+  --olive:#d6ca9d;
+  --olive-dark:#938962;
+  --cyan:#54c4c9;
+  --shadow:0 22px 38px rgba(44,44,38,.13);
+  --max:1240px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.42}
+a{color:inherit}
+button,input{font:inherit}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 34px;border-bottom:1px solid rgba(45,45,45,.14);
+  background:rgba(248,244,232,.92);backdrop-filter:blur(14px)
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:-.02em}
+.brand-dot{width:22px;height:22px;background:var(--ink);border-radius:50%;display:inline-block}
+.topbar nav{display:flex;gap:22px}
+.topbar nav a{text-decoration:none;font-size:14px}
+.topbar nav a:hover{text-decoration:underline}
+
