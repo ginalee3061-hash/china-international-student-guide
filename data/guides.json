@@ -1,0 +1,101 @@
+[
+  {
+    "guide_id": "GUIDE-001",
+    "item_id": "APP-001",
+    "guide_title": "How to register Alipay",
+    "guide_type": "setup",
+    "user_question": "How do I create an Alipay account?",
+    "short_description": "Create your Alipay account",
+    "platform": "iOS, Android",
+    "status": "published",
+    "title": "How to register Alipay"
+  },
+  {
+    "guide_id": "GUIDE-002",
+    "item_id": "APP-001",
+    "guide_title": "How to add a bank card",
+    "guide_type": "setup",
+    "user_question": "How do I add my bank card?",
+    "short_description": "Link a bank card to Alipay",
+    "platform": "iOS, Android",
+    "status": "published",
+    "title": "How to add a bank card"
+  },
+  {
+    "guide_id": "GUIDE-003",
+    "item_id": "APP-001",
+    "guide_title": "How to pay with Alipay",
+    "guide_type": "tutorial",
+    "user_question": "How do I pay in a store?",
+    "short_description": "Pay using a QR code",
+    "platform": "iOS, Android",
+    "status": "published",
+    "title": "How to pay with Alipay"
+  },
+  {
+    "guide_id": "GUIDE-004",
+    "item_id": "TRA-001",
+    "guide_title": "How to take metro with Alipay?",
+    "guide_type": "tutorial",
+    "user_question": "How can I use Alipay to take the metro?",
+    "short_description": "Scan using a QR code",
+    "platform": "iOS, Android",
+    "status": "published",
+    "title": "How to take metro with Alipay?"
+  },
+  {
+    "guide_id": "GUIDE-005",
+    "item_id": "APP-002",
+    "guide_title": "Download the Cainiao App [ IOS ] ",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": null,
+    "platform": null,
+    "status": "published",
+    "title": "Download the Cainiao App [ IOS ] "
+  },
+  {
+    "guide_id": "GUIDE-006",
+    "item_id": "APP-002",
+    "guide_title": "Download the Cainiao App [ Android ]",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": null,
+    "platform": null,
+    "status": "published",
+    "title": "Download the Cainiao App [ Android ]"
+  },
+  {
+    "guide_id": "GUIDE-007",
+    "item_id": "APP-002",
+    "guide_title": "Sign up & link your accounts",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": null,
+    "platform": null,
+    "status": "published",
+    "title": "Sign up & link your accounts"
+  },
+  {
+    "guide_id": "GUIDE-008",
+    "item_id": "APP-002",
+    "guide_title": "How to receive a package",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": null,
+    "platform": null,
+    "status": "published",
+    "title": "How to receive a package"
+  },
+  {
+    "guide_id": "GUIDE-009",
+    "item_id": "DOR-001",
+    "guide_title": "Top up your campus card & dorm electricity",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": null,
+    "platform": null,
+    "status": "published",
+    "title": "Top up your campus card & dorm electricity"
+  }
+]

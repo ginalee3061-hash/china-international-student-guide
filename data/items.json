@@ -1,0 +1,107 @@
+[
+  {
+    "item_id": "APP-001",
+    "category_id": "CAT-004",
+    "name": "Alipay",
+    "chinese_name": "支付宝",
+    "item_type": "app",
+    "short_description": "Mobile payment and daily services",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "essential",
+    "featured": "yes",
+    "status": "active",
+    "_display_name": "Alipay",
+    "_display_description": "Mobile payment and daily services",
+    "visual": {
+      "kind": "app",
+      "logo_text": "支",
+      "logo_class": "alipay",
+      "accent": "blue"
+    }
+  },
+  {
+    "item_id": "DOR-001",
+    "category_id": "CAT-002",
+    "name": "Ecard",
+    "chinese_name": "Ecard",
+    "item_type": null,
+    "short_description": "Mobile payment and daily services",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "essential",
+    "featured": "yes",
+    "status": "active",
+    "_display_name": "Ecard",
+    "_display_description": "Mobile payment and daily services",
+    "visual": {
+      "kind": "item",
+      "logo_text": "✦",
+      "logo_class": "default",
+      "accent": "default"
+    }
+  },
+  {
+    "item_id": "APP-002",
+    "category_id": "CAT-003",
+    "name": "CaiNiao",
+    "chinese_name": "菜鸟",
+    "item_type": "app",
+    "short_description": "Papckage",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "useful",
+    "featured": "no",
+    "status": "active",
+    "_display_name": "CaiNiao",
+    "_display_description": "Papckage",
+    "visual": {
+      "kind": "app",
+      "logo_text": "菜",
+      "logo_class": "cainiao",
+      "accent": "sky"
+    }
+  },
+  {
+    "item_id": "TRA-001",
+    "category_id": "CAT-005",
+    "name": "Alipay- metro",
+    "chinese_name": "支付宝-地铁",
+    "item_type": "app",
+    "short_description": "Dormitory laundry facilities",
+    "who_needs_it": "Everyone",
+    "platform": "all",
+    "importance": "useful",
+    "featured": "yes",
+    "status": "active",
+    "_display_name": "Metro",
+    "_display_description": "Use Alipay to get around by metro.",
+    "visual": {
+      "kind": "transport",
+      "logo_text": "地",
+      "logo_class": "metro",
+      "accent": "cyan"
+    }
+  },
+  {
+    "item_id": "FAC-002",
+    "category_id": "CAT-007",
+    "name": "Campus Wi-Fi",
+    "chinese_name": "校园 Wi-Fi",
+    "item_type": "service",
+    "short_description": "University internet access",
+    "who_needs_it": "Students",
+    "platform": "all",
+    "importance": "essential",
+    "featured": "yes",
+    "status": "waiting",
+    "_display_name": "Campus Wi-Fi",
+    "_display_description": "University internet access",
+    "visual": {
+      "kind": "service",
+      "logo_text": "Wi",
+      "logo_class": "wifi",
+      "accent": "indigo"
+    }
+  }
+]
