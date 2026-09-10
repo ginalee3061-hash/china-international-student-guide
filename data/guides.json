@@ -5,7 +5,7 @@
     "guide_title": "How to register Alipay",
     "guide_type": "setup",
     "user_question": "How do I create an Alipay account?",
-    "short_description": "Create your Alipay account",
+    "short_description": "Link your card and start paying like a local",
     "platform": "iOS, Android",
     "status": "published",
     "title": "How to register Alipay"
@@ -46,46 +46,46 @@
   {
     "guide_id": "GUIDE-005",
     "item_id": "APP-002",
-    "guide_title": "Download the Cainiao App [ IOS ] ",
-    "guide_type": "tutorial",
+    "guide_title": "Download the Cainiao App [ IOS ]",
+    "guide_type": "setup",
     "user_question": null,
     "short_description": null,
-    "platform": null,
-    "status": "published",
-    "title": "Download the Cainiao App [ IOS ] "
+    "platform": "iOS, Android",
+    "status": "draft",
+    "title": "Download the Cainiao App [ IOS ]"
   },
   {
     "guide_id": "GUIDE-006",
     "item_id": "APP-002",
     "guide_title": "Download the Cainiao App [ Android ]",
-    "guide_type": "tutorial",
+    "guide_type": "setup",
     "user_question": null,
     "short_description": null,
-    "platform": null,
-    "status": "published",
+    "platform": "iOS, Android",
+    "status": "draft",
     "title": "Download the Cainiao App [ Android ]"
   },
   {
     "guide_id": "GUIDE-007",
     "item_id": "APP-002",
     "guide_title": "Sign up & link your accounts",
-    "guide_type": "tutorial",
+    "guide_type": "setup",
     "user_question": null,
     "short_description": null,
-    "platform": null,
-    "status": "published",
+    "platform": "iOS, Android",
+    "status": "draft",
     "title": "Sign up & link your accounts"
   },
   {
     "guide_id": "GUIDE-008",
-    "item_id": "APP-002",
-    "guide_title": "How to receive a package",
+    "item_id": "APP-003",
+    "guide_title": "How to get my packages？",
     "guide_type": "tutorial",
     "user_question": null,
-    "short_description": null,
-    "platform": null,
+    "short_description": "Finding pickup stations",
+    "platform": "iOS, Android",
     "status": "published",
-    "title": "How to receive a package"
+    "title": "How to get my packages？"
   },
   {
     "guide_id": "GUIDE-009",
@@ -93,9 +93,53 @@
     "guide_title": "Top up your campus card & dorm electricity",
     "guide_type": "tutorial",
     "user_question": null,
-    "short_description": null,
-    "platform": null,
+    "short_description": "Easy recharges so youre never stuck at the canteen",
+    "platform": "iOS, Android",
     "status": "published",
     "title": "Top up your campus card & dorm electricity"
+  },
+  {
+    "guide_id": "GUIDE-010",
+    "item_id": "FOO-001",
+    "guide_title": "How to get my delivery?",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": "How to order and pick up your meal",
+    "platform": "iOS, Android",
+    "status": "published",
+    "title": "How to get my delivery?"
+  },
+  {
+    "guide_id": "GUIDE-011",
+    "item_id": "ICB-001",
+    "guide_title": "How to get a debit card？",
+    "guide_type": "guide",
+    "user_question": null,
+    "short_description": "Required paperwork,bank visit, and account activation",
+    "platform": null,
+    "status": "published",
+    "title": "How to get a debit card？"
+  },
+  {
+    "guide_id": "GUIDE-012",
+    "item_id": "DOR-002",
+    "guide_title": "Doing your laundry",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": "Quick guide to washing machines",
+    "platform": null,
+    "status": "published",
+    "title": "Doing your laundry"
+  },
+  {
+    "guide_id": "GUIDE-013",
+    "item_id": "DOR-003",
+    "guide_title": "Getting things fixed",
+    "guide_type": "tutorial",
+    "user_question": null,
+    "short_description": "How to submit a repair requests when things break",
+    "platform": null,
+    "status": "published",
+    "title": "Getting things fixed"
   }
 ]
