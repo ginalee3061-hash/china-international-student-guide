@@ -21,10 +21,13 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-// 首页指南卡片：带有右上角拍立得 App 图标贴纸
-function guideCard(g, item, iconFilename){
+// 首页卡片：右上角呈现拍立得相框小图
+function guideCard(g, item, polaroidImg){
   return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
-    ${iconFilename ? `<div class="polaroid-badge"><img src="images/${iconFilename}" alt="App Icon"></div>` : ''}
+    ${polaroidImg ? `
+      <div class="polaroid-badge-right">
+        <img src="images/${polaroidImg}" alt="Polaroid photo" onerror="this.parentElement.style.display='none';">
+      </div>` : ''}
     <div class="eyebrow">${esc(itemName(item))}</div>
     <h3>${esc(titleOf(g))}</h3>
     <p>${esc(g.short_description || "")}</p>
@@ -32,7 +35,6 @@ function guideCard(g, item, iconFilename){
   </a>`;
 }
 
-// 推荐分类板块配置（对应 5 张大图缩略图）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -142,19 +144,19 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 精确配置你指定的首屏两大自定义板块及其拍立得贴纸图
+  // 配置前两大板块及其右上角的拍立得小图素材名（对应你上传的图片命名）
   const packageFoodConfigs = [
-    { id: "GUIDE-010", icon: "meituanicon.png" }, 
-    { id: "GUIDE-008", icon: "taobaoicon.png" }
+    { id: "GUIDE-010", photo: "packagesandfood-01.png" }, 
+    { id: "GUIDE-008", photo: "packagesandfood-02.png" }
   ];
   const moneyPaymentConfigs = [
-    { id: "GUIDE-011", icon: "icbcicon.png" }, 
-    { id: "GUIDE-009", icon: "icbcicon.png" }, 
-    { id: "GUIDE-001", icon: "alipayicon.png" }
+    { id: "GUIDE-011", photo: "moneyandpayments-01.png" }, 
+    { id: "GUIDE-009", photo: "moneyandpayments-02.png" }, 
+    { id: "GUIDE-001", photo: "moneyandpayments-03.png" }
   ];
 
-  const packageGuides = packageFoodConfigs.map(c => ({ g: pub.get(c.id), icon: c.icon })).filter(x => x.g);
-  const moneyGuides = moneyPaymentConfigs.map(c => ({ g: pub.get(c.id), icon: c.icon })).filter(x => x.g);
+  const packageGuides = packageFoodConfigs.map(c => ({ g: pub.get(c.id), photo: c.photo })).filter(x => x.g);
+  const moneyGuides = moneyPaymentConfigs.map(c => ({ g: pub.get(c.id), photo: c.photo })).filter(x => x.g);
 
   app.innerHTML = `<section class="hero"><div class="container hero-inner">
     <div>
@@ -174,14 +176,13 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 自定义首屏两大板块 -->
   <div class="home-sections">
     <section class="section-band blue">
       <div class="container">
         <div class="section-tab"><span>01 PACKAGES & FOOD</span><span class="arrow">→</span></div>
         <p class="section-note">How to order food and retrieve your parcel deliveries around campus.</p>
         <div class="card-grid">
-          ${packageGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.icon)).join("")}
+          ${packageGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.photo)).join("")}
         </div>
       </div>
     </section>
@@ -191,7 +192,7 @@ async function home(){
         <div class="section-tab"><span>02 MONEY & PAYMENTS</span><span class="arrow">→</span></div>
         <p class="section-note">Bank debit card, dorm electricity top-ups, and Alipay setup.</p>
         <div class="card-grid">
-          ${moneyGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.icon)).join("")}
+          ${moneyGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.photo)).join("")}
         </div>
       </div>
     </section>
@@ -211,7 +212,6 @@ async function home(){
     </div>
   </section>
 
-  <!-- 主页下方的 Building 12 档案袋封面入口 (对应 dorm12file.jpg) -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -249,28 +249,27 @@ function recCategoryPage(catId){
   </div></section>`;
 }
 
-/* 基于 page.jpg 底图的档案册页面（小标签切换 + 真实文字排版与一键复制 Icon） */
+/* 使用 page.jpg 作为响应式底图的档案册内页 */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-native-page">
-    <div class="container" style="margin-bottom:15px; width:min(900px, 100%);">
+    <div class="container" style="margin-bottom:12px; width:min(920px, 100%);">
       ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
     </div>
 
     <div class="dorm-canvas-box">
-      <!-- 底层直接铺上你的 page.jpg -->
+      <!-- 纸张底图采用 page.jpg -->
       <img src="images/page.jpg" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/13_2.jpg'">
 
-      <!-- 顶层交互区 -->
       <div class="dorm-interactive-layer">
         
-        <!-- 顶部标签栏 -->
+        <!-- 顶部小标签栏 -->
         <div class="dorm-top-tabs">
           <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
           <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
           <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
         </div>
 
-        <!-- Tab 01: Address & Rules -->
+        <!-- Tab 01 -->
         <div class="dorm-panel-content active" id="dorm-panel-0">
           <div class="sheet-sec-title">DORMITORY ADDRESS</div>
           <div class="sheet-sec-line"></div>
@@ -289,7 +288,7 @@ async function dormBookPage(){
             </button>
           </div>
 
-          <div class="sheet-row-item" style="margin-top:14px;">
+          <div class="sheet-row-item" style="margin-top:10px;">
             <div class="sheet-row-left">
               <span>★</span>
               <div id="addr-cn" style="cursor:text;">
@@ -302,20 +301,20 @@ async function dormBookPage(){
             </button>
           </div>
 
-          <div class="sheet-sec-title" style="margin-top:35px;">ACCESS HOURS</div>
+          <div class="sheet-sec-title" style="margin-top:25px;">ACCESS HOURS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item">
             <div class="sheet-row-left"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
           </div>
 
-          <div class="sheet-sec-title" style="margin-top:35px;">QUIET HOURS</div>
+          <div class="sheet-sec-title" style="margin-top:25px;">QUIET HOURS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item">
             <div class="sheet-row-left"><span>★</span><div>Please keep noise to a minimum after 23:00. Do not use washing machines or hair dryers after 23:00.</div></div>
           </div>
         </div>
 
-        <!-- Tab 02: Kitchen & Garbage -->
+        <!-- Tab 02 -->
         <div class="dorm-panel-content" id="dorm-panel-1">
           <div class="sheet-sec-title">SHARED KITCHEN</div>
           <div class="sheet-sec-line"></div>
@@ -323,19 +322,19 @@ async function dormBookPage(){
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div></div>
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div></div>
 
-          <div class="sheet-sec-title" style="margin-top:30px;">GARBAGE DISPOSAL</div>
+          <div class="sheet-sec-title" style="margin-top:22px;">GARBAGE DISPOSAL</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div></div>
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div></div>
         </div>
 
-        <!-- Tab 03: Water & Facilities -->
+        <!-- Tab 03 -->
         <div class="dorm-panel-content" id="dorm-panel-2">
           <div class="sheet-sec-title">DRINKING WATER DISPENSERS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div></div>
 
-          <div class="sheet-sec-title" style="margin-top:35px;">HAIR DRYER ROOMS</div>
+          <div class="sheet-sec-title" style="margin-top:25px;">HAIR DRYER ROOMS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div></div>
         </div>
@@ -393,14 +392,7 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  let relatedGuides = [];
-  const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
-
-  if (isAlipayRelated) {
-    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && (x.item_id === "APP-001" || x.guide_id === "GUIDE-004"));
-  } else {
-    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
-  }
+  let relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
 
   app.innerHTML = `<section class="page"><div class="container">
     ${crumbs([{label:"Home", href:"/"}, ...(item ? [{label: itemName(item), href:`/item/${item.item_id}`}] : []), {label: titleOf(g)}])}
