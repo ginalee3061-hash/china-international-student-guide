@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. 字体声明 (fonts/)
+   1. 字体配置 (fonts/)
    ========================================================================== */
 @font-face {
   font-family: 'AlteHaasGroteskBold';
@@ -25,23 +25,23 @@
 }
 
 /* ==========================================================================
-   2. 全局重置与色彩
+   2. 全局重置
    ========================================================================== */
 :root {
   --bg-sand: #FAF7F2;
-  --bg-card: #FFFFFF;
   --text-dark: #1F2024;
   --text-muted: #7E828B;
-  --bar-blue: #7094AA;
-  --bar-rose: #C28B8B;
-  --bar-sage: #8DA184;
+  --bar-blue: #6A90A4;
+  --bar-rose: #BD8787;
+  --bar-sage: #8A9E82;
   --accent-cyan: #3CB5C2;
+  --earth-bg: #6B6547;
 }
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -51,7 +51,6 @@ body {
   overflow-x: hidden;
 }
 
-/* 页面切换机制 */
 .page-view {
   display: none;
   width: 100%;
@@ -62,12 +61,12 @@ body {
 }
 
 /* ==========================================================================
-   3. 主页：头部与搜索栏
+   3. 头部导航
    ========================================================================== */
 .site-header {
-  max-width: 1380px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 2.5rem;
+  padding: 2.2rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -86,7 +85,7 @@ body {
 }
 .logo-title {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   letter-spacing: 0.05em;
 }
 .badge-dorm {
@@ -103,7 +102,7 @@ body {
 }
 .search-bar-wrap input {
   width: 100%;
-  padding: 0.65rem 1rem 0.65rem 2.2rem;
+  padding: 0.7rem 1rem 0.7rem 2.4rem;
   border-radius: 30px;
   border: 1px solid #DFD9CE;
   background: #FFF;
@@ -112,227 +111,231 @@ body {
 }
 .search-icon {
   position: absolute;
-  left: 0.8rem;
+  left: 0.9rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.8rem;
-  opacity: 0.5;
+  font-size: 0.85rem;
+  opacity: 0.45;
 }
 .top-nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.8rem;
 }
 .top-nav-links a {
   font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: #555;
   text-decoration: none;
 }
-.top-nav-links a:hover {
-  color: #000;
-}
 
 /* ==========================================================================
-   4. 分类栏与带拍立得贴纸的卡片
+   4. 分类横条与卡片
    ========================================================================== */
 .main-content {
-  max-width: 1380px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem 2.5rem 5rem;
+  padding: 1rem 3rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 4.5rem;
 }
 .category-bar {
   border-radius: 8px;
-  padding: 0.9rem 1.75rem;
+  padding: 1rem 2rem;
   color: #FFF;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  letter-spacing: 0.06em;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  letter-spacing: 0.08em;
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
 }
 .bar-blue { background-color: var(--bar-blue); }
 .bar-rose { background-color: var(--bar-rose); }
 .bar-sage { background-color: var(--bar-sage); }
 
-.cards-carousel {
+.cards-row {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   overflow-x: auto;
-  padding-bottom: 1rem;
+  padding-top: 15px;
+  padding-bottom: 10px;
 }
 .guide-card {
   flex: 0 0 320px;
-  background: var(--bg-card);
-  border-radius: 28px;
-  padding: 2.2rem 2rem 2rem;
+  background: #FFFFFF;
+  border-radius: 30px;
+  padding: 2.2rem 2.2rem 2.2rem;
   position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.25s ease;
 }
 .guide-card:hover {
   transform: translateY(-6px);
 }
 
-/* 卡片右上角拍立得照片贴纸 */
 .card-polaroid {
   position: absolute;
-  top: -15px;
+  top: -18px;
   right: 25px;
-  width: 90px;
-  height: 105px;
+  width: 95px;
+  height: 110px;
   background: #FFF;
-  padding: 5px 5px 18px 5px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-  border-radius: 4px;
-  transform: rotate(6deg);
+  padding: 6px 6px 20px 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.14);
+  border-radius: 3px;
+  transform: rotate(5deg);
 }
 .card-polaroid img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 2px;
 }
 
 .card-headline {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   line-height: 1.15;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
+  margin-top: 1.8rem;
+  margin-bottom: 1.8rem;
   letter-spacing: -0.02em;
 }
 .card-app-name {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 0.95rem;
-  margin-bottom: 0.2rem;
+  font-size: 1rem;
 }
 .card-sub-desc {
   font-size: 0.85rem;
   color: var(--text-muted);
+  margin-top: 0.2rem;
   margin-bottom: 2rem;
 }
 .btn-learn-more {
-  background: #99B2C2;
+  background: #8FAAB9;
   color: #FFF;
   border: none;
   font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
-  padding: 0.65rem 1.6rem;
+  padding: 0.7rem 1.8rem;
   border-radius: 20px;
   cursor: pointer;
 }
 
 /* ==========================================================================
-   5. RECOMMEND APPS 推荐模块
+   5. RECOMMEND APPS 散落式排版与大地色底屏
    ========================================================================== */
-.recommend-apps-section {
-  background: #FAF8F5;
-  border: 1px solid #ECE7DE;
-  border-radius: 24px;
-  padding: 3rem;
+.recommend-scattered-zone {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 3rem 6rem;
+  position: relative;
 }
-.apps-title {
+.scattered-intro {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  letter-spacing: 0.05em;
+  margin-bottom: 4rem;
+}
+.scattered-stage {
+  position: relative;
+  min-height: 520px;
+}
+.scattered-title-box {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.scattered-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 2rem;
-  line-height: 1.1;
+  font-size: 2.8rem;
+  line-height: 1.05;
   letter-spacing: -0.01em;
 }
-.apps-subtitle {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  margin-bottom: 2rem;
-}
-.apps-categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-}
-.app-cat-card {
+
+.pin-card {
+  position: absolute;
   background: #FFF;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  padding: 8px 8px 24px 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  width: 170px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.app-cat-thumb img {
+.pin-card:hover {
+  transform: scale(1.06) !important;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.16);
+  z-index: 10;
+}
+.pin-card img {
   width: 100%;
-  height: 110px;
+  height: 140px;
   object-fit: cover;
+  border-radius: 2px;
 }
-.app-cat-meta {
-  padding: 0.75rem 1rem;
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-}
-.apps-items-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed #DDD7CC;
-}
-.app-icon-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: #FFF;
-  padding: 0.6rem 1.2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-.app-icon-badge img {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+.pin-tag {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: #333;
 }
 
-/* 宿舍档案入口 */
-.dorm-file-section {
+.pin-01 { top: 10px; left: 8%; transform: rotate(-3deg); }
+.pin-02 { top: 0px; right: 12%; transform: rotate(4deg); }
+.pin-03 { bottom: 60px; left: 4%; transform: rotate(2deg); }
+.pin-04 { bottom: 20px; left: 42%; transform: rotate(-2deg); }
+.pin-05 { bottom: 80px; right: 8%; transform: rotate(3deg); }
+
+.earth-footer-plane {
+  width: 100vw;
+  background-color: var(--earth-bg);
+  padding: 6rem 2rem;
   display: flex;
   justify-content: center;
-}
-.dorm-file-trigger {
-  display: flex;
   align-items: center;
-  gap: 1.5rem;
+}
+.folder-standalone {
+  position: relative;
   cursor: pointer;
-  background: #FFF;
-  padding: 1.5rem 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-  border: 1px solid #ECE7DE;
-  transition: transform 0.2s;
+  transition: transform 0.25s ease;
 }
-.dorm-file-trigger:hover {
-  transform: translateY(-4px);
+.folder-standalone:hover {
+  transform: translateY(-8px) scale(1.02);
 }
-.folder-graphic {
-  width: 90px;
-  height: auto;
-}
-.folder-title {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.3rem;
+.folder-big-img {
+  width: 380px;
+  max-width: 90vw;
   display: block;
 }
-.folder-subtitle {
-  color: var(--text-muted);
+.folder-click-pill {
+  position: absolute;
+  bottom: 25px;
+  right: -20px;
+  background: #FFF;
+  padding: 0.7rem 1.4rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  font-family: 'AlteHaasGroteskBold', sans-serif;
   font-size: 0.85rem;
+}
+.pill-arrow {
+  font-size: 1.1rem;
 }
 
 /* ==========================================================================
-   6. 视图 2：图 4 全屏步骤详情与竖向蓝色进度条灌浆
+   6. 视图 2：步骤流与条件预留框架样式
    ========================================================================== */
 .detail-page-container {
   max-width: 1200px;
@@ -350,9 +353,8 @@ body {
   background: none;
   border: none;
   font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
 }
 .detail-guide-tag {
   font-family: 'Minecraftia', monospace;
@@ -363,18 +365,15 @@ body {
   font-family: 'AlteHaasGroteskBold', sans-serif;
   font-size: 3.2rem;
   line-height: 1.05;
-  margin-bottom: 3.5rem;
+  margin-bottom: 4rem;
 }
 
-/* 步骤与滑动条双栏排版 */
 .detail-scroll-layout {
   position: relative;
   display: grid;
   grid-template-columns: 40px 1fr;
-  gap: 3.5rem;
+  gap: 4rem;
 }
-
-/* 左侧蓝色贯通轨道与灌浆填充 */
 .track-wrapper {
   position: relative;
   display: flex;
@@ -407,27 +406,26 @@ body {
   transition: height 0.1s ease-out;
 }
 
-/* 右侧具体步骤流 */
 .steps-flow-container {
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 4.5rem;
 }
-.step-section-header {
-  font-family: 'Minecraftia', monospace;
-  font-size: 1.4rem;
-  letter-spacing: 0.04em;
-  margin-bottom: 1.5rem;
-}
+
+/* 步骤卡片双栏网格 */
 .step-item-card {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 3rem;
   align-items: center;
-  margin-bottom: 2rem;
 }
 
-/* 手机壳 Mockup（圆角黑边外壳） */
+/* 当 Excel 明确写 status === 'none' 时应用的纯文本卡片（不留左侧空白） */
+.step-item-card.step-card-text-only {
+  grid-template-columns: 1fr;
+  max-width: 680px;
+}
+
 .mockup-phone-body {
   width: 260px;
   height: 520px;
@@ -449,7 +447,37 @@ body {
   object-fit: cover;
 }
 
-/* 实拍图 Photo 相框容器 */
+/* 预留占位框架（当暂无真实截图时） */
+.mockup-screen-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #EDE8DE;
+  border: 2px dashed #D3CCBE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #8C887B;
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem;
+}
+.mockup-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  background: #EDE8DE;
+  border: 2px dashed #D3CCBE;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8C887B;
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.75rem;
+}
+
 .mockup-photo-body {
   width: 280px;
   height: 340px;
@@ -465,12 +493,6 @@ body {
   border-radius: 8px;
   object-fit: cover;
 }
-
-.step-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 .step-circle-badge {
   width: 36px;
   height: 36px;
@@ -482,11 +504,13 @@ body {
   justify-content: center;
   font-family: 'AlteHaasGroteskBold', sans-serif;
   font-size: 1rem;
+  margin-bottom: 1rem;
 }
 .step-instruction-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
   font-size: 1.4rem;
   line-height: 1.3;
+  margin-bottom: 0.6rem;
 }
 .step-detail-text {
   color: #4A4D53;
@@ -495,35 +519,122 @@ body {
 }
 
 /* ==========================================================================
-   7. 视图 3：BUILDING 12 档案全屏页 (叠加在 page.png 之上)
+   7. 视图 3：图 6~10 RECOMMEND APPS 展台独立页
    ========================================================================== */
-.dossier-full-overlay {
-  max-width: 960px;
-  margin: 2rem auto;
-  padding: 1rem;
+.gallery-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2.5rem 8rem;
 }
-.dossier-canvas-frame {
-  position: relative;
+.gallery-top-bar {
+  margin-bottom: 3rem;
+}
+.gallery-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+.gallery-category-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+.gallery-cat-title {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 2.8rem;
+  letter-spacing: -0.01em;
+  color: #1D1D1F;
+}
+.gallery-underline {
   width: 100%;
-  min-height: 920px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  border-radius: 16px;
-  overflow: hidden;
+  height: 4px;
+  background: #1D1D1F;
+  margin-top: 10px;
 }
-.dossier-bg-img {
-  position: absolute;
-  inset: 0;
+
+.gallery-cards-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3.5rem;
+}
+
+/* 严格对齐图 6~10 的正方形展示框 */
+.app-exhibit-card {
+  width: 250px;
+  background: #FFF;
+  border: 1.5px solid #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+.app-exhibit-icon-box {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF;
+}
+.app-exhibit-icon-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.app-exhibit-footer {
+  border-top: 1.5px solid #000;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFF;
+}
+.app-exhibit-name {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.05rem;
+  color: #000;
+}
+.app-exhibit-arrow {
+  font-size: 0.9rem;
+  color: #000;
+}
+
+/* ==========================================================================
+   8. 视图 4：BUILDING 12 档案全屏页
+   ========================================================================== */
+.dossier-full-viewport {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--earth-bg);
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.dossier-sheet-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  min-height: 880px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+}
+.dossier-page-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  inset: 0;
+  object-fit: fill;
   z-index: 1;
 }
-.dossier-interactive-layer {
+.dossier-content-surface {
   position: relative;
   z-index: 2;
-  padding: 3.5rem 4rem;
+  padding: 4rem 4.5rem;
 }
-.dossier-header-bar {
+.dossier-toolstrip {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -531,31 +642,31 @@ body {
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
 }
-.dossier-pagination {
+.dossier-pager {
   display: flex;
   align-items: center;
   gap: 1rem;
   font-family: 'ToxTypewriter', serif;
+  font-size: 0.95rem;
 }
-.doc-arrow {
+.pager-btn {
   background: none;
-  border: 1px solid #666;
+  border: 1px solid #444;
   border-radius: 4px;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   font-size: 1.2rem;
 }
-.doc-close-btn {
+.dossier-exit-btn {
   font-family: 'HeuvelGrotesk', sans-serif;
   background: none;
   border: 1px solid #333;
-  padding: 0.4rem 1rem;
+  padding: 0.45rem 1.2rem;
   border-radius: 20px;
   cursor: pointer;
+  font-weight: bold;
 }
-
-/* 档案文字与打字机排版 */
 .dorm-section-block {
   margin-bottom: 2.5rem;
 }
@@ -563,24 +674,22 @@ body {
   font-family: 'AlteHaasGroteskBold', sans-serif;
   font-size: 1.35rem;
   letter-spacing: 0.04em;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.8rem;
   border-bottom: 1px solid rgba(0,0,0,0.12);
   padding-bottom: 0.35rem;
 }
 .dorm-typewriter-text {
   font-family: 'ToxTypewriter', serif;
   font-size: 0.96rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: #2A2A2A;
 }
-
-/* 真实可复制行 */
 .dossier-copyable-box {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 8px;
   margin-bottom: 1rem;
 }
@@ -589,15 +698,12 @@ body {
   border: none;
   cursor: pointer;
   padding: 4px;
-  opacity: 0.7;
-  transition: opacity 0.2s, transform 0.15s;
+  opacity: 0.75;
+  transition: transform 0.15s;
 }
 .copy-trigger-btn:hover {
-  opacity: 1;
   transform: scale(1.15);
 }
-
-/* 拍立得照片与银色回形夹 */
 .dossier-split-photo {
   display: grid;
   grid-template-columns: 1fr 220px;
@@ -609,7 +715,6 @@ body {
   padding: 10px 10px 24px 10px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
   position: relative;
-  border: 1px solid #ECE7DE;
 }
 .polaroid-holder img {
   width: 100%;
@@ -624,10 +729,7 @@ body {
   height: 44px;
   border: 3px solid #8E9196;
   border-radius: 12px;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.2);
 }
-
-/* 复制成功 Toast 弹窗 */
 .toast-popup {
   position: fixed;
   bottom: 2.5rem;
@@ -635,7 +737,7 @@ body {
   transform: translateX(-50%) translateY(40px);
   background: rgba(30, 30, 32, 0.92);
   color: #FFF;
-  padding: 0.65rem 1.4rem;
+  padding: 0.7rem 1.6rem;
   border-radius: 30px;
   font-size: 0.85rem;
   opacity: 0;
