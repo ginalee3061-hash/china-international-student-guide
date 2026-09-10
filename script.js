@@ -102,8 +102,8 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 严格落实问题 3 的指定分配
-  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 & APP-003
+  // 严格绑定要求的项目指南
+  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 与 APP-003
   const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; // ICB-001, DOR-001, APP-001
 
   const packageGuides = packageFoodGuideIds.map(id => pub.get(id)).filter(Boolean);
@@ -152,7 +152,7 @@ async function home(){
     </section>
   </div>
 
-  <!-- RECOMMENDED APPS 拼贴看板区 (严格对应图 2 / 5_2.jpg) -->
+  <!-- RECOMMENDED APPS 拼贴看板区 (图 2 / 5_2.jpg) -->
   <section class="rec-board-section">
     <div class="container">
       <div class="rec-board-header">
@@ -162,7 +162,7 @@ async function home(){
         ${REC_SECTIONS.map(sec => `
           <a href="#/rec-category/${sec.id}" class="rec-board-item ${sec.posClass}">
             <div class="rec-board-img">
-              <img src="${sec.image}" alt="${sec.title}" onerror="this.src='images/5_2.jpg'">
+              <img src="${sec.image}" alt="${sec.title}" onerror="this.src='images/5_2.jpg'; this.onerror=null;">
             </div>
             <div class="rec-board-label">
               <span class="num">${sec.num}</span>
@@ -178,7 +178,7 @@ async function home(){
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
-        <img src="images/12.jpg" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='12.jpg'">
+        <img src="images/12.jpg" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='12.jpg'; this.onerror=null;">
       </a>
     </div>
   </section>`;
@@ -190,7 +190,7 @@ async function home(){
   });
 }
 
-/* 分类展示页 (严格对应 6_2 ~ 10_2.png) */
+/* 分类展示页 (图 3 ~ 图 7) */
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -214,7 +214,7 @@ function recCategoryPage(catId){
   </section>`;
 }
 
-/* 档案册全屏轮播阅读页 (13, 14, 15.jpg) */
+/* 档案册全屏阅读页 (13, 14, 15.jpg) */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-book-page">
     <div class="container" style="margin-bottom:20px;">
@@ -222,9 +222,9 @@ async function dormBookPage(){
     </div>
     <div class="dorm-book-container" id="dorm-book-container">
       <div class="dorm-slide-wrapper" id="dorm-slide-wrapper">
-        <div class="dorm-slide"><img src="images/13.jpg" alt="Dormitory Information 1" onerror="this.src='13.jpg'"></div>
-        <div class="dorm-slide"><img src="images/14.jpg" alt="Dormitory Information 2" onerror="this.src='14.jpg'"></div>
-        <div class="dorm-slide"><img src="images/15.jpg" alt="Dormitory Information 3" onerror="this.src='15.jpg'"></div>
+        <div class="dorm-slide"><img src="images/13.jpg" alt="Dormitory Information 1" onerror="this.src='13.jpg'; this.onerror=null;"></div>
+        <div class="dorm-slide"><img src="images/14.jpg" alt="Dormitory Information 2" onerror="this.src='14.jpg'; this.onerror=null;"></div>
+        <div class="dorm-slide"><img src="images/15.jpg" alt="Dormitory Information 3" onerror="this.src='15.jpg'; this.onerror=null;"></div>
       </div>
     </div>
     <div class="dorm-nav-bar">
@@ -295,7 +295,7 @@ async function dormBookPage(){
   updateSlide(0);
 }
 
-/* App 详情展示页 */
+/* App 详情页 */
 async function itemPage(id){
   const [items, guides, details] = await Promise.all([getData("items"), getData("guides"), getData("app-details")]);
   const item = by(items, "item_id", id) || { name: id, chinese_name: id, _display_name: id, visual: { logo_class: "default", logo_text: "✦" } };
@@ -326,7 +326,7 @@ async function itemPage(id){
   </div></section>`;
 }
 
-/* 步骤详情页 (强制从 images/ 目录抓取对应截图，并套用 iPhone Mockup) */
+/* 步骤详情页（全智能图片加载与 iPhone Mockup 渲染） */
 async function guidePage(id){
   const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
@@ -349,8 +349,10 @@ async function guidePage(id){
         <div class="guide-steps">
           ${guideSteps.map((s, i) => {
             const sh = shotMap.get(s.image_id);
-            // 自动从平铺好的 images/ 目录里读取文件名
-            const finalImg = (sh && sh.filename) ? `images/${sh.filename}` : (s.image_path ? `images/${s.image_path.split('/').pop()}` : null);
+            // 自动提取纯文件名
+            let rawFilename = sh?.filename || (s.image_path ? s.image_path.split('/').pop() : '');
+            let primarySrc = rawFilename ? `images/${rawFilename}` : '';
+            
             return `<section class="guide-step" data-step-section="${i}">
               <div class="step-kicker">[ ${String(i+1).padStart(2, "0")} ] ${esc(s.step_title || "STEP")}</div>
               <div class="step-grid">
@@ -361,7 +363,19 @@ async function guidePage(id){
                 </div>
                 <div class="iphone-mockup">
                   <div class="iphone-screen">
-                    ${finalImg ? `<img src="${finalImg}" alt="Step image" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;step-image placeholder&quot;>Missing file:<br><code>${esc(sh?.filename || s.image_id)}</code></div>'">` : `<div class="step-image placeholder">Screenshot placeholder</div>`}
+                    ${primarySrc ? `
+                      <img src="${primarySrc}" 
+                           alt="Step screenshot" 
+                           loading="lazy" 
+                           onerror="
+                             if(!this.dataset.retried) {
+                               this.dataset.retried = '1';
+                               this.src = '${rawFilename}';
+                             } else {
+                               this.parentElement.innerHTML = '<div class=&quot;step-image placeholder&quot; style=&quot;padding:15px;font-size:12px;color:#c8102e;&quot;>未找到图片文件：<br><b>${rawFilename}</b><br><small style=&quot;color:#666;&quot;>请检查 images 目录下是否有此文件</small></div>';
+                             }
+                           ">
+                    ` : `<div class="step-image placeholder">未绑定图片<br><small>${s.image_id || '暂无ID'}</small></div>`}
                   </div>
                 </div>
               </div>
