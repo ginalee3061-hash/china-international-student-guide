@@ -21,9 +21,10 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-function guideCard(g, item){
-  return `<a class="guide-card" href="#/guide/${g.guide_id}">
-    <div class="polaroid"><div class="polaroid-inner ${esc(clsFor(item))}">${esc(iconFor(item))}</div></div>
+// 首页指南卡片：带有右上角拍立得 App 图标贴纸
+function guideCard(g, item, iconFilename){
+  return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
+    ${iconFilename ? `<div class="polaroid-badge"><img src="images/${iconFilename}" alt="App Icon"></div>` : ''}
     <div class="eyebrow">${esc(itemName(item))}</div>
     <h3>${esc(titleOf(g))}</h3>
     <p>${esc(g.short_description || "")}</p>
@@ -31,6 +32,7 @@ function guideCard(g, item){
   </a>`;
 }
 
+// 推荐分类板块配置（对应 5 张大图缩略图）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -137,8 +139,22 @@ window.openLightbox = function(src){
 };
 
 async function home(){
-  const [items, guides, groups] = await Promise.all([getData("items"), getData("guides"), getData("featured-groups")]);
-  const published = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
+  const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
+  const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
+
+  // 精确配置你指定的首屏两大自定义板块及其拍立得贴纸图
+  const packageFoodConfigs = [
+    { id: "GUIDE-010", icon: "meituanicon.png" }, 
+    { id: "GUIDE-008", icon: "taobaoicon.png" }
+  ];
+  const moneyPaymentConfigs = [
+    { id: "GUIDE-011", icon: "icbcicon.png" }, 
+    { id: "GUIDE-009", icon: "icbcicon.png" }, 
+    { id: "GUIDE-001", icon: "alipayicon.png" }
+  ];
+
+  const packageGuides = packageFoodConfigs.map(c => ({ g: pub.get(c.id), icon: c.icon })).filter(x => x.g);
+  const moneyGuides = moneyPaymentConfigs.map(c => ({ g: pub.get(c.id), icon: c.icon })).filter(x => x.g);
 
   app.innerHTML = `<section class="hero"><div class="container hero-inner">
     <div>
@@ -158,20 +174,28 @@ async function home(){
     </div>
   </div></section>
 
-  <div class="home-sections">${groups.map(group => {
-    const gs = group.guide_ids.map(id => published.get(id)).filter(Boolean).slice(0, 3);
-    const its = (group.item_ids || []).map(id => by(items, "item_id", id)).filter(Boolean);
-    return `<section class="section-band ${group.theme}">
+  <!-- 自定义首屏两大板块 -->
+  <div class="home-sections">
+    <section class="section-band blue">
       <div class="container">
-        <div class="section-tab"><span>${group.number} ${esc(group.title)}</span><span class="arrow">→</span></div>
-        <p class="section-note">${esc(group.description)}</p>
+        <div class="section-tab"><span>01 PACKAGES & FOOD</span><span class="arrow">→</span></div>
+        <p class="section-note">How to order food and retrieve your parcel deliveries around campus.</p>
         <div class="card-grid">
-          ${gs.map(g => guideCard(g, by(items, "item_id", g.item_id))).join("")}
-          ${!gs.length ? its.map(appCard).join("") : ""}
+          ${packageGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.icon)).join("")}
         </div>
       </div>
-    </section>`;
-  }).join("")}</div>
+    </section>
+
+    <section class="section-band rose">
+      <div class="container">
+        <div class="section-tab"><span>02 MONEY & PAYMENTS</span><span class="arrow">→</span></div>
+        <p class="section-note">Bank debit card, dorm electricity top-ups, and Alipay setup.</p>
+        <div class="card-grid">
+          ${moneyGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.icon)).join("")}
+        </div>
+      </div>
+    </section>
+  </div>
 
   <section class="rec-board-section">
     <div class="container">
@@ -187,6 +211,7 @@ async function home(){
     </div>
   </section>
 
+  <!-- 主页下方的 Building 12 档案袋封面入口 (对应 dorm12file.jpg) -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -224,7 +249,7 @@ function recCategoryPage(catId){
   </div></section>`;
 }
 
-/* 完美复刻：使用 page.jpg 作为底图，并在白纸区域还原排版与带复制功能的 Icon */
+/* 基于 page.jpg 底图的档案册页面（小标签切换 + 真实文字排版与一键复制 Icon） */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-native-page">
     <div class="container" style="margin-bottom:15px; width:min(900px, 100%);">
@@ -232,7 +257,7 @@ async function dormBookPage(){
     </div>
 
     <div class="dorm-canvas-box">
-      <!-- 底层直接调用你的 page.jpg -->
+      <!-- 底层直接铺上你的 page.jpg -->
       <img src="images/page.jpg" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/13_2.jpg'">
 
       <!-- 顶层交互区 -->
@@ -368,7 +393,14 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  let relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
+  let relatedGuides = [];
+  const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
+
+  if (isAlipayRelated) {
+    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && (x.item_id === "APP-001" || x.guide_id === "GUIDE-004"));
+  } else {
+    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
+  }
 
   app.innerHTML = `<section class="page"><div class="container">
     ${crumbs([{label:"Home", href:"/"}, ...(item ? [{label: itemName(item), href:`/item/${item.item_id}`}] : []), {label: titleOf(g)}])}
@@ -415,7 +447,7 @@ async function guidePage(id){
           <section class="related">
             <h2>YOU MAY ALSO NEED</h2>
             <div class="related-grid">
-              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id))).join("")}
+              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id), null)).join("")}
             </div>
           </section>
         ` : ''}
