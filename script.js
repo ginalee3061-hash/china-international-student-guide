@@ -21,7 +21,6 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-// 首页特色板块标准卡片
 function guideCard(g, item){
   return `<a class="guide-card" href="#/guide/${g.guide_id}">
     <div class="polaroid"><div class="polaroid-inner ${esc(clsFor(item))}">${esc(iconFor(item))}</div></div>
@@ -32,7 +31,6 @@ function guideCard(g, item){
   </a>`;
 }
 
-// 推荐分类板块配置（对应 5 张大图缩略图）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -160,7 +158,6 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 恢复原有的特色板块 -->
   <div class="home-sections">${groups.map(group => {
     const gs = group.guide_ids.map(id => published.get(id)).filter(Boolean).slice(0, 3);
     const its = (group.item_ids || []).map(id => by(items, "item_id", id)).filter(Boolean);
@@ -190,7 +187,6 @@ async function home(){
     </div>
   </section>
 
-  <!-- Building 12 档案袋封面入口 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -206,7 +202,6 @@ async function home(){
   });
 }
 
-// 分类详情页（支持渲染你提供的真实 App 大图标）
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -229,91 +224,97 @@ function recCategoryPage(catId){
   </div></section>`;
 }
 
-/* 档案册页面 */
+/* 完美复刻：使用 page.jpg 作为底图，并在白纸区域还原排版与带复制功能的 Icon */
 async function dormBookPage(){
-  app.innerHTML = `<section class="dorm-file-page">
-    <div class="container" style="margin-bottom:20px; width:min(900px, 100%);">
+  app.innerHTML = `<section class="dorm-native-page">
+    <div class="container" style="margin-bottom:15px; width:min(900px, 100%);">
       ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
     </div>
 
-    <div class="dorm-folder-container">
-      <div class="dorm-tabs-bar">
-        <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
-        <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
-        <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
-      </div>
+    <div class="dorm-canvas-box">
+      <!-- 底层直接调用你的 page.jpg -->
+      <img src="images/page.jpg" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/13_2.jpg'">
 
-      <div class="dorm-tab-panel active" id="dorm-tab-0">
-        <div class="dorm-sheet-sec">
-          <h2>DORMITORY ADDRESS</h2>
-          <div class="dorm-sheet-line"></div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div style="display:flex;gap:10px;">
+      <!-- 顶层交互区 -->
+      <div class="dorm-interactive-layer">
+        
+        <!-- 顶部标签栏 -->
+        <div class="dorm-top-tabs">
+          <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
+          <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
+          <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
+        </div>
+
+        <!-- Tab 01: Address & Rules -->
+        <div class="dorm-panel-content active" id="dorm-panel-0">
+          <div class="sheet-sec-title">DORMITORY ADDRESS</div>
+          <div class="sheet-sec-line"></div>
+          
+          <div class="sheet-row-item">
+            <div class="sheet-row-left">
               <span>★</span>
-              <div id="addr-en" style="cursor:text;font-size:13.5px;line-height:1.45;">
+              <div id="addr-en" style="cursor:text;">
                 Building 12, Graduate Student Apartments<br>
                 East China Normal University (Minhang Campus)<br>
                 No. 5800 Hongmei South Road, Minhang District, Shanghai
               </div>
             </div>
-            <button class="hotspot-copy-btn" onclick="selectAndCopyText('addr-en', 'Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai')">
-              <svg viewBox="0 0 24 24" width="16" height="16" stroke="#2b2b2b" stroke-width="1.8" fill="none"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            <button class="sheet-copy-icon-btn" title="Copy" onclick="selectAndCopyText('addr-en', 'Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai')">
+              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
             </button>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:16px;">
-            <div style="display:flex;gap:10px;">
+
+          <div class="sheet-row-item" style="margin-top:14px;">
+            <div class="sheet-row-left">
               <span>★</span>
-              <div id="addr-cn" style="cursor:text;font-size:13.5px;line-height:1.45;">
+              <div id="addr-cn" style="cursor:text;">
                 上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
                 研究生公寓12号楼
               </div>
             </div>
-            <button class="hotspot-copy-btn" onclick="selectAndCopyText('addr-cn', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
-              <svg viewBox="0 0 24 24" width="16" height="16" stroke="#2b2b2b" stroke-width="1.8" fill="none"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            <button class="sheet-copy-icon-btn" title="复制" onclick="selectAndCopyText('addr-cn', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
+              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
             </button>
           </div>
-        </div>
-        <div class="dorm-sheet-sec" style="margin-top:25px;">
-          <h2>ACCESS HOURS</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
-        </div>
-        <div class="dorm-sheet-sec" style="margin-top:25px;">
-          <h2>QUIET HOURS</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>★</span><div>Please keep noise to a minimum after 23:00. Do not use washing machines or hair dryers after 23:00.</div></div>
-        </div>
-      </div>
 
-      <div class="dorm-tab-panel" id="dorm-tab-1">
-        <div class="dorm-sheet-sec">
-          <h2>SHARED KITCHEN</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Please clean the kitchen after use.</div></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div>
-        </div>
-        <div class="dorm-sheet-sec" style="margin-top:25px;">
-          <h2>GARBAGE DISPOSAL</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div>
-        </div>
-        <div class="polaroid-frame" onclick="openLightbox('images/14.png')"><img src="images/14.png" alt="Kitchen" onerror="this.src='images/14.jpg'"></div>
-      </div>
+          <div class="sheet-sec-title" style="margin-top:35px;">ACCESS HOURS</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item">
+            <div class="sheet-row-left"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
+          </div>
 
-      <div class="dorm-tab-panel" id="dorm-tab-2">
-        <div class="dorm-sheet-sec">
-          <h2>DRINKING WATER DISPENSERS</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div>
+          <div class="sheet-sec-title" style="margin-top:35px;">QUIET HOURS</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item">
+            <div class="sheet-row-left"><span>★</span><div>Please keep noise to a minimum after 23:00. Do not use washing machines or hair dryers after 23:00.</div></div>
+          </div>
         </div>
-        <div class="dorm-sheet-sec" style="margin-top:25px;">
-          <h2>HAIR DRYER ROOMS</h2>
-          <div class="dorm-sheet-line"></div>
-          <div class="dorm-sheet-item"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div>
+
+        <!-- Tab 02: Kitchen & Garbage -->
+        <div class="dorm-panel-content" id="dorm-panel-1">
+          <div class="sheet-sec-title">SHARED KITCHEN</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Please clean the kitchen after use.</div></div></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div></div>
+
+          <div class="sheet-sec-title" style="margin-top:30px;">GARBAGE DISPOSAL</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div></div>
         </div>
-        <div class="polaroid-frame" onclick="openLightbox('images/15.png')"><img src="images/15.png" alt="Facilities" onerror="this.src='images/15.jpg'"></div>
+
+        <!-- Tab 03: Water & Facilities -->
+        <div class="dorm-panel-content" id="dorm-panel-2">
+          <div class="sheet-sec-title">DRINKING WATER DISPENSERS</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div></div>
+
+          <div class="sheet-sec-title" style="margin-top:35px;">HAIR DRYER ROOMS</div>
+          <div class="sheet-sec-line"></div>
+          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div></div>
+        </div>
+
       </div>
     </div>
   </section>`;
@@ -322,7 +323,7 @@ async function dormBookPage(){
     document.querySelectorAll('.dorm-tab-pill').forEach((btn, idx) => {
       btn.classList.toggle('active', idx === index);
     });
-    document.querySelectorAll('.dorm-tab-panel').forEach((panel, idx) => {
+    document.querySelectorAll('.dorm-panel-content').forEach((panel, idx) => {
       panel.classList.toggle('active', idx === index);
     });
   };
