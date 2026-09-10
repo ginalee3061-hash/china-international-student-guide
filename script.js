@@ -21,7 +21,7 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-// 首页卡片：右上角呈现拍立得相框小图
+// 首页卡片：右上角悬挂拍立得相框小图
 function guideCard(g, item, polaroidImg){
   return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
     ${polaroidImg ? `
@@ -35,6 +35,7 @@ function guideCard(g, item, polaroidImg){
   </a>`;
 }
 
+// 修正后的 5 张推荐板块缩略图文件名（去掉了冒号，确保正常显示）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -144,7 +145,7 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 配置前两大板块及其右上角的拍立得小图素材名（对应你上传的图片命名）
+  // 配置前两大板块的拍立得小图素材（对应你上传的包名）
   const packageFoodConfigs = [
     { id: "GUIDE-010", photo: "packagesandfood-01.png" }, 
     { id: "GUIDE-008", photo: "packagesandfood-02.png" }
@@ -212,10 +213,11 @@ async function home(){
     </div>
   </section>
 
+  <!-- 对应 dorm12file.png 档案袋封面入口 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
-        <img src="images/dorm12file.jpg" alt="Building 12 Dormitory Information" class="folder-inner-img">
+        <img src="images/dorm12file.png" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='images/dorm12file.jpg'">
       </a>
     </div>
   </section>`;
@@ -249,7 +251,7 @@ function recCategoryPage(catId){
   </div></section>`;
 }
 
-/* 使用 page.jpg 作为响应式底图的档案册内页 */
+/* 使用 page.png 作为底图的响应式宿舍详情页 */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-native-page">
     <div class="container" style="margin-bottom:12px; width:min(920px, 100%);">
@@ -257,12 +259,11 @@ async function dormBookPage(){
     </div>
 
     <div class="dorm-canvas-box">
-      <!-- 纸张底图采用 page.jpg -->
-      <img src="images/page.jpg" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/13_2.jpg'">
+      <!-- 纸张底图采用 page.png -->
+      <img src="images/page.png" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/page.jpg'">
 
       <div class="dorm-interactive-layer">
         
-        <!-- 顶部小标签栏 -->
         <div class="dorm-top-tabs">
           <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
           <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
