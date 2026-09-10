@@ -1,0 +1,26 @@
+[
+  {
+    "category_id": "CAT-001",
+    "category_name": "packages&food",
+    "display_name": "PACKAGES & FOOD",
+    "description": "Shopping, meal delivery & parcel pickup",
+    "order": 1,
+    "status": "active"
+  },
+  {
+    "category_id": "CAT-002",
+    "category_name": "payment&transport",
+    "display_name": "MONEY & PAYMENTS",
+    "description": "Payments, banking and money",
+    "order": 2,
+    "status": "active"
+  },
+  {
+    "category_id": "CAT-003",
+    "category_name": "dorm1",
+    "display_name": "SETTLING INTO YOUR DORM LIFE",
+    "description": "Dorm facilities and campus card top-up",
+    "order": 3,
+    "status": "active"
+  }
+]

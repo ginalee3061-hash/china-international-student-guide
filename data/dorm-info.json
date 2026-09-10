@@ -1,0 +1,98 @@
+{
+  "building": "Building 12",
+  "pages": [
+    {
+      "page_number": 1,
+      "sections": [
+        {
+          "title": "DORMITORY ADDRESS",
+          "items": [
+            {
+              "type": "copyable",
+              "text": "Building 12, Graduate Student Apartments\nEast China Normal University (Minhang Campus)\nNo. 5800 Hongmei South Road, Minhang District, Shanghai"
+            },
+            {
+              "type": "copyable",
+              "text": "上海市闵行区虹梅南路5800号华东师范大学闵行校区\n研究生公寓12号楼"
+            }
+          ]
+        },
+        {
+          "title": "ACCESS HOURS",
+          "items": [
+            {
+              "type": "bullet",
+              "text": "The dormitory entrance closes at 23:00."
+            }
+          ]
+        },
+        {
+          "title": "QUIET HOURS",
+          "items": [
+            {
+              "type": "bullet",
+              "text": "Please keep noise to a minimum after 23:00.\nDo not use washing machines or hair dryers after 23:00."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page_number": 2,
+      "sections": [
+        {
+          "title": "SHARED KITCHEN",
+          "items": [
+            {"type": "bullet", "text": "Please clean the kitchen after use."},
+            {"type": "bullet", "text": "Do not leave personal items, pots, dishes, or cooking utensils on the countertops."},
+            {"type": "bullet", "text": "Please return them to the cabinets or take them back to your room."}
+          ],
+          "photo": {
+            "image": "images/kitchen.jpg",
+            "has_clip": true,
+            "rotation": 6
+          }
+        },
+        {
+          "title": "GARBAGE DISPOSAL",
+          "items": [
+            {"type": "bullet", "text": "The kitchen trash bins are for food waste only."},
+            {"type": "bullet", "text": "Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria."}
+          ],
+          "photo": {
+            "image": "images/garbage.jpg",
+            "has_clip": false,
+            "rotation": -4
+          }
+        }
+      ]
+    },
+    {
+      "page_number": 3,
+      "sections": [
+        {
+          "title": "DRINKING WATER DISPENSERS",
+          "items": [
+            {"type": "text", "text": "Water dispensers are located near the small staircases on the 2nd and 5th floors."}
+          ],
+          "photo": {
+            "image": "images/water.jpg",
+            "has_clip": false,
+            "rotation": -3
+          }
+        },
+        {
+          "title": "HAIR DRYER ROOMS",
+          "items": [
+            {"type": "text", "text": "Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors."}
+          ],
+          "photo": {
+            "image": "images/hairdryer.jpg",
+            "has_clip": true,
+            "rotation": 5
+          }
+        }
+      ]
+    }
+  ]
+}

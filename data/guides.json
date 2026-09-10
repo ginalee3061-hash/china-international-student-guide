@@ -1,0 +1,82 @@
+[
+  {
+    "guide_id": "GUIDE-008",
+    "category_id": "CAT-001",
+    "item_id": "FP-001",
+    "guide_title": "HOW TO GET MY PACKAGES?",
+    "guide_type": "tutorial",
+    "short_description": "Finding pickup stations and using pickup codes",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-010",
+    "category_id": "CAT-001",
+    "item_id": "FP-002",
+    "guide_title": "HOW TO GET MY DELIVERY?",
+    "guide_type": "tutorial",
+    "short_description": "How to order and pick up your meal",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-001",
+    "category_id": "CAT-002",
+    "item_id": "TP-001",
+    "guide_title": "HOW TO REGISTER ALIPAY",
+    "guide_type": "setup",
+    "short_description": "Link your card and start paying like a local",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-002",
+    "category_id": "CAT-002",
+    "item_id": "TP-001",
+    "guide_title": "HOW TO ADD A BANK CARD",
+    "guide_type": "setup",
+    "short_description": "Link a bank card to Alipay",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-004",
+    "category_id": "CAT-002",
+    "item_id": "TP-003",
+    "guide_title": "HOW TO TAKE METRO WITH ALIPAY?",
+    "guide_type": "tutorial",
+    "short_description": "Scan using a QR code",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-009",
+    "category_id": "CAT-003",
+    "item_id": "TP-002",
+    "guide_title": "TOP UP YOUR CAMPUS CARD & ELECTRICITY",
+    "guide_type": "tutorial",
+    "short_description": "Easy recharges so you're never stuck",
+    "platform": "iOS, Android",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-012",
+    "category_id": "CAT-003",
+    "item_id": "DL-001",
+    "guide_title": "DOING YOUR LAUNDRY",
+    "guide_type": "tutorial",
+    "short_description": "Quick guide to washing machines",
+    "platform": "all",
+    "status": "published"
+  },
+  {
+    "guide_id": "GUIDE-013",
+    "category_id": "CAT-003",
+    "item_id": "DL-002",
+    "guide_title": "GETTING THINGS FIXED",
+    "guide_type": "tutorial",
+    "short_description": "How to submit repair requests",
+    "platform": "all",
+    "status": "published"
+  }
+]

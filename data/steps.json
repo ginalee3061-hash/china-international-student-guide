@@ -1,0 +1,72 @@
+[
+  {
+    "step_id": "GUIDE-008-S01",
+    "guide_id": "GUIDE-008",
+    "step_number": 1,
+    "step_title": "[iOS] Download the Cainiao App",
+    "instruction": "Change your App Store region to Mainland China and search for 菜鸟.",
+    "tip": null,
+    "image_id": "IMG-020",
+    "display_frame": "phone"
+  },
+  {
+    "step_id": "GUIDE-008-S02",
+    "guide_id": "GUIDE-008",
+    "step_number": 2,
+    "step_title": "[Android] Download the Cainiao App",
+    "instruction": "Open your phone's built-in app store or download via official store.",
+    "tip": null,
+    "image_id": "IMG-022",
+    "display_frame": "phone"
+  },
+  {
+    "step_id": "GUIDE-008-S03",
+    "guide_id": "GUIDE-008",
+    "step_number": 3,
+    "step_title": "Tap 菜鸟驿站 & Find Pickup Code",
+    "instruction": "Use the 取件码 (pickup code) to find your package on the shelves.",
+    "tip": null,
+    "image_id": "IMG-029",
+    "display_frame": "phone"
+  },
+  {
+    "step_id": "GUIDE-008-S04",
+    "guide_id": "GUIDE-008",
+    "step_number": 4,
+    "step_title": "Scan and Complete Pickup",
+    "instruction": "Scan the barcode or your identity code at the station exit machine.",
+    "tip": null,
+    "image_id": "IMG-031",
+    "display_frame": "photo"
+  },
+  {
+    "step_id": "GUIDE-012-S01",
+    "guide_id": "GUIDE-012",
+    "step_number": 1,
+    "step_title": "Locate the Laundry Room",
+    "instruction": "The washing machines and dryers are located around the corner of the stairs on the 1st floor.",
+    "tip": "Turn left after entering the door and go all the way to the end.",
+    "image_id": "IMG-054",
+    "display_frame": "photo"
+  },
+  {
+    "step_id": "GUIDE-012-S02",
+    "guide_id": "GUIDE-012",
+    "step_number": 2,
+    "step_title": "Put Clothes & Detergent",
+    "instruction": "Put your clothes into the washing machine and add laundry detergent.",
+    "tip": null,
+    "image_id": "IMG-055",
+    "display_frame": "photo"
+  },
+  {
+    "step_id": "GUIDE-012-S03",
+    "guide_id": "GUIDE-012",
+    "step_number": 3,
+    "step_title": "Scan WeChat QR Code",
+    "instruction": "Use WeChat on your phone to scan the QR code on the machine.",
+    "tip": null,
+    "image_id": "IMG-056",
+    "display_frame": "phone"
+  }
+]
