@@ -755,3 +755,136 @@ button,input{font:inherit}
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
+/* ========================================================
+   基于 page.jpg 底图的真实排版与文字叠加热区样式
+======================================================== */
+.dorm-native-page {
+  background: #55523d;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dorm-canvas-box {
+  position: relative;
+  width: min(900px, 100%);
+  aspect-ratio: 1.25 / 1;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 底层直接铺上你的 page.jpg */
+.dorm-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 顶层文字与交互层 */
+.dorm-interactive-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* 顶部小标签切换栏 */
+.dorm-top-tabs {
+  position: absolute;
+  top: 25px;
+  left: 140px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.dorm-tab-pill {
+  background: #f0ebd8;
+  color: #4a4532;
+  border: 1.5px solid #484534;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: all .15s ease;
+}
+.dorm-tab-pill:hover, .dorm-tab-pill.active {
+  background: #58553f;
+  color: #fffdfa;
+  transform: translateY(-2px);
+}
+
+/* 面板内容容器 */
+.dorm-panel-content {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: 95px 90px 40px 140px;
+}
+.dorm-panel-content.active {
+  display: block;
+}
+
+/* 文字排版与线条风格复刻图2 */
+.sheet-sec-title {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+.sheet-sec-line {
+  height: 1px;
+  background: #d0c9b6;
+  margin-bottom: 16px;
+}
+.sheet-row-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #2b2b2b;
+}
+.sheet-row-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* 复制小图标按钮样式 */
+.sheet-copy-icon-btn {
+  background: transparent;
+  border: 1px solid #b5af9e;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sheet-copy-icon-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: #333;
+}
+.sheet-copy-icon-btn svg {
+  width: 15px;
+  height: 15px;
+  stroke: #2b2b2b;
+  stroke-width: 1.8;
+  fill: none;
+}
