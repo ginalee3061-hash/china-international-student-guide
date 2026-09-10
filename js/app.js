@@ -70,7 +70,7 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 3个特色分类 (对应 5.jpg 上半部分) -->
+  <!-- 3个特色分类 -->
   <div class="home-sections">${groups.map(group => {
     const gs = group.guide_ids.map(id => published.get(id)).filter(Boolean).slice(0, 3);
     const its = (group.item_ids || []).map(id => by(items, "item_id", id)).filter(Boolean);
@@ -86,14 +86,23 @@ async function home(){
     </section>`;
   }).join("")}</div>
 
-  <!-- 往下继续出现 RECOMMENDED APPS 分类板块 (对应 5.jpg 下半部分要求) -->
-  <section class="section-band blue" style="padding-top:40px;">
+  <!-- RECOMMENDED APPS 分类板块 -->
+  <section class="section-band blue" style="padding-top:20px;">
     <div class="container">
       <div class="section-tab" style="background:var(--blue-dark)"><span>RECOMMENDED APPS</span><span class="arrow">→</span></div>
       <p class="section-note">Explore apps and services categorized for your daily life in China.</p>
       <div class="card-grid">
         ${categories.map((cat, idx) => categoryCard(cat, idx)).join("")}
       </div>
+    </div>
+  </section>
+
+  <!-- 档案袋模块 (对应 12.jpg) 放在 Recommended Apps 大图下方 -->
+  <section class="folder-banner-section">
+    <div class="container">
+      <a href="#/dorm-book" class="folder-card">
+        <img src="images/12.jpg" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='12.jpg'">
+      </a>
     </div>
   </section>`;
 
@@ -104,7 +113,120 @@ async function home(){
   });
 }
 
-/* 分类详情页 (对应点击后展示对应 6~10.jpg 界面) */
+/* 档案册全屏轮播阅读页 (对应 13.jpg, 14.jpg, 15.jpg，支持点击按钮与左右滑动翻页) */
+async function dormBookPage(){
+  app.innerHTML = `<section class="dorm-book-page">
+    <div class="container" style="margin-bottom:20px;">
+      ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
+    </div>
+    <div class="dorm-book-container" id="dorm-book-container">
+      <div class="dorm-slide-wrapper" id="dorm-slide-wrapper">
+        <div class="dorm-slide"><img src="images/13.jpg" alt="Dormitory Information 1" onerror="this.src='13.jpg'"></div>
+        <div class="dorm-slide"><img src="images/14.jpg" alt="Dormitory Information 2" onerror="this.src='14.jpg'"></div>
+        <div class="dorm-slide"><img src="images/15.jpg" alt="Dormitory Information 3" onerror="this.src='15.jpg'"></div>
+      </div>
+    </div>
+    <div class="dorm-nav-bar">
+      <button class="dorm-nav-btn" id="prev-btn">← Prev</button>
+      <div class="dorm-indicators" id="dorm-indicators">
+        <div class="dorm-dot active" data-index="0"></div>
+        <div class="dorm-dot" data-index="1"></div>
+        <div class="dorm-dot" data-index="2"></div>
+      </div>
+      <button class="dorm-nav-btn" id="next-btn">Next →</button>
+    </div>
+  </section>`;
+
+  let currentIndex = 0;
+  const totalSlides = 3;
+  const wrapper = document.getElementById("dorm-slide-wrapper");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const dots = document.querySelectorAll(".dorm-dot");
+  const container = document.getElementById("dorm-book-container");
+
+  function updateSlide(index){
+    currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+    wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === totalSlides - 1;
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle("active", idx === currentIndex);
+    });
+  }
+
+  prevBtn.addEventListener("click", () => updateSlide(currentIndex - 1));
+  nextBtn.addEventListener("click", () => updateSlide(currentIndex + 1));
+  dots.forEach(dot => {
+    dot.addEventListener("click", (e) => {
+      const idx = parseInt(e.target.getAttribute("data-index"));
+      updateSlide(idx);
+    });
+  });
+
+  // 触控/鼠标左右滑动（Swipe / Drag）逻辑
+  let startX = 0;
+  let isDragging = false;
+  let currentTranslate = 0;
+
+  container.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  container.addEventListener("touchmove", (e) => {
+    if(!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    // 实时跟随拖动
+    wrapper.style.transform = `translateX(calc(-${currentIndex * 100}% + ${diff}px))`;
+  });
+
+  container.addEventListener("touchend", (e) => {
+    if(!isDragging) return;
+    isDragging = false;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
+    if(diff < -50 && currentIndex < totalSlides - 1){
+      updateSlide(currentIndex + 1);
+    } else if(diff > 50 && currentIndex > 0){
+      updateSlide(currentIndex - 1);
+    } else {
+      updateSlide(currentIndex);
+    }
+  });
+
+  // 鼠标拖动支持
+  container.addEventListener("mousedown", (e) => {
+    startX = e.clientX;
+    isDragging = true;
+    container.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if(!isDragging) return;
+    const diff = e.clientX - startX;
+    wrapper.style.transform = `translateX(calc(-${currentIndex * 100}% + ${diff}px))`;
+  });
+
+  window.addEventListener("mouseup", (e) => {
+    if(!isDragging) return;
+    isDragging = false;
+    container.style.cursor = "default";
+    const diff = e.clientX - startX;
+    if(diff < -50 && currentIndex < totalSlides - 1){
+      updateSlide(currentIndex + 1);
+    } else if(diff > 50 && currentIndex > 0){
+      updateSlide(currentIndex - 1);
+    } else {
+      updateSlide(currentIndex);
+    }
+  });
+
+  updateSlide(0);
+}
+
+/* 分类详情页 */
 async function categoryPage(catId){
   const [categories, items] = await Promise.all([getData("categories"), getData("items")]);
   const cat = by(categories, "category_id", catId);
@@ -132,7 +254,7 @@ async function recommendedApps(){
   </div></section>`;
 }
 
-/* App 详情页 (对应 11.jpg 重新设计的高级排版) */
+/* App 详情页 */
 async function itemPage(id){
   const [items, guides, details] = await Promise.all([getData("items"), getData("guides"), getData("app-details")]);
   const item = by(items, "item_id", id); if(!item) return notFound();
@@ -163,7 +285,7 @@ async function itemPage(id){
   </div></section>`;
 }
 
-/* 教程步骤页 (自动套用 iPhone Mockup 壳) */
+/* 教程步骤页 */
 async function guidePage(id){
   const [cats, items, guides, steps, shots] = await Promise.all([getData("categories"), getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
@@ -262,7 +384,7 @@ async function faqPage(){
     <div class="page-head"><div class="eyebrow">QUICK ANSWERS</div><h1>FAQ</h1><p>Common questions will live here as the guide grows.</p></div>
     <div class="faq-list">
       <details><summary>Which apps should I set up first?</summary><p>Start with the apps you need for the tasks you actually do: payments, transport, parcels, campus services and communication.</p></details>
-      <details><summary>Where can I find a step-by-step tutorial?</summary><p>Browse a topic on the home page, open the relevant item, and choose a guide.</p></details>
+      <details><summary>Where can I find a step-by-step tutorial?</summary><p>Browse a topic on the home page, open the relevant item, and choose a guide.</p></div>
       <details><summary>What happens to guides that are not ready?</summary><p>They can stay in the data with a draft or collecting status and remain hidden from the public interface until they are ready.</p></details>
     </div>
   </div></section>`;
@@ -281,6 +403,7 @@ async function route(){
   if(path === "/recommended-apps") return recommendedApps();
   if(path === "/search") return searchPage(params.get("q") || "");
   if(path === "/faq") return faqPage();
+  if(path === "/dorm-book") return dormBookPage();
   const parts = path.split("/");
   if(parts[1] === "category") return categoryPage(parts[2]);
   if(parts[1] === "item") return itemPage(parts[2]);
