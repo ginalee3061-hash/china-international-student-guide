@@ -25,7 +25,7 @@
     "category_id": "CAT-002",
     "name": "Ecard",
     "chinese_name": "Ecard",
-    "item_type": null,
+    "item_type": "Money & Payment",
     "short_description": "Mobile payment and daily services",
     "who_needs_it": "Everyone",
     "platform": "iOS, Android",
@@ -102,6 +102,90 @@
       "logo_text": "Wi",
       "logo_class": "wifi",
       "accent": "indigo"
+    }
+  },
+  {
+    "item_id": "APP-003",
+    "category_id": "CAT-003",
+    "name": "Taobao",
+    "chinese_name": "淘宝",
+    "item_type": "app",
+    "short_description": "Papckage",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "useful",
+    "featured": "no",
+    "status": "active",
+    "_display_name": "Taobao",
+    "_display_description": "Papckage",
+    "visual": {
+      "kind": "app",
+      "logo_text": "淘",
+      "logo_class": "taobao",
+      "accent": "orange"
+    }
+  },
+  {
+    "item_id": "FOO-001",
+    "category_id": "CAT-008",
+    "name": "MeiTuan",
+    "chinese_name": "美团",
+    "item_type": "Food",
+    "short_description": "Food delivery and services",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "useful",
+    "featured": "no",
+    "status": "active",
+    "_display_name": "MeiTuan",
+    "_display_description": "Food delivery and services",
+    "visual": {
+      "kind": "app",
+      "logo_text": "美",
+      "logo_class": "meituan",
+      "accent": "yellow"
+    }
+  },
+  {
+    "item_id": "ICB-001",
+    "category_id": "CAT-004",
+    "name": "ICBC",
+    "chinese_name": "工商银行",
+    "item_type": "Money & Payment",
+    "short_description": "Banking and financial services",
+    "who_needs_it": "Everyone",
+    "platform": "iOS, Android",
+    "importance": "essential",
+    "featured": "no",
+    "status": "active",
+    "_display_name": "ICBC",
+    "_display_description": "Banking and financial services",
+    "visual": {
+      "kind": "item",
+      "logo_text": "工",
+      "logo_class": "icbc",
+      "accent": "red"
+    }
+  },
+  {
+    "item_id": "DOR-002",
+    "category_id": "CAT-001",
+    "name": "Laundry",
+    "chinese_name": "Laundry",
+    "item_type": "Dorm facilities",
+    "short_description": "Dormitory laundry facilities",
+    "who_needs_it": "Everyone",
+    "platform": "all",
+    "importance": "useful",
+    "featured": "no",
+    "status": "active",
+    "_display_name": "Laundry",
+    "_display_description": "Dormitory laundry facilities",
+    "visual": {
+      "kind": "item",
+      "logo_text": "衣",
+      "logo_class": "laundry",
+      "accent": "blue"
     }
   }
 ]
