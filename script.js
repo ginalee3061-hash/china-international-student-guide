@@ -1,293 +1,324 @@
 /**
- * Campus Life Survival Guide - Dynamic Loader & Interactive Engine
+ * Campus Life Survival Guide - Complete Engine
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 全局数据状态缓存
-  const state = {
-    categories: [],
+  // 数据总线
+  const appData = {
     guides: [],
     steps: [],
-    screenshots: [],
     dormInfo: null,
     currentDormPage: 1
   };
 
-  // DOM 元素引用
-  const feedSection = document.getElementById('feedSection');
-  const categoryNav = document.getElementById('categoryNav');
-  const guideModal = document.getElementById('guideModal');
-  const closeGuideModal = document.getElementById('closeGuideModal');
-  const modalGuideTitle = document.getElementById('modalGuideTitle');
-  const modalGuideDesc = document.getElementById('modalGuideDesc');
-  const modalStepsScroll = document.getElementById('modalStepsScroll');
+  // 视图节点
+  const homeView = document.getElementById('homeView');
+  const guideDetailView = document.getElementById('guideDetailView');
+  const dormDossierView = document.getElementById('dormDossierView');
 
-  const folderTrigger = document.getElementById('folderTrigger');
-  const dossierModal = document.getElementById('dossierModal');
-  const closeDossierBtn = document.getElementById('closeDossierBtn');
-  const prevPageBtn = document.getElementById('prevPageBtn');
-  const nextPageBtn = document.getElementById('nextPageBtn');
-  const pageIndicator = document.getElementById('pageIndicator');
-  const paperPageContent = document.getElementById('paperPageContent');
-  const toastNotice = document.getElementById('toastNotice');
+  // 组件节点
+  const detailMainTitle = document.getElementById('detailMainTitle');
+  const stepsFlowContainer = document.getElementById('stepsFlowContainer');
+  const trackLineFill = document.getElementById('trackLineFill');
+  const btnBackHome = document.getElementById('btnBackHome');
 
-  // 初始化加载所有本地 JSON 数据
-  async function initApp() {
+  const dormFileTrigger = document.getElementById('dormFileTrigger');
+  const openDormDossierLink = document.getElementById('openDormDossierLink');
+  const dossierCloseBtn = document.getElementById('dossierCloseBtn');
+  const dossierPrevBtn = document.getElementById('dossierPrevBtn');
+  const dossierNextBtn = document.getElementById('dossierNextBtn');
+  const dossierPageLabel = document.getElementById('dossierPageLabel');
+  const dossierBodyViewport = document.getElementById('dossierBodyViewport');
+  const toastPopup = document.getElementById('toastPopup');
+
+  // 1. 初始化并拉取数据
+  async function init() {
     try {
-      const [cats, guides, steps, screenshots, dorm] = await Promise.all([
-        fetch('data/categories.json').then(r => r.json()),
+      const [guidesRes, stepsRes, dormRes] = await Promise.all([
         fetch('data/guides.json').then(r => r.json()),
         fetch('data/steps.json').then(r => r.json()),
-        fetch('data/screenshots.json').then(r => r.json()),
         fetch('data/dorm-info.json').then(r => r.json())
       ]);
 
-      state.categories = cats;
-      state.guides = guides;
-      state.steps = steps;
-      state.screenshots = screenshots;
-      state.dormInfo = dorm;
+      appData.guides = guidesRes;
+      appData.steps = stepsRes;
+      appData.dormInfo = dormRes;
 
-      renderCategoryNav();
-      renderFeed();
-    } catch (err) {
-      console.error('Failed to load JSON files:', err);
+      bindEventListeners();
+    } catch (e) {
+      console.error('Data loading error:', e);
     }
   }
 
-  // 渲染顶部药丸导航
-  function renderCategoryNav() {
-    categoryNav.innerHTML = `<button class="cat-pill active" data-cat="all">ALL</button>`;
-    state.categories.forEach(c => {
-      const btn = document.createElement('button');
-      btn.className = 'cat-pill';
-      btn.textContent = c.display_name;
-      btn.dataset.cat = c.category_id;
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderFeed(c.category_id);
+  // 2. 绑定事件
+  function bindEventListeners() {
+    // 点击主页任一指南卡片 -> 切到详情页
+    document.querySelectorAll('.guide-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const guideId = card.dataset.guideId;
+        openGuideDetailPage(guideId);
       });
-      categoryNav.appendChild(btn);
     });
 
-    categoryNav.querySelector('[data-cat="all"]').addEventListener('click', (e) => {
-      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      renderFeed('all');
+    // 详情页返回主页
+    btnBackHome.addEventListener('click', () => {
+      switchView('home');
+      window.scrollTo(0, 0);
     });
+
+    // 打开 Building 12 档案
+    dormFileTrigger.addEventListener('click', () => openDormDossier());
+    openDormDossierLink.addEventListener('click', () => openDormDossier());
+
+    // 关闭档案
+    dossierCloseBtn.addEventListener('click', () => {
+      switchView('home');
+    });
+
+    // 档案翻页
+    dossierPrevBtn.addEventListener('click', () => {
+      if (appData.currentDormPage > 1) {
+        appData.currentDormPage--;
+        renderDormPage(appData.currentDormPage);
+      }
+    });
+
+    dossierNextBtn.addEventListener('click', () => {
+      if (appData.currentDormPage < 3) {
+        appData.currentDormPage++;
+        renderDormPage(appData.currentDormPage);
+      }
+    });
+
+    // 监听窗口滚动 -> 驱动竖直蓝色灌浆进度条
+    window.addEventListener('scroll', handleScrollProgressBar);
   }
 
-  // 渲染卡片信息流
-  function renderFeed(filterCatId = 'all') {
-    feedSection.innerHTML = '';
+  // 视图切换控制器
+  function switchView(viewName) {
+    homeView.classList.remove('active');
+    guideDetailView.classList.remove('active');
+    dormDossierView.classList.remove('active');
 
-    const targetCats = filterCatId === 'all' 
-      ? state.categories 
-      : state.categories.filter(c => c.category_id === filterCatId);
-
-    targetCats.forEach(cat => {
-      const catGuides = state.guides.filter(g => g.category_id === cat.category_id && g.status === 'published');
-      if (catGuides.length === 0) return;
-
-      const groupContainer = document.createElement('div');
-      groupContainer.className = 'category-group';
-
-      groupContainer.innerHTML = `
-        <div class="category-group-header">
-          <span class="category-badge">${cat.display_name}</span>
-        </div>
-        <div class="cards-grid"></div>
-      `;
-
-      const grid = groupContainer.querySelector('.cards-grid');
-
-      catGuides.forEach(guide => {
-        const card = document.createElement('div');
-        card.className = 'guide-card';
-        card.innerHTML = `
-          <div>
-            <h3 class="card-title">${guide.guide_title}</h3>
-            <p class="card-desc">${guide.short_description || ''}</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-platform-tag">${guide.platform}</span>
-            <span class="card-action-arrow">→</span>
-          </div>
-        `;
-        card.addEventListener('click', () => openGuideDetails(guide));
-        grid.appendChild(card);
-      });
-
-      feedSection.appendChild(groupContainer);
-    });
+    if (viewName === 'home') homeView.classList.add('active');
+    if (viewName === 'guide') guideDetailView.classList.add('active');
+    if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 打开步骤指引弹窗（自动匹配 手机外壳 / 实拍相框）
-  function openGuideDetails(guide) {
-    modalGuideTitle.textContent = guide.guide_title;
-    modalGuideDesc.textContent = guide.short_description || '';
-    modalStepsScroll.innerHTML = '';
+  // 3. 打开指南步骤新页面（图 4 效果）
+  function openGuideDetailPage(guideId) {
+    const guide = appData.guides.find(g => g.guide_id === guideId) || {
+      guide_title: 'HOW TO GET MY PACKAGES?'
+    };
 
-    const steps = state.steps
-      .filter(s => s.guide_id === guide.guide_id)
-      .sort((a, b) => a.step_number - b.step_number);
+    detailMainTitle.innerHTML = guide.guide_title.replace('?', '?<br>');
+    stepsFlowContainer.innerHTML = '';
 
+    // 过滤此 guide 的所有步骤
+    let steps = appData.steps.filter(s => s.guide_id === guideId);
+    if (steps.length === 0) {
+      // 若是菜鸟默认步骤，聚合呈现
+      steps = appData.steps.filter(s => ['GUIDE-005', 'GUIDE-006', 'GUIDE-008'].includes(s.guide_id));
+    }
+
+    let currentSection = '';
     steps.forEach(step => {
-      const screenshot = state.screenshots.find(ss => ss.image_id === step.image_id);
-      const isPhoto = (step.display_frame === 'photo') || (screenshot && screenshot.display_frame === 'photo');
-      const imgSrc = screenshot ? `images/${screenshot.filename}` : 'images/placeholder.png';
-
-      const stepRow = document.createElement('div');
-      stepRow.className = 'step-card-wrapper';
-
-      // 视觉容器渲染：手机外壳 vs 相框
-      const mediaHtml = isPhoto ? `
-        <div class="photo-frame-wrapper">
-          <div class="photo-frame-inner">
-            <img src="${imgSrc}" alt="${step.step_title}" onerror="this.style.background='#CCC'">
-          </div>
-        </div>
-      ` : `
-        <div class="mockup-phone-frame">
-          <div class="phone-screen">
-            <img src="${imgSrc}" alt="${step.step_title}" onerror="this.style.background='#E0E0E0'">
-          </div>
-        </div>
-      `;
-
-      stepRow.innerHTML = `
-        ${mediaHtml}
-        <div class="step-details-side">
-          <span class="step-number-tag">STEP ${String(step.step_number).padStart(2, '0')}</span>
-          <h4 class="step-title-text">${step.step_title}</h4>
-          <p class="step-instruction-text">${step.instruction || ''}</p>
-          ${step.tip ? `<div class="step-tip-callout">Tip: ${step.tip}</div>` : ''}
-        </div>
-      `;
-
-      modalStepsScroll.appendChild(stepRow);
-    });
-
-    guideModal.classList.add('open');
-  }
-
-  closeGuideModal.addEventListener('click', () => {
-    guideModal.classList.remove('open');
-  });
-
-  // ==========================================================================
-  // Building 12 拟物档案渲染与真实剪贴板复制引擎
-  // ==========================================================================
-  folderTrigger.addEventListener('click', () => {
-    state.currentDormPage = 1;
-    renderDormPage(state.currentDormPage);
-    dossierModal.classList.add('open');
-  });
-
-  closeDossierBtn.addEventListener('click', () => {
-    dossierModal.classList.remove('open');
-  });
-
-  prevPageBtn.addEventListener('click', () => {
-    if (state.currentDormPage > 1) {
-      state.currentDormPage--;
-      renderDormPage(state.currentDormPage);
-    }
-  });
-
-  nextPageBtn.addEventListener('click', () => {
-    if (state.currentDormPage < state.dormInfo.pages.length) {
-      state.currentDormPage++;
-      renderDormPage(state.currentDormPage);
-    }
-  });
-
-  // 渲染具体某一页档案纸张内容
-  function renderDormPage(pageNum) {
-    pageIndicator.textContent = `Page ${pageNum} / ${state.dormInfo.pages.length}`;
-    paperPageContent.innerHTML = '';
-
-    const pageData = state.dormInfo.pages.find(p => p.page_number === pageNum);
-    if (!pageData) return;
-
-    pageData.sections.forEach(sec => {
-      const secDiv = document.createElement('div');
-      secDiv.className = sec.photo ? 'paper-section paper-section-with-photo' : 'paper-section';
-
-      let itemsHtml = '';
-
-      sec.items.forEach(item => {
-        if (item.type === 'copyable') {
-          itemsHtml += `
-            <div class="copyable-row">
-              <div class="typewriter-body" style="white-space: pre-line;">★  ${item.text}</div>
-              <button class="copy-icon-btn" data-clipboard="${encodeURIComponent(item.text)}" title="Copy address">
-                <svg class="copy-icon-svg" viewBox="0 0 24 24">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-              </button>
-            </div>
-          `;
-        } else if (item.type === 'bullet') {
-          itemsHtml += `<div class="typewriter-body" style="margin-bottom: 0.5rem; white-space: pre-line;">★  ${item.text}</div>`;
-        } else {
-          itemsHtml += `<div class="typewriter-body" style="white-space: pre-line;">${item.text}</div>`;
-        }
-      });
-
-      if (sec.photo) {
-        secDiv.innerHTML = `
-          <div>
-            <h3 class="paper-sec-title">${sec.title}</h3>
-            ${itemsHtml}
-          </div>
-          <div class="polaroid-frame" style="transform: rotate(${sec.photo.rotation}deg)">
-            ${sec.photo.has_clip ? '<div class="paper-clip"></div>' : ''}
-            <div class="polaroid-img-box">
-              <img src="${sec.photo.image}" alt="${sec.title}" onerror="this.style.background='#CCC'">
-            </div>
-          </div>
-        `;
-      } else {
-        secDiv.innerHTML = `
-          <h3 class="paper-sec-title">${sec.title}</h3>
-          ${itemsHtml}
-        `;
+      // 分段小标题（例如 [iOS] Download the Cainiao App）
+      if (step.step_title && step.step_title.startsWith('[')) {
+        const secHeader = document.createElement('h3');
+        secHeader.className = 'step-section-header';
+        secHeader.textContent = step.step_title;
+        stepsFlowContainer.appendChild(secHeader);
       }
 
-      paperPageContent.appendChild(secDiv);
+      const isPhoto = step.display_frame === 'photo';
+      const imgSrc = step.image_id ? `images/cainiao-code-01.png` : 'images/cainiao-code-01.png'; // 优先展示对应截图
+
+      const stepCard = document.createElement('div');
+      stepCard.className = 'step-item-card';
+
+      const mediaHtml = isPhoto ? `
+        <div class="mockup-photo-body">
+          <img src="${imgSrc}" alt="${step.step_title}">
+        </div>
+      ` : `
+        <div class="mockup-phone-body">
+          <div class="mockup-screen">
+            <img src="${imgSrc}" alt="${step.step_title}">
+          </div>
+        </div>
+      `;
+
+      stepCard.innerHTML = `
+        ${mediaHtml}
+        <div class="step-info-col">
+          <div class="step-circle-badge">${step.step_number || 1}</div>
+          <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
+          <p class="step-detail-text">${step.instruction || ''}</p>
+        </div>
+      `;
+
+      stepsFlowContainer.appendChild(stepCard);
     });
 
-    // 绑定真实剪贴板复制事件
-    paperPageContent.querySelectorAll('.copy-icon-btn').forEach(btn => {
+    switchView('guide');
+    window.scrollTo(0, 0);
+    setTimeout(handleScrollProgressBar, 100);
+  }
+
+  // 4. 竖直蓝色进度条随页面滑动灌浆填充
+  function handleScrollProgressBar() {
+    if (!guideDetailView.classList.contains('active')) return;
+
+    const scrollLayout = document.querySelector('.detail-scroll-layout');
+    if (!scrollLayout) return;
+
+    const rect = scrollLayout.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const totalHeight = rect.height - windowHeight;
+
+    if (totalHeight <= 0) {
+      trackLineFill.style.height = '100%';
+      return;
+    }
+
+    const currentPassed = Math.max(0, -rect.top + 100);
+    const percent = Math.min(100, Math.max(0, (currentPassed / totalHeight) * 100));
+    trackLineFill.style.height = `${percent}%`;
+  }
+
+  // 5. 打开 Building 12 沉浸式档案页（底图 page.png）
+  function openDormDossier() {
+    appData.currentDormPage = 1;
+    renderDormPage(appData.currentDormPage);
+    switchView('dossier');
+    window.scrollTo(0, 0);
+  }
+
+  function renderDormPage(pageNum) {
+    dossierPageLabel.textContent = `Page ${pageNum} / 3`;
+    dossierBodyViewport.innerHTML = '';
+
+    if (pageNum === 1) {
+      dossierBodyViewport.innerHTML = `
+        <div class="dorm-section-block">
+          <h3 class="dorm-sec-heading">DORMITORY ADDRESS</h3>
+          
+          <div class="dossier-copyable-box">
+            <div class="dorm-typewriter-text">
+              ★ Building 12, Graduate Student Apartments<br>
+              East China Normal University (Minhang Campus)<br>
+              No. 5800 Hongmei South Road, Minhang District, Shanghai
+            </div>
+            <button class="copy-trigger-btn" data-copy="Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai" title="Copy English Address">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+
+          <div class="dossier-copyable-box">
+            <div class="dorm-typewriter-text">
+              ★ 上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
+              研究生公寓12号楼
+            </div>
+            <button class="copy-trigger-btn" data-copy="上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼" title="复制中文地址">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="dorm-section-block">
+          <h3 class="dorm-sec-heading">ACCESS HOURS</h3>
+          <div class="dorm-typewriter-text">★ The dormitory entrance closes at 23:00.</div>
+        </div>
+
+        <div class="dorm-section-block">
+          <h3 class="dorm-sec-heading">QUIET HOURS</h3>
+          <div class="dorm-typewriter-text">★ Please keep noise to a minimum after 23:00.<br>Do not use washing machines or hair dryers after 23:00.</div>
+        </div>
+      `;
+    } else if (pageNum === 2) {
+      dossierBodyViewport.innerHTML = `
+        <div class="dorm-section-block dossier-split-photo">
+          <div>
+            <h3 class="dorm-sec-heading">SHARED KITCHEN</h3>
+            <div class="dorm-typewriter-text">
+              • Please clean the kitchen after use.<br>
+              • Do not leave personal items, pots, dishes, or cooking utensils on the countertops.<br>
+              • Please return them to the cabinets or take them back to your room.
+            </div>
+          </div>
+          <div class="polaroid-holder" style="transform: rotate(5deg);">
+            <div class="metal-clip"></div>
+            <img src="images/packagesandfood-01.png" alt="Kitchen">
+          </div>
+        </div>
+
+        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
+          <div class="polaroid-holder" style="transform: rotate(-4deg);">
+            <img src="images/packagesandfood-02.png" alt="Garbage">
+          </div>
+          <div>
+            <h3 class="dorm-sec-heading">GARBAGE DISPOSAL</h3>
+            <div class="dorm-typewriter-text">
+              • The kitchen trash bins are for food waste only.<br>
+              • Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (pageNum === 3) {
+      dossierBodyViewport.innerHTML = `
+        <div class="dorm-section-block dossier-split-photo">
+          <div>
+            <h3 class="dorm-sec-heading">DRINKING WATER DISPENSERS</h3>
+            <div class="dorm-typewriter-text">
+              Water dispensers are located near the small staircases on the 2nd and 5th floors.
+            </div>
+          </div>
+          <div class="polaroid-holder" style="transform: rotate(-3deg);">
+            <img src="images/dormlife-01.png" alt="Water Dispenser">
+          </div>
+        </div>
+
+        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
+          <div>
+            <h3 class="dorm-sec-heading">HAIR DRYER ROOMS</h3>
+            <div class="dorm-typewriter-text">
+              Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.
+            </div>
+          </div>
+          <div class="polaroid-holder" style="transform: rotate(6deg);">
+            <div class="metal-clip"></div>
+            <img src="images/dormlife-02.png" alt="Hair Dryer">
+          </div>
+        </div>
+      `;
+    }
+
+    // 绑定复制真实触发事件
+    dossierBodyViewport.querySelectorAll('.copy-trigger-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const rawText = decodeURIComponent(btn.dataset.clipboard);
-        navigator.clipboard.writeText(rawText).then(() => {
+        const text = btn.dataset.copy;
+        navigator.clipboard.writeText(text).then(() => {
           showToast('Address copied to clipboard!');
         }).catch(() => {
-          // Fallback 复制兼容
-          const textarea = document.createElement('textarea');
-          textarea.value = rawText;
-          document.body.appendChild(textarea);
-          textarea.select();
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
           document.execCommand('copy');
-          document.body.removeChild(textarea);
+          document.body.removeChild(ta);
           showToast('Address copied to clipboard!');
         });
       });
     });
   }
 
-  // Toast 弹窗通知
   function showToast(msg) {
-    toastNotice.textContent = msg;
-    toastNotice.classList.add('show');
-    setTimeout(() => {
-      toastNotice.classList.remove('show');
-    }, 2200);
+    toastPopup.textContent = msg;
+    toastPopup.classList.add('show');
+    setTimeout(() => toastPopup.classList.remove('show'), 2000);
   }
 
-  initApp();
+  init();
 });
