@@ -10,7 +10,6 @@
 
   <!-- ================= 视图 1：主页流 (HOME VIEW) ================= -->
   <div id="homeView" class="page-view active">
-    <!-- 顶部导航栏 -->
     <header class="site-header">
       <div class="header-left">
         <span class="logo-circle"></span>
@@ -26,20 +25,19 @@
         <a href="#finance">FINANCE</a>
         <a href="#dorm">DORM LIFE</a>
         <a href="#apps">APP DIRECTORY</a>
-        <a href="javascript:void(0)" id="openDormDossierLink">DORM 12 DOCS</a>
+        <a href="javascript:void(0)" id="openDormLink">DORM 12 DOCS</a>
       </nav>
     </header>
 
-    <!-- 分类与卡片展示区 -->
     <main class="main-content">
       
       <!-- 01 PACKAGES & FOOD -->
       <section class="category-block" id="packages">
         <div class="category-bar bar-blue">
-          <span>PACKAGES & FOOD</span>
+          <span>PACKAGES &amp; FOOD</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-carousel">
+        <div class="cards-row">
           <div class="guide-card" data-guide-id="GUIDE-008">
             <div class="card-polaroid">
               <img src="images/packagesandfood-01.png" alt="Packages">
@@ -54,9 +52,9 @@
             <div class="card-polaroid">
               <img src="images/packagesandfood-02.png" alt="Delivery">
             </div>
-            <h3 class="card-headline">HOW TO<br>GET MY<br>PACKAGES?</h3>
-            <p class="card-app-name">CaiNiao</p>
-            <p class="card-sub-desc">finding pickup stations</p>
+            <h3 class="card-headline">HOW TO<br>GET MY<br>DELIVERY?</h3>
+            <p class="card-app-name">MeiTuan</p>
+            <p class="card-sub-desc">How to order and pick up your meal</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
@@ -65,37 +63,37 @@
       <!-- 02 MONEY & PAYMENTS -->
       <section class="category-block" id="finance">
         <div class="category-bar bar-rose">
-          <span>MONEY & PAYMENTS</span>
+          <span>MONEY &amp; PAYMENTS</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-carousel">
+        <div class="cards-row">
           <div class="guide-card" data-guide-id="GUIDE-001">
             <div class="card-polaroid">
-              <img src="images/moneyandpayments-01.png" alt="Alipay">
+              <img src="images/moneyandpayments-01.png" alt="Alipay Register">
             </div>
             <h3 class="card-headline">HOW TO<br>REGISTER<br>ALIPAY</h3>
             <p class="card-app-name">Alipay</p>
-            <p class="card-sub-desc">Link card & pay locally</p>
+            <p class="card-sub-desc">Link your card and start paying</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
           <div class="guide-card" data-guide-id="GUIDE-002">
             <div class="card-polaroid">
-              <img src="images/moneyandpayments-02.png" alt="Bank">
+              <img src="images/moneyandpayments-02.png" alt="Add Bank Card">
             </div>
             <h3 class="card-headline">HOW TO<br>ADD A BANK<br>CARD</h3>
             <p class="card-app-name">Alipay</p>
-            <p class="card-sub-desc">Link bank card</p>
+            <p class="card-sub-desc">Link a bank card to Alipay</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
           <div class="guide-card" data-guide-id="GUIDE-004">
             <div class="card-polaroid">
-              <img src="images/moneyandpayments-03.png" alt="Metro">
+              <img src="images/moneyandpayments-03.png" alt="Metro Scan">
             </div>
             <h3 class="card-headline">HOW TO<br>TAKE METRO<br>WITH ALIPAY?</h3>
             <p class="card-app-name">Alipay</p>
-            <p class="card-sub-desc">Scan QR code</p>
+            <p class="card-sub-desc">Scan using a QR code</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
@@ -107,14 +105,14 @@
           <span>SETTLING INTO YOUR DORM LIFE</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-carousel">
+        <div class="cards-row">
           <div class="guide-card" data-guide-id="GUIDE-009">
             <div class="card-polaroid">
-              <img src="images/dormlife-01.png" alt="Campus card">
+              <img src="images/dormlife-01.png" alt="Ecard">
             </div>
             <h3 class="card-headline">CAMPUS CARD<br>&amp; ELECTRICITY<br>TOP-UP</h3>
             <p class="card-app-name">ECNU Ecard</p>
-            <p class="card-sub-desc">Easy recharges</p>
+            <p class="card-sub-desc">Easy recharges so you're never stuck</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
@@ -123,114 +121,86 @@
               <img src="images/dormlife-02.png" alt="Laundry">
             </div>
             <h3 class="card-headline">DOING YOUR<br>LAUNDRY<br>EASILY</h3>
-            <p class="card-app-name">Laundry Room</p>
-            <p class="card-sub-desc">1st floor corner</p>
+            <p class="card-app-name">Laundry</p>
+            <p class="card-sub-desc">Quick guide to washing machines</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
           <div class="guide-card" data-guide-id="GUIDE-013">
             <div class="card-polaroid">
-              <img src="images/dormlife-03.png" alt="Maintenance">
+              <img src="images/dormlife-03.png" alt="Repair">
             </div>
             <h3 class="card-headline">GETTING<br>THINGS<br>FIXED</h3>
-            <p class="card-app-name">Repair System</p>
-            <p class="card-sub-desc">Submit online requests</p>
+            <p class="card-app-name">Repair</p>
+            <p class="card-sub-desc">How to submit repair requests</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
       </section>
 
-      <!-- 04 RECOMMEND APPS 推荐模块 -->
-      <section class="recommend-apps-section" id="apps">
-        <div class="apps-header">
-          <h2 class="apps-title">RECOMMEND<br>APPS</h2>
-          <p class="apps-subtitle">Click any category to browse recommended apps for daily life in China.</p>
-        </div>
-
-        <div class="apps-categories-grid">
-          <div class="app-cat-card">
-            <div class="app-cat-thumb"><img src="images/food-delivery-thumb.jpg" alt="Food"></div>
-            <div class="app-cat-meta"><span>(01)</span><strong>Food & Delivery</strong></div>
-          </div>
-          <div class="app-cat-card">
-            <div class="app-cat-thumb"><img src="images/transit-maps-thumb.jpg" alt="Transit"></div>
-            <div class="app-cat-meta"><span>(02)</span><strong>Transit & Maps</strong></div>
-          </div>
-          <div class="app-cat-card">
-            <div class="app-cat-thumb"><img src="images/finance-payments-thumb.jpg" alt="Finance"></div>
-            <div class="app-cat-meta"><span>(03)</span><strong>Finance & Payments</strong></div>
-          </div>
-          <div class="app-cat-card">
-            <div class="app-cat-thumb"><img src="images/shopping-thumb.jpg" alt="Shopping"></div>
-            <div class="app-cat-meta"><span>(04)</span><strong>Shopping</strong></div>
-          </div>
-          <div class="app-cat-card">
-            <div class="app-cat-thumb"><img src="images/vpn-thumb.jpg" alt="VPN"></div>
-            <div class="app-cat-meta"><span>(05)</span><strong>VPN & Network</strong></div>
-          </div>
-        </div>
-
-        <!-- 详细 App 图标展示行 -->
-        <div class="apps-items-row">
-          <div class="app-icon-badge">
-            <img src="images/meituanicon.png" alt="MeiTuan">
-            <span>美团 MeiTuan</span>
-          </div>
-          <div class="app-icon-badge">
-            <img src="images/taobaoicon.png" alt="Taobao">
-            <span>淘宝 Taobao</span>
-          </div>
-          <div class="app-icon-badge">
-            <img src="images/JDIcon.png" alt="JD">
-            <span>京东 JD</span>
-          </div>
-          <div class="app-icon-badge">
-            <img src="images/cainiaoicon.png" alt="CaiNiao">
-            <span>菜鸟 CaiNiao</span>
-          </div>
-          <div class="app-icon-badge">
-            <img src="images/alipayicon.png" alt="Alipay">
-            <span>支付宝 Alipay</span>
-          </div>
-          <div class="app-icon-badge">
-            <img src="images/wechatpayicon.png" alt="WeChat">
-            <span>微信支付 WeChat</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 05 底部独立 DORM 12 FILE 入口 -->
-      <section class="dorm-file-section">
-        <div class="dorm-file-trigger" id="dormFileTrigger">
-          <img src="images/dorm12file.png" alt="Building 12 Folder" class="folder-graphic">
-          <div class="folder-prompt">
-            <span class="folder-title">Building 12</span>
-            <span class="folder-subtitle">Dormitory Information &amp; Rules →</span>
-          </div>
-        </div>
-      </section>
-
     </main>
+
+    <!-- RECOMMEND APPS 散落拍立得 (01) ~ (05) 可点击 -->
+    <section class="recommend-scattered-zone" id="apps">
+      <p class="scattered-intro">• Click any category below or browse the full ecosystem •</p>
+      
+      <div class="scattered-stage">
+        <div class="scattered-title-box">
+          <h2 class="scattered-heading">RECOMMEND<br>APPS</h2>
+        </div>
+
+        <div class="pin-card pin-01" data-app-cat="01">
+          <img src="images/food-delivery-thumb.jpg" alt="Food Delivery">
+          <span class="pin-tag">(01)<br>Food &amp; Delivery</span>
+        </div>
+
+        <div class="pin-card pin-02" data-app-cat="02">
+          <img src="images/transit-maps-thumb.jpg" alt="Transit Maps">
+          <span class="pin-tag">(02)<br>Transit &amp; Maps</span>
+        </div>
+
+        <div class="pin-card pin-03" data-app-cat="03">
+          <img src="images/finance-payments-thumb.jpg" alt="Finance">
+          <span class="pin-tag">(03)<br>Finance &amp; Payments</span>
+        </div>
+
+        <div class="pin-card pin-04" data-app-cat="04">
+          <img src="images/shopping-thumb.jpg" alt="Shopping">
+          <span class="pin-tag">(04)<br>Shopping</span>
+        </div>
+
+        <div class="pin-card pin-05" data-app-cat="05">
+          <img src="images/vpn-thumb.jpg" alt="VPN">
+          <span class="pin-tag">(05)<br>VPN &amp; Network</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 纯大地色独立底屏 -->
+    <footer class="earth-footer-plane">
+      <div class="folder-standalone" id="dormFileTrigger">
+        <img src="images/dorm12file.png" alt="Building 12" class="folder-big-img">
+        <div class="folder-click-pill">
+          <span>Building 12 Dormitory Information</span>
+          <span class="pill-arrow">→</span>
+        </div>
+      </div>
+    </footer>
   </div>
 
 
-  <!-- ================= 视图 2：指南步骤详情全屏页 (GUIDE DETAIL VIEW) ================= -->
+  <!-- ================= 视图 2：全屏步骤详情页 ================= -->
   <div id="guideDetailView" class="page-view">
     <div class="detail-page-container">
-      
-      <!-- 顶部返回导航 -->
       <nav class="detail-top-bar">
         <button class="btn-back-home" id="btnBackHome">← BACK TO GUIDES</button>
-        <div class="detail-guide-tag" id="detailGuideTag">CAMPUS SURVIVAL</div>
+        <div class="detail-guide-tag">CAMPUS SURVIVAL GUIDE</div>
       </nav>
 
-      <!-- 大标题 -->
       <h1 class="detail-main-title" id="detailMainTitle">HOW TO GET<br>MY PACKAGES?</h1>
 
-      <!-- 步骤与竖直滑动进度条容器 -->
       <div class="detail-scroll-layout">
-        
-        <!-- 左侧蓝色滑动灌浆进度条 -->
+        <!-- 竖向进度条 -->
         <div class="track-wrapper">
           <div class="track-node top-node"></div>
           <div class="track-line-bg">
@@ -239,46 +209,55 @@
           <div class="track-node bottom-node"></div>
         </div>
 
-        <!-- 右侧具体步骤流 -->
-        <div class="steps-flow-container" id="stepsFlowContainer">
-          <!-- 动态灌入具体步骤 -->
-        </div>
-
+        <!-- 步骤流 -->
+        <div class="steps-flow-container" id="stepsFlowContainer"></div>
       </div>
     </div>
   </div>
 
 
-  <!-- ================= 视图 3：BUILDING 12 沉浸式档案页 (DORM DOSSIER VIEW) ================= -->
+  <!-- ================= 视图 3：RECOMMEND APPS 分类详情页 (图 6 ~ 10) ================= -->
+  <div id="appGalleryView" class="page-view">
+    <div class="gallery-page-container">
+      <nav class="gallery-top-bar">
+        <button class="btn-back-home" id="btnBackFromGallery">← BACK TO HOME</button>
+      </nav>
+
+      <div class="gallery-center-content">
+        <div class="gallery-category-header">
+          <h1 class="gallery-cat-title" id="galleryCatTitle">01 FOOD &amp; DELIVERY</h1>
+          <div class="gallery-underline"></div>
+        </div>
+
+        <!-- App 徽标并排展台 -->
+        <div class="gallery-cards-grid" id="galleryCardsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= 视图 4：BUILDING 12 档案全屏页 ================= -->
   <div id="dormDossierView" class="page-view">
-    <div class="dossier-full-overlay">
-      <div class="dossier-canvas-frame">
-        <!-- page.png 作为底层背景板 -->
-        <img src="images/page.png" alt="Page Background" class="dossier-bg-img">
+    <div class="dossier-full-viewport">
+      <div class="dossier-sheet-wrapper">
+        <img src="images/page.png" alt="Dormitory Document" class="dossier-page-bg">
 
-        <!-- 悬浮内容区与翻页控制 -->
-        <div class="dossier-interactive-layer">
-          
-          <div class="dossier-header-bar">
-            <div class="dossier-pagination">
-              <button class="doc-arrow" id="dossierPrevBtn">‹</button>
+        <div class="dossier-content-surface">
+          <div class="dossier-toolstrip">
+            <div class="dossier-pager">
+              <button class="pager-btn" id="dossierPrevBtn">‹</button>
               <span id="dossierPageLabel">Page 1 / 3</span>
-              <button class="doc-arrow" id="dossierNextBtn">›</button>
+              <button class="pager-btn" id="dossierNextBtn">›</button>
             </div>
-            <button class="doc-close-btn" id="dossierCloseBtn">✕ CLOSE</button>
+            <button class="dossier-exit-btn" id="dossierCloseBtn">✕ CLOSE</button>
           </div>
 
-          <!-- 3 页内容渲染槽 -->
-          <div class="dossier-body-viewport" id="dossierBodyViewport">
-            <!-- 动态渲染 Page 1 / 2 / 3 -->
-          </div>
-
+          <div class="dossier-text-canvas" id="dossierBodyViewport"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 真实复制地址 Toast 提示 -->
   <div class="toast-popup" id="toastPopup">Address copied to clipboard!</div>
 
   <script src="script.js"></script>
