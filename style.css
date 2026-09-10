@@ -1,638 +1,649 @@
 /* ==========================================================================
-   1. 字体配置 (严格对应 fonts/ 目录)
+   1. 字体声明 (fonts/)
    ========================================================================== */
 @font-face {
   font-family: 'AlteHaasGroteskBold';
   src: url('fonts/AlteHaasGroteskBold.ttf') format('truetype');
   font-weight: 700;
-  font-style: normal;
 }
-
 @font-face {
   font-family: 'AlteHaasGroteskRegular';
   src: url('fonts/AlteHaasGroteskRegular.ttf') format('truetype');
   font-weight: 400;
-  font-style: normal;
 }
-
 @font-face {
   font-family: 'HeuvelGrotesk';
   src: url('fonts/HeuvelGroteskDEMO-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
 }
-
-@font-face {
-  font-family: 'ToxTypewriter';
-  src: url('fonts/Tox Typewriter.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
 @font-face {
   font-family: 'Minecraftia';
   src: url('fonts/Minecraftia-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+}
+@font-face {
+  font-family: 'ToxTypewriter';
+  src: url('fonts/Tox Typewriter.ttf') format('truetype');
 }
 
 /* ==========================================================================
-   2. 全局基础变量与布局重置
+   2. 全局重置与色彩
    ========================================================================== */
 :root {
-  --bg-sand: #F3EEE7;
+  --bg-sand: #FAF7F2;
   --bg-card: #FFFFFF;
-  --text-main: #1D1D1F;
-  --text-muted: #6E6E73;
-  --accent-folder: #7D7A58;
-  --paper-cream: #FCFAF6;
-  --color-border: #E5E1D8;
-  --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.04);
-  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --text-dark: #1F2024;
+  --text-muted: #7E828B;
+  --bar-blue: #7094AA;
+  --bar-rose: #C28B8B;
+  --bar-sage: #8DA184;
+  --accent-cyan: #3CB5C2;
 }
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background-color: var(--bg-sand);
-  color: var(--text-main);
-  font-family: 'AlteHaasGroteskRegular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.5;
-  padding-bottom: 120px;
+  color: var(--text-dark);
+  font-family: 'AlteHaasGroteskRegular', sans-serif;
   overflow-x: hidden;
 }
 
+/* 页面切换机制 */
+.page-view {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+}
+.page-view.active {
+  display: block;
+}
+
 /* ==========================================================================
-   3. 头部导航与卡片分类流
+   3. 主页：头部与搜索栏
    ========================================================================== */
 .site-header {
-  padding: 2.5rem 2rem 1.5rem;
-  max-width: 1280px;
+  max-width: 1380px;
   margin: 0 auto;
+  padding: 2rem 2.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
 }
-
-.logo-area {
-  font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  color: #333333;
-}
-
-.category-nav {
+.header-left {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
 }
-
-.cat-pill {
-  font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.75rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 20px;
-  background: rgba(0, 0, 0, 0.04);
-  color: #555;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.logo-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #E85A4F;
 }
-
-.cat-pill.active, .cat-pill:hover {
-  background: #000;
-  color: #FFF;
+.logo-title {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
 }
-
-.feed-section {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
+.badge-dorm {
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.65rem;
+  border: 1px solid #CCC;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.search-bar-wrap {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+}
+.search-bar-wrap input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.2rem;
+  border-radius: 30px;
+  border: 1px solid #DFD9CE;
+  background: #FFF;
+  font-size: 0.85rem;
+  outline: none;
+}
+.search-icon {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+.top-nav-links {
   display: flex;
-  flex-direction: column;
-  gap: 3.5rem;
+  gap: 1.5rem;
 }
-
-.category-group-header {
-  margin-bottom: 1.25rem;
-}
-
-.category-badge {
+.top-nav-links a {
   font-family: 'HeuvelGrotesk', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 0.4rem;
-  display: inline-block;
+  color: #555;
+  text-decoration: none;
 }
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.75rem;
-}
-
-.guide-card {
-  background: var(--bg-card);
-  border-radius: 18px;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-subtle);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 220px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.guide-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-float);
-}
-
-.card-title {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.25rem;
-  line-height: 1.2;
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.01em;
-}
-
-.card-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1.5rem;
-  border-top: 1px solid #F0EFEA;
-  padding-top: 0.75rem;
-}
-
-.card-platform-tag {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.65rem;
-  color: #888;
-}
-
-.card-action-arrow {
-  font-size: 1rem;
+.top-nav-links a:hover {
   color: #000;
 }
 
 /* ==========================================================================
-   4. 步骤指引滚动模态（支持 手机外壳 / 实拍相框）
+   4. 分类栏与带拍立得贴纸的卡片
    ========================================================================== */
-.guide-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 900;
-  padding: 2rem;
-}
-
-.guide-modal-overlay.open {
-  display: flex;
-}
-
-.guide-modal-container {
-  background: #FAF8F5;
-  width: 100%;
-  max-width: 960px;
-  max-height: 90vh;
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+.main-content {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 1rem 2.5rem 5rem;
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  gap: 4rem;
 }
-
-.modal-close-btn {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.5rem;
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  color: #666;
-  z-index: 10;
-}
-
-.guide-modal-header {
-  padding: 2.5rem 2.5rem 1.5rem;
-  border-bottom: 1px solid #EAE6DE;
-}
-
-.modal-guide-title {
+.category-bar {
+  border-radius: 8px;
+  padding: 0.9rem 1.75rem;
+  color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.75rem;
+  letter-spacing: 0.06em;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+.bar-blue { background-color: var(--bar-blue); }
+.bar-rose { background-color: var(--bar-rose); }
+.bar-sage { background-color: var(--bar-sage); }
+
+.cards-carousel {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+.guide-card {
+  flex: 0 0 320px;
+  background: var(--bg-card);
+  border-radius: 28px;
+  padding: 2.2rem 2rem 2rem;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid rgba(0,0,0,0.02);
+}
+.guide-card:hover {
+  transform: translateY(-6px);
+}
+
+/* 卡片右上角拍立得照片贴纸 */
+.card-polaroid {
+  position: absolute;
+  top: -15px;
+  right: 25px;
+  width: 90px;
+  height: 105px;
+  background: #FFF;
+  padding: 5px 5px 18px 5px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  border-radius: 4px;
+  transform: rotate(6deg);
+}
+.card-polaroid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.card-headline {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.65rem;
+  line-height: 1.15;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
   letter-spacing: -0.02em;
 }
-
-.modal-guide-desc {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
-}
-
-.guide-steps-scroll {
-  padding: 2rem 2.5rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-}
-
-.step-card-wrapper {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2.5rem;
-  align-items: center;
-}
-
-/* 手机壳形态 Mockup */
-.mockup-phone-frame {
-  width: 260px;
-  height: 520px;
-  background: #000;
-  border-radius: 36px;
-  padding: 10px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-}
-
-.phone-screen {
-  background: #FFF;
-  border-radius: 28px;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.phone-screen img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 相框形态 Photo Frame */
-.photo-frame-wrapper {
-  width: 260px;
-  height: 320px;
-  background: #FFF;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border: 1px solid #E5E2DA;
-}
-
-.photo-frame-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #EEE;
-}
-
-.photo-frame-inner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.step-details-side {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.step-number-tag {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.75rem;
-  color: #888;
-}
-
-.step-title-text {
+.card-app-name {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.3rem;
-}
-
-.step-instruction-text {
-  color: #444;
   font-size: 0.95rem;
-  line-height: 1.6;
+  margin-bottom: 0.2rem;
 }
-
-.step-tip-callout {
-  background: #F1ECE3;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+.card-sub-desc {
   font-size: 0.85rem;
-  color: #555;
-  border-left: 3px solid var(--accent-folder);
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+.btn-learn-more {
+  background: #99B2C2;
+  color: #FFF;
+  border: none;
+  font-family: 'HeuvelGrotesk', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.65rem 1.6rem;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 /* ==========================================================================
-   5. Building 12 拟物文件夹与 3 页档案抽取动效
+   5. RECOMMEND APPS 推荐模块
    ========================================================================== */
-.dossier-dock {
-  position: fixed;
-  bottom: 0;
-  left: 3rem;
-  z-index: 100;
-  cursor: pointer;
+.recommend-apps-section {
+  background: #FAF8F5;
+  border: 1px solid #ECE7DE;
+  border-radius: 24px;
+  padding: 3rem;
 }
-
-.folder-trigger {
-  width: 220px;
-  height: 90px;
-  background: var(--accent-folder);
-  border-radius: 16px 16px 0 0;
-  position: relative;
-  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
-  transform: translateY(35px);
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+.apps-title {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
-
-.folder-trigger:hover {
-  transform: translateY(15px);
-}
-
-.folder-tab {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-}
-
-.folder-label-text {
-  font-family: 'HeuvelGrotesk', sans-serif;
-  color: #FFF;
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
-}
-
-.polaroid-stamp {
-  width: 44px;
-  height: 48px;
-  background: #FFF;
-  padding: 3px;
-  border-radius: 3px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transform: rotate(-6deg);
-}
-
-.stamp-inner {
-  background: #DDD;
-  width: 100%;
-  height: 32px;
-}
-
-/* 展开后的全屏活页档案 */
-.dossier-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(5px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.dossier-modal-overlay.open {
-  display: flex;
-}
-
-.dossier-wrapper {
-  position: relative;
-  width: 90%;
-  max-width: 780px;
-  height: 820px;
-  perspective: 1000px;
-}
-
-.manila-folder-back {
-  position: absolute;
-  inset: -15px -15px -15px -15px;
-  background: var(--accent-folder);
-  border-radius: 20px;
-  z-index: 1;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-}
-
-.typewriter-paper {
-  position: relative;
-  background-color: var(--paper-cream);
-  background-image: radial-gradient(#E8E4DA 1px, transparent 1px);
-  background-size: 24px 24px;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  z-index: 2;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  padding: 3rem 3.5rem;
-  overflow-y: auto;
-  border-left: 6px solid #DDD8CE;
-  animation: pullOutPaper 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pullOutPaper {
-  0% { transform: translateY(80px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-.paper-header-tabs {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px dashed #D5D0C5;
-  padding-bottom: 1.25rem;
+.apps-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
   margin-bottom: 2rem;
 }
-
-.confidential-tag {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: #777;
+.apps-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
-
-.pagination-controls {
+.app-cat-card {
+  background: #FFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.app-cat-thumb img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+.app-cat-meta {
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.apps-items-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #DDD7CC;
+}
+.app-icon-badge {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  background: #FFF;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.app-icon-badge img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
 }
 
-.page-arrow {
-  background: none;
-  border: 1px solid #BBB;
-  border-radius: 4px;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-.page-indicator {
-  font-family: 'ToxTypewriter', serif;
-  font-size: 0.85rem;
-  color: #444;
-}
-
-.dossier-close-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #555;
-}
-
-/* 档案文字样式（严格运用 Tox Typewriter 与粗体标题） */
-.paper-section {
-  margin-bottom: 2.25rem;
-  position: relative;
-}
-
-.paper-sec-title {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.25rem;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  padding-bottom: 0.3rem;
-}
-
-.typewriter-body {
-  font-family: 'ToxTypewriter', serif;
-  font-size: 0.92rem;
-  line-height: 1.7;
-  color: #2D2D2D;
-}
-
-/* 真实复制小图标行 */
-.copyable-row {
+/* 宿舍档案入口 */
+.dorm-file-section {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.02);
-  transition: background 0.2s;
+  justify-content: center;
 }
-
-.copyable-row:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.copy-icon-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  opacity: 0.65;
-  transition: opacity 0.2s, transform 0.15s;
-  flex-shrink: 0;
-}
-
-.copy-icon-btn:hover {
-  opacity: 1;
-  transform: scale(1.12);
-}
-
-.copy-icon-svg {
-  width: 18px;
-  height: 18px;
-  stroke: #222;
-  fill: none;
-  stroke-width: 2;
-}
-
-/* 拍立得照片与回形夹排版 */
-.paper-section-with-photo {
-  display: grid;
-  grid-template-columns: 1fr 200px;
+.dorm-file-trigger {
+  display: flex;
+  align-items: center;
   gap: 1.5rem;
+  cursor: pointer;
+  background: #FFF;
+  padding: 1.5rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  border: 1px solid #ECE7DE;
+  transition: transform 0.2s;
+}
+.dorm-file-trigger:hover {
+  transform: translateY(-4px);
+}
+.folder-graphic {
+  width: 90px;
+  height: auto;
+}
+.folder-title {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.3rem;
+  display: block;
+}
+.folder-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   6. 视图 2：图 4 全屏步骤详情与竖向蓝色进度条灌浆
+   ========================================================================== */
+.detail-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2.5rem 8rem;
+}
+.detail-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.btn-back-home {
+  font-family: 'HeuvelGrotesk', sans-serif;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  font-weight: bold;
+}
+.detail-guide-tag {
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.detail-main-title {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 3.2rem;
+  line-height: 1.05;
+  margin-bottom: 3.5rem;
+}
+
+/* 步骤与滑动条双栏排版 */
+.detail-scroll-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 3.5rem;
+}
+
+/* 左侧蓝色贯通轨道与灌浆填充 */
+.track-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
-
-.polaroid-frame {
+.track-node {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #1D1D1F;
+  border-radius: 50%;
   background: #FFF;
-  padding: 8px 8px 24px 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  border: 1px solid #ECE7DE;
+  z-index: 5;
+}
+.track-line-bg {
+  width: 14px;
+  flex: 1;
+  background: #E5E1D8;
+  border-left: 3px solid #1D1D1F;
+  border-right: 3px solid #1D1D1F;
   position: relative;
 }
-
-.polaroid-img-box {
+.track-line-fill {
   width: 100%;
-  height: 140px;
-  background: #E8E8E8;
-  overflow: hidden;
+  height: 0%;
+  background: var(--accent-cyan);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: height 0.1s ease-out;
 }
 
-.polaroid-img-box img {
+/* 右侧具体步骤流 */
+.steps-flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+.step-section-header {
+  font-family: 'Minecraftia', monospace;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+.step-item-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* 手机壳 Mockup（圆角黑边外壳） */
+.mockup-phone-body {
+  width: 260px;
+  height: 520px;
+  background: #111;
+  border-radius: 40px;
+  padding: 10px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+}
+.mockup-screen {
+  width: 100%;
+  height: 100%;
+  background: #FFF;
+  border-radius: 30px;
+  overflow: hidden;
+}
+.mockup-screen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.paper-clip {
+/* 实拍图 Photo 相框容器 */
+.mockup-photo-body {
+  width: 280px;
+  height: 340px;
+  background: #FFF;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid #E0DCD3;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+.mockup-photo-body img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.step-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.step-circle-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1rem;
+}
+.step-instruction-heading {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+.step-detail-text {
+  color: #4A4D53;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   7. 视图 3：BUILDING 12 档案全屏页 (叠加在 page.png 之上)
+   ========================================================================== */
+.dossier-full-overlay {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+.dossier-canvas-frame {
+  position: relative;
+  width: 100%;
+  min-height: 920px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.dossier-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.dossier-interactive-layer {
+  position: relative;
+  z-index: 2;
+  padding: 3.5rem 4rem;
+}
+.dossier-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed rgba(0,0,0,0.15);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.dossier-pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'ToxTypewriter', serif;
+}
+.doc-arrow {
+  background: none;
+  border: 1px solid #666;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+.doc-close-btn {
+  font-family: 'HeuvelGrotesk', sans-serif;
+  background: none;
+  border: 1px solid #333;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* 档案文字与打字机排版 */
+.dorm-section-block {
+  margin-bottom: 2.5rem;
+}
+.dorm-sec-heading {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  padding-bottom: 0.35rem;
+}
+.dorm-typewriter-text {
+  font-family: 'ToxTypewriter', serif;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: #2A2A2A;
+}
+
+/* 真实可复制行 */
+.dossier-copyable-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.copy-trigger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.copy-trigger-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* 拍立得照片与银色回形夹 */
+.dossier-split-photo {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 2rem;
+  align-items: center;
+}
+.polaroid-holder {
+  background: #FFF;
+  padding: 10px 10px 24px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  position: relative;
+  border: 1px solid #ECE7DE;
+}
+.polaroid-holder img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+.metal-clip {
   position: absolute;
   top: -12px;
   left: 20px;
   width: 22px;
   height: 44px;
-  border: 3px solid #8A8D91;
+  border: 3px solid #8E9196;
   border-radius: 12px;
-  background: transparent;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.15);
-  pointer-events: none;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.2);
 }
 
-/* 轻提示 Toast */
-.toast-notice {
+/* 复制成功 Toast 弹窗 */
+.toast-popup {
   position: fixed;
-  bottom: 2rem;
+  bottom: 2.5rem;
   left: 50%;
-  transform: translateX(-50%) translateY(50px);
-  background: rgba(29, 29, 31, 0.9);
+  transform: translateX(-50%) translateY(40px);
+  background: rgba(30, 30, 32, 0.92);
   color: #FFF;
-  padding: 0.6rem 1.25rem;
+  padding: 0.65rem 1.4rem;
   border-radius: 30px;
   font-size: 0.85rem;
-  font-family: 'AlteHaasGroteskRegular', sans-serif;
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  z-index: 1500;
+  transition: all 0.25s ease;
+  z-index: 2000;
 }
-
-.toast-notice.show {
+.toast-popup.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
