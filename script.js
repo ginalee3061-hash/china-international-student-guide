@@ -21,10 +21,10 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-// 首页指南卡片（支持传入拍立得 App 图标贴纸）
-function guideCard(g, item, iconFilename){
-  return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
-    ${iconFilename ? `<div class="polaroid-badge"><img src="images/${iconFilename}" alt="App Icon"></div>` : ''}
+// 首页特色板块标准卡片
+function guideCard(g, item){
+  return `<a class="guide-card" href="#/guide/${g.guide_id}">
+    <div class="polaroid"><div class="polaroid-inner ${esc(clsFor(item))}">${esc(iconFor(item))}</div></div>
     <div class="eyebrow">${esc(itemName(item))}</div>
     <h3>${esc(titleOf(g))}</h3>
     <p>${esc(g.short_description || "")}</p>
@@ -32,7 +32,7 @@ function guideCard(g, item, iconFilename){
   </a>`;
 }
 
-// 推荐板块配置（直接匹配你确认好的 5 张图片名字）
+// 推荐分类板块配置（对应 5 张大图缩略图）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -42,9 +42,9 @@ const REC_SECTIONS = [
     pageTitle: "01 FOOD & DELIVERY",
     posClass: "pos-food",
     apps: [
-      { name: "美团", en: "MeiTuan", icon: "美团", cls: "meituan", id: "FOO-001" },
-      { name: "淘宝", en: "TaoBao", icon: "淘", cls: "taobao", id: "APP-003" },
-      { name: "京东", en: "JingDong", icon: "京", cls: "jingdong", id: "APP-004" }
+      { name: "美团", en: "MeiTuan", iconImg: "images/meituanicon.png", id: "FOO-001" },
+      { name: "淘宝", en: "TaoBao", iconImg: "images/taobaoicon.png", id: "APP-003" },
+      { name: "京东", en: "JingDong", iconImg: "images/taobaoicon.png", id: "APP-004" }
     ]
   },
   {
@@ -55,8 +55,8 @@ const REC_SECTIONS = [
     pageTitle: "02 TRANSIT & MAPS",
     posClass: "pos-transit",
     apps: [
-      { name: "高德地图", en: "Amap", icon: "✈", cls: "amap", id: "TRA-002" },
-      { name: "哈啰", en: "HaLou", icon: "哈啰", cls: "halou", id: "TRA-003" }
+      { name: "高德地图", en: "Amap", iconImg: "images/amapicon.png", id: "TRA-002" },
+      { name: "哈啰", en: "HaLou", iconImg: "images/haloicon.png", id: "TRA-003" }
     ]
   },
   {
@@ -67,9 +67,9 @@ const REC_SECTIONS = [
     pageTitle: "03 FINANCE & PAYMENTS",
     posClass: "pos-finance",
     apps: [
-      { name: "支付宝", en: "Alipay", icon: "支", cls: "alipay", id: "APP-001" },
-      { name: "工商银行", en: "ICBC", icon: "工", cls: "icbc", id: "ICB-001" },
-      { name: "微信", en: "WeChat Pay", icon: "✔", cls: "wechat", id: "APP-005" }
+      { name: "支付宝", en: "Alipay", iconImg: "images/alipayicon.png", id: "APP-001" },
+      { name: "工商银行", en: "ICBC", iconImg: "images/icbcicon.png", id: "ICB-001" },
+      { name: "微信", en: "WeChat Pay", iconImg: "images/wechatpayicon.png", id: "APP-005" }
     ]
   },
   {
@@ -80,9 +80,9 @@ const REC_SECTIONS = [
     pageTitle: "04 SHOPPING",
     posClass: "pos-shopping",
     apps: [
-      { name: "淘宝", en: "TaoBao", icon: "淘", cls: "taobao", id: "APP-003" },
-      { name: "京东", en: "JingDong", icon: "京", cls: "jingdong", id: "APP-004" },
-      { name: "菜鸟", en: "CaiNiao", icon: "菜", cls: "cainiao", id: "APP-002" }
+      { name: "淘宝", en: "TaoBao", iconImg: "images/taobaoicon.png", id: "APP-003" },
+      { name: "京东", en: "JingDong", iconImg: "images/taobaoicon.png", id: "APP-004" },
+      { name: "菜鸟", en: "CaiNiao", iconImg: "images/cainiaoicon.png", id: "APP-002" }
     ]
   },
   {
@@ -93,8 +93,8 @@ const REC_SECTIONS = [
     pageTitle: "05 VPN",
     posClass: "pos-vpn",
     apps: [
-      { name: "Skuracat", en: "", icon: "🐱", cls: "skuracat", id: "VPN-001" },
-      { name: "IKuuu", en: "", icon: "S", cls: "ikuuu", id: "VPN-002" }
+      { name: "Skuracat", en: "", iconImg: "images/sakuracaticon.png", id: "VPN-001" },
+      { name: "IKuuu", en: "", iconImg: "images/ikuuuicon.png", id: "VPN-002" }
     ]
   }
 ];
@@ -139,11 +139,8 @@ window.openLightbox = function(src){
 };
 
 async function home(){
-  const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
-  const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
-
-  const packageFoodConfigs = [{ id: "GUIDE-010", icon: "meituanicon.png" }, { id: "GUIDE-008", icon: "taobaoicon.png" }];
-  const moneyPaymentConfigs = [{ id: "GUIDE-011", icon: "icbcicon.png" }, { id: "GUIDE-009", icon: "icbcicon.png" }, { id: "GUIDE-001", icon: "alipayicon.png" }];
+  const [items, guides, groups] = await Promise.all([getData("items"), getData("guides"), getData("featured-groups")]);
+  const published = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
   app.innerHTML = `<section class="hero"><div class="container hero-inner">
     <div>
@@ -163,27 +160,21 @@ async function home(){
     </div>
   </div></section>
 
-  <div class="home-sections">
-    <section class="section-band blue">
+  <!-- 恢复原有的特色板块 -->
+  <div class="home-sections">${groups.map(group => {
+    const gs = group.guide_ids.map(id => published.get(id)).filter(Boolean).slice(0, 3);
+    const its = (group.item_ids || []).map(id => by(items, "item_id", id)).filter(Boolean);
+    return `<section class="section-band ${group.theme}">
       <div class="container">
-        <div class="section-tab"><span>01 PACKAGES & FOOD</span><span class="arrow">→</span></div>
-        <p class="section-note">How to order food and retrieve your parcel deliveries around campus.</p>
+        <div class="section-tab"><span>${group.number} ${esc(group.title)}</span><span class="arrow">→</span></div>
+        <p class="section-note">${esc(group.description)}</p>
         <div class="card-grid">
-          ${packageFoodConfigs.map(c => { const g = pub.get(c.id); return g ? guideCard(g, by(items, "item_id", g.item_id), c.icon) : ''; }).join("")}
+          ${gs.map(g => guideCard(g, by(items, "item_id", g.item_id))).join("")}
+          ${!gs.length ? its.map(appCard).join("") : ""}
         </div>
       </div>
-    </section>
-
-    <section class="section-band rose">
-      <div class="container">
-        <div class="section-tab"><span>02 MONEY & PAYMENTS</span><span class="arrow">→</span></div>
-        <p class="section-note">Bank debit card, dorm electricity top-ups, and Alipay setup.</p>
-        <div class="card-grid">
-          ${moneyPaymentConfigs.map(c => { const g = pub.get(c.id); return g ? guideCard(g, by(items, "item_id", g.item_id), c.icon) : ''; }).join("")}
-        </div>
-      </div>
-    </section>
-  </div>
+    </section>`;
+  }).join("")}</div>
 
   <section class="rec-board-section">
     <div class="container">
@@ -199,7 +190,7 @@ async function home(){
     </div>
   </section>
 
-  <!-- 主页下方的 Building 12 档案袋封面 (对应 dorm12file.jpg) -->
+  <!-- Building 12 档案袋封面入口 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -215,6 +206,7 @@ async function home(){
   });
 }
 
+// 分类详情页（支持渲染你提供的真实 App 大图标）
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -223,16 +215,21 @@ function recCategoryPage(catId){
     <div class="category-title-underline">${sec.pageTitle}</div>
     <div class="category-cards-row">
       ${sec.apps.map(app => `
-        <a href="#/item/${app.id}" class="square-app-card">
-          <div class="square-app-icon ${app.cls}">${app.icon}</div>
-          <div class="square-app-footer"><div class="square-app-name">${app.name} <small style="color:#666">${app.en}</small></div><span class="square-app-arrow">▶</span></div>
+        <a href="#/item/${app.id}" class="square-app-card" style="display:flex;flex-direction:column;border:2px solid var(--line);background:var(--white);">
+          <div style="width:100%;aspect-ratio:1;display:grid;place-items:center;background:#fff;overflow:hidden;">
+            <img src="${app.iconImg}" alt="${app.name}" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="square-app-footer" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-top:2px solid var(--line);background:var(--white);">
+            <div class="square-app-name" style="font-size:15px;font-weight:800;">${app.name} <small style="color:#666">${app.en}</small></div>
+            <span class="square-app-arrow" style="font-size:14px;">▶</span>
+          </div>
         </a>
       `).join("")}
     </div>
   </div></section>`;
 }
 
-/* 采用 page.jpg 信纸底纹 + 顶部标签页切换 + 拍立得照片装饰的新版档案册页面 */
+/* 档案册页面 */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-file-page">
     <div class="container" style="margin-bottom:20px; width:min(900px, 100%);">
@@ -240,19 +237,16 @@ async function dormBookPage(){
     </div>
 
     <div class="dorm-folder-container">
-      <!-- 顶部小标签页切换栏 -->
       <div class="dorm-tabs-bar">
         <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
         <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
         <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
       </div>
 
-      <!-- Tab 1: Address & Rules -->
       <div class="dorm-tab-panel active" id="dorm-tab-0">
         <div class="dorm-sheet-sec">
           <h2>DORMITORY ADDRESS</h2>
           <div class="dorm-sheet-line"></div>
-          
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div style="display:flex;gap:10px;">
               <span>★</span>
@@ -266,7 +260,6 @@ async function dormBookPage(){
               <svg viewBox="0 0 24 24" width="16" height="16" stroke="#2b2b2b" stroke-width="1.8" fill="none"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
             </button>
           </div>
-
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:16px;">
             <div style="display:flex;gap:10px;">
               <span>★</span>
@@ -280,13 +273,11 @@ async function dormBookPage(){
             </button>
           </div>
         </div>
-
         <div class="dorm-sheet-sec" style="margin-top:25px;">
           <h2>ACCESS HOURS</h2>
           <div class="dorm-sheet-line"></div>
           <div class="dorm-sheet-item"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
         </div>
-
         <div class="dorm-sheet-sec" style="margin-top:25px;">
           <h2>QUIET HOURS</h2>
           <div class="dorm-sheet-line"></div>
@@ -294,7 +285,6 @@ async function dormBookPage(){
         </div>
       </div>
 
-      <!-- Tab 2: Kitchen & Garbage -->
       <div class="dorm-tab-panel" id="dorm-tab-1">
         <div class="dorm-sheet-sec">
           <h2>SHARED KITCHEN</h2>
@@ -303,40 +293,28 @@ async function dormBookPage(){
           <div class="dorm-sheet-item"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div>
           <div class="dorm-sheet-item"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div>
         </div>
-
         <div class="dorm-sheet-sec" style="margin-top:25px;">
           <h2>GARBAGE DISPOSAL</h2>
           <div class="dorm-sheet-line"></div>
           <div class="dorm-sheet-item"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div>
           <div class="dorm-sheet-item"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div>
         </div>
-
-        <!-- 右下角拍立得照片装饰（可点击放大） -->
-        <div class="polaroid-frame" onclick="openLightbox('images/14.png')">
-          <img src="images/14.png" alt="Kitchen" onerror="this.src='images/14.jpg'">
-        </div>
+        <div class="polaroid-frame" onclick="openLightbox('images/14.png')"><img src="images/14.png" alt="Kitchen" onerror="this.src='images/14.jpg'"></div>
       </div>
 
-      <!-- Tab 3: Water & Facilities -->
       <div class="dorm-tab-panel" id="dorm-tab-2">
         <div class="dorm-sheet-sec">
           <h2>DRINKING WATER DISPENSERS</h2>
           <div class="dorm-sheet-line"></div>
           <div class="dorm-sheet-item"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div>
         </div>
-
         <div class="dorm-sheet-sec" style="margin-top:25px;">
           <h2>HAIR DRYER ROOMS</h2>
           <div class="dorm-sheet-line"></div>
           <div class="dorm-sheet-item"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div>
         </div>
-
-        <!-- 右下角拍立得照片装饰（可点击放大） -->
-        <div class="polaroid-frame" onclick="openLightbox('images/15.png')">
-          <img src="images/15.png" alt="Facilities" onerror="this.src='images/15.jpg'">
-        </div>
+        <div class="polaroid-frame" onclick="openLightbox('images/15.png')"><img src="images/15.png" alt="Facilities" onerror="this.src='images/15.jpg'"></div>
       </div>
-
     </div>
   </section>`;
 
@@ -376,7 +354,7 @@ async function itemPage(id){
         <div class="info-box"><h3>Start here</h3><p>Pick one of the guides below instead of learning the whole app at once.</p></div>
       </div>
     </div>
-    <section class="related"><h2>RELATED GUIDES</h2><div class="related-grid">${related.map(g => guideCard(g, item, null)).join("") || '<div class="empty" style="padding:20px;border-radius:12px;background:#eee;">More guides coming soon.</div>'}</div></section>
+    <section class="related"><h2>RELATED GUIDES</h2><div class="related-grid">${related.map(g => guideCard(g, item)).join("") || '<div class="empty" style="padding:20px;border-radius:12px;background:#eee;">More guides coming soon.</div>'}</div></section>
   </div></section>`;
 }
 
@@ -389,14 +367,7 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  let relatedGuides = [];
-  const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
-
-  if (isAlipayRelated) {
-    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && (x.item_id === "APP-001" || x.guide_id === "GUIDE-004"));
-  } else {
-    relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
-  }
+  let relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
 
   app.innerHTML = `<section class="page"><div class="container">
     ${crumbs([{label:"Home", href:"/"}, ...(item ? [{label: itemName(item), href:`/item/${item.item_id}`}] : []), {label: titleOf(g)}])}
@@ -443,7 +414,7 @@ async function guidePage(id){
           <section class="related">
             <h2>YOU MAY ALSO NEED</h2>
             <div class="related-grid">
-              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id), null)).join("")}
+              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id))).join("")}
             </div>
           </section>
         ` : ''}
