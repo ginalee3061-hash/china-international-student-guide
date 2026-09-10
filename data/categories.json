@@ -1,20 +1,20 @@
 [
   {
     "category_id": "CAT-001",
-    "category_name": "campus",
-    "display_name": "Campus",
-    "description": "Campus facilities and services",
+    "category_name": "dorm1",
+    "display_name": "Dorm facilities",
+    "description": "Dorm facilities",
     "icon": "🏫",
     "order": 1.0,
     "status": "active"
   },
   {
     "category_id": "CAT-002",
-    "category_name": "dorm",
-    "display_name": "Dorm",
+    "category_name": "dorm2",
+    "display_name": "Dorm info",
     "description": "Dormitory information and rules",
     "icon": "🏠",
-    "order": 1.0,
+    "order": 3.0,
     "status": "active"
   },
   {
@@ -23,7 +23,7 @@
     "display_name": "Apps",
     "description": "Useful apps for life in China",
     "icon": "📱",
-    "order": 1.0,
+    "order": 4.0,
     "status": "active"
   },
   {
@@ -32,7 +32,7 @@
     "display_name": "Money & Payment",
     "description": "Payments, banking and money",
     "icon": "💳",
-    "order": 1.0,
+    "order": 5.0,
     "status": "active"
   },
   {
@@ -41,7 +41,7 @@
     "display_name": "Transportation",
     "description": "Getting around China",
     "icon": "🚇",
-    "order": 1.0,
+    "order": 6.0,
     "status": "active"
   },
   {
@@ -50,7 +50,7 @@
     "display_name": "Internet",
     "description": "Wi-Fi, VPN and internet access",
     "icon": "🌐",
-    "order": 1.0,
+    "order": 7.0,
     "status": "active"
   },
   {
@@ -59,7 +59,7 @@
     "display_name": "Communication",
     "description": "Phone, messaging and communication",
     "icon": "💬",
-    "order": 1.0,
+    "order": 8.0,
     "status": "active"
   },
   {
@@ -68,7 +68,7 @@
     "display_name": "Food",
     "description": "Food delivery, restaurants and supermarkets",
     "icon": "🍜",
-    "order": 1.0,
+    "order": 9.0,
     "status": "active"
   },
   {
@@ -77,7 +77,7 @@
     "display_name": "Help & Emergency",
     "description": "Problems, contacts and emergency information",
     "icon": "🆘",
-    "order": 1.0,
+    "order": 10.0,
     "status": "active"
   }
 ]
