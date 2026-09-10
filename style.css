@@ -620,460 +620,13 @@ button,input{font:inherit}
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }/* ========================================================
-   Dorm 真实画报层叠样式（完美契合 13, 14, 15 设计稿）
-======================================================== */
-.dorm-book-page {
-  background: #55523d;
-  min-height: 100vh;
-  padding: 40px 20px 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dorm-canvas-wrap {
-  position: relative;
-  width: min(940px, 100%);
-  aspect-ratio: 1 / 1;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
-  border-radius: 4px;
-  overflow: hidden;
-  user-select: none;
-}
-
-/* 底层完整背景图 */
-.dorm-bg-art {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* 覆盖层：允许文字框选与点击交互 */
-.dorm-overlay-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  user-select: text;
-}
-
-/* 图 2: 地址文字透明高亮遮罩与复制按钮 */
-.hotspot-copy-btn {
-  position: absolute;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, transform 0.15s;
-}
-.hotspot-copy-btn:hover {
-  background: rgba(0, 0, 0, 0.08);
-  transform: scale(1.15);
-}
-.hotspot-copy-btn svg {
-  width: 19px;
-  height: 19px;
-  stroke: #2b2b2b;
-  stroke-width: 1.8;
-  fill: none;
-}
-
-/* 文字定位区（平时透明不遮挡底图字，框选时高亮可选） */
-.selectable-text-block {
-  position: absolute;
-  font-family: "Courier New", Courier, monospace;
-  color: transparent;
-  line-height: 1.45;
-  cursor: text;
-}
-.selectable-text-block::selection {
-  background: rgba(84, 196, 201, 0.45);
-  color: #111;
-}
-
-/* 拍立得照片热区 */
-.dorm-photo-slot {
-  position: absolute;
-  cursor: zoom-in;
-  transition: transform 0.2s;
-  z-index: 3;
-}
-.dorm-photo-slot:hover {
-  transform: scale(1.04);
-}
-
-/* 气泡提示 Toast */
-.copy-toast {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--ink);
-  color: var(--white);
-  padding: 10px 22px;
-  border-radius: 99px;
-  font-size: 13px;
-  font-weight: 800;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 10000;
-}
-.copy-toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* 全屏大图 Lightbox 灯箱 */
-.lightbox-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(15, 15, 15, 0.88);
-  backdrop-filter: blur(8px);
-  justify-content: center;
-  align-items: center;
-  cursor: zoom-out;
-}
-.lightbox-modal.active {
-  display: flex;
-}
-.lightbox-modal img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-/* ========================================================
-   基于 page.jpg 底图的真实排版与文字叠加热区样式
-======================================================== */
-.dorm-native-page {
-  background: #55523d;
-  min-height: 100vh;
-  padding: 40px 20px 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dorm-canvas-box {
-  position: relative;
-  width: min(900px, 100%);
-  aspect-ratio: 1.25 / 1;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* 底层直接铺上你的 page.jpg */
-.dorm-bg-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* 顶层文字与交互层 */
-.dorm-interactive-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  font-family: "Courier New", Courier, monospace;
-}
-
-/* 顶部小标签切换栏 */
-.dorm-top-tabs {
-  position: absolute;
-  top: 25px;
-  left: 140px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-.dorm-tab-pill {
-  background: #f0ebd8;
-  color: #4a4532;
-  border: 1.5px solid #484534;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-weight: 800;
-  font-size: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: all .15s ease;
-}
-.dorm-tab-pill:hover, .dorm-tab-pill.active {
-  background: #58553f;
-  color: #fffdfa;
-  transform: translateY(-2px);
-}
-
-/* 面板内容容器 */
-.dorm-panel-content {
-  display: none;
-  position: absolute;
-  inset: 0;
-  padding: 95px 90px 40px 140px;
-}
-.dorm-panel-content.active {
-  display: block;
-}
-
-/* 文字排版与线条风格复刻图2 */
-.sheet-sec-title {
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: #1a1a1a;
-  text-transform: uppercase;
-  margin: 0 0 6px 0;
-}
-.sheet-sec-line {
-  height: 1px;
-  background: #d0c9b6;
-  margin-bottom: 16px;
-}
-.sheet-row-item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 14px;
-  font-size: 13.5px;
-  line-height: 1.45;
-  color: #2b2b2b;
-}
-.sheet-row-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-/* 复制小图标按钮样式 */
-.sheet-copy-icon-btn {
-  background: transparent;
-  border: 1px solid #b5af9e;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, border-color 0.15s;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.sheet-copy-icon-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: #333;
-}
-.sheet-copy-icon-btn svg {
-  width: 15px;
-  height: 15px;
-  stroke: #2b2b2b;
-  stroke-width: 1.8;
-  fill: none;
-}
-/* ========================================================
-   1. 首页拍立得相框与悬停动效样式
-   ======================================================== */
-.polaroid-badge-right {
-  position: absolute;
-  right: -15px;
-  top: -42px;
-  width: 105px;
-  background: #f7f3e8;
-  padding: 8px 8px 22px 8px;
-  box-shadow: 0 12px 25px rgba(0,0,0,0.18);
-  transform: rotate(6deg);
-  z-index: 5;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  pointer-events: none;
-}
-.guide-card:hover .polaroid-badge-right {
-  transform: scale(1.08) rotate(3deg);
-  box-shadow: 0 16px 30px rgba(0,0,0,0.25);
-}
-.polaroid-badge-right img {
-  width: 100%;
-  aspect-ratio: 1;
-  display: block;
-  object-fit: cover;
-  border-radius: 2px;
-}
 
 /* ========================================================
-   2. 完美响应式的纸张内页布局 (针对 page.jpg 适配)
-   ======================================================== */
-.dorm-native-page {
-  background: #55523d;
-  min-height: 100vh;
-  padding: 30px 15px 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dorm-canvas-box {
-  position: relative;
-  width: min(920px, 100%);
-  aspect-ratio: 1.25 / 1;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #fcf8ee;
-}
-
-/* 核心背景适配：靠左固定，高宽比不变形，手机端自动裁剪右侧多余部分 */
-.dorm-bg-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: left center; /* 手机端优先保住左侧，裁剪右侧 */
-  pointer-events: none;
-  z-index: 1;
-}
-
-.dorm-interactive-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  font-family: "Courier New", Courier, monospace;
-}
-
-/* 顶部精巧小标签栏 */
-.dorm-top-tabs {
-  position: absolute;
-  top: 22px;
-  left: 110px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-.dorm-tab-pill {
-  background: #f0ebd8;
-  color: #4a4532;
-  border: 1.5px solid #484534;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-weight: 800;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all .15s ease;
-}
-.dorm-tab-pill:hover, .dorm-tab-pill.active {
-  background: #58553f;
-  color: #fffdfa;
-}
-
-/* 纸张内部面板内容，严格控制内边距，文字不超出边缘 */
-.dorm-panel-content {
-  display: none;
-  position: absolute;
-  inset: 0;
-  padding: 85px 70px 30px 110px;
-}
-.dorm-panel-content.active {
-  display: block;
-}
-
-.sheet-sec-title {
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: #1a1a1a;
-  text-transform: uppercase;
-  margin: 0 0 5px 0;
-}
-.sheet-sec-line {
-  height: 1px;
-  background: #d0c9b6;
-  margin-bottom: 12px;
-}
-.sheet-row-item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #2b2b2b;
-}
-.sheet-row-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.sheet-copy-icon-btn {
-  background: transparent;
-  border: 1px solid #b5af9e;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
-.sheet-copy-icon-btn:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
-.sheet-copy-icon-btn svg {
-  width: 14px;
-  height: 14px;
-  stroke: #2b2b2b;
-  stroke-width: 1.8;
-  fill: none;
-}
-
-/* 手机端媒体查询：动态缩减左侧边距，腾出书写空间 */
-@media (max-width: 768px) {
-  .dorm-panel-content {
-    padding: 75px 35px 20px 65px;
-  }
-  .dorm-top-tabs {
-    left: 65px;
-    top: 15px;
-  }
-  .sheet-sec-title {
-    font-size: 15px;
-  }
-  .sheet-row-item {
-    font-size: 11.5px;
-  }
-}
-/* ========================================================
-   1. 字体注册 (AlteHaasGrotesk, HeuvelGrotesk, Minecraftia, Tox Typewriter)
+   1. 自定义字体引入 (AlteHaasGrotesk, Minecraftia, ToxTypewriter)
 ======================================================== */
 @font-face {
   font-family: 'AlteHaasGrotesk';
   src: url('fonts/AlteHaasGroteskRegular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'HeuvelGrotesk';
-  src: url('fonts/HeuvelGroteskDEMO-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -1094,170 +647,204 @@ button,input{font:inherit}
 }
 
 /* ========================================================
-   2. 字体与元素精准绑定
+   2. 基础变量与全局重置
 ======================================================== */
-/* 卡片大标题 (图中的红圈部分)：对应 AlteHaasGrotesk */
-.guide-card h3 {
-  font-family: 'AlteHaasGrotesk', sans-serif !important;
+:root {
+  --bg: #fdfbf7;
+  --ink: #1f1f1f;
+  --line: #d8d3c5;
+  --cyan: #54c4c9;
+  --white: #ffffff;
 }
 
-/* 板块标签与大标题：对应 HeuvelGrotesk */
-.section-tab, 
-.rec-board-label .title, 
-.hero h1, 
-.guide-title h1, 
-.sheet-sec-title,
-h2 {
-  font-family: 'HeuvelGrotesk', sans-serif !important;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* 像素风装饰：对应 Minecraftia */
-.step-kicker, 
-.breadcrumbs, 
-.pill, 
-.eyebrow {
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'ToxTypewriter', monospace;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 页面容器 */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 面包屑导航 */
+.breadcrumbs {
   font-family: 'Minecraftia', monospace !important;
-  font-size: 11px !important;
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
-
-/* 宿舍页面正文：对应 Tox Typewriter */
-.sheet-row-item, 
-.dorm-tab-panel, 
-.exact-text-block, 
-.dorm-sheet-item {
-  font-family: 'ToxTypewriter', monospace !important;
+.breadcrumbs a:hover {
+  text-decoration: underline;
 }
 
 /* ========================================================
-   3. 纸张底图响应式样式 (page.jpg 靠左固定)
+   3. 首页与 Hero 板块样式
 ======================================================== */
-.dorm-native-page {
-  background: #55523d;
-  min-height: 100vh;
-  padding: 30px 15px 60px;
-  display: flex;
-  flex-direction: column;
+.hero {
+  padding: 80px 0 50px;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
   align-items: center;
 }
-
-.dorm-canvas-box {
-  position: relative;
-  width: min(920px, 100%);
-  aspect-ratio: 1.25 / 1;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #fcf8ee;
-}
-
-.dorm-bg-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: left center; /* 手机端优先保住左侧，裁剪右侧多余部分 */
-  pointer-events: none;
-  z-index: 1;
-}
-
-.dorm-interactive-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-.dorm-top-tabs {
-  position: absolute;
-  top: 22px;
-  left: 110px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-.dorm-tab-pill {
-  background: #f0ebd8;
-  color: #4a4532;
-  border: 1.5px solid #484534;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-weight: 800;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all .15s ease;
+.hero-kicker {
   font-family: 'Minecraftia', monospace;
-}
-.dorm-tab-pill:hover, .dorm-tab-pill.active {
-  background: #58553f;
-  color: #fffdfa;
-}
-
-.dorm-panel-content {
-  display: none;
-  position: absolute;
-  inset: 0;
-  padding: 85px 70px 30px 110px;
-}
-.dorm-panel-content.active {
-  display: block;
-}
-
-.sheet-sec-line {
-  height: 1px;
-  background: #d0c9b6;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #666;
   margin-bottom: 12px;
 }
-.sheet-row-item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #2b2b2b;
+.hero h1 {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 48px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -0.03em;
 }
-.sheet-row-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+.hero-copy {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 28px;
+  max-width: 500px;
 }
-
-.sheet-copy-icon-btn {
-  background: transparent;
-  border: 1px solid #b5af9e;
-  border-radius: 4px;
+.hero-search {
+  display: flex;
+  gap: 10px;
+  max-width: 450px;
+}
+.hero-search input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  font-family: inherit;
+  font-size: 14px;
+}
+.btn {
+  background: var(--ink);
+  color: var(--white);
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
   cursor: pointer;
-  padding: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-  flex-shrink: 0;
+  transition: opacity .15s;
 }
-.sheet-copy-icon-btn:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
-.sheet-copy-icon-btn svg {
-  width: 14px;
-  height: 14px;
-  stroke: #2b2b2b;
-  stroke-width: 1.8;
-  fill: none;
+.btn:hover {
+  opacity: 0.85;
 }
 
-@media (max-width: 768px) {
-  .dorm-panel-content {
-    padding: 75px 35px 20px 65px;
-  }
-  .dorm-top-tabs {
-    left: 65px;
-    top: 15px;
-  }
+/* 右侧 Hero Art 装饰卡片 */
+.hero-art {
+  position: relative;
 }
+.hero-card {
+  background: var(--white);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+.hero-card .eyebrow {
+  font-family: 'Minecraftia', monospace;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.hero-card h2 {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+.mini-line {
+  height: 2px;
+  background: var(--line);
+  margin-bottom: 10px;
+  border-radius: 2px;
+}
+.hero-note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+
 /* ========================================================
-   1. 首页拍立得相框与悬停动效样式
+   4. 首页特色板块与卡片样式 (含右上角拍立得相框小图)
    ======================================================== */
+.home-sections {
+  margin: 40px 0;
+}
+.section-band {
+  padding: 40px 0;
+  border-top: 2px solid var(--line);
+}
+.section-tab {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--white);
+  padding: 8px 18px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.section-note {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* 核心卡片样式 */
+.guide-card {
+  background: var(--white);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+}
+.guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+}
+
+/* 卡片右上角拍立得相框小图 */
 .polaroid-badge-right {
   position: absolute;
   right: -12px;
@@ -1283,9 +870,121 @@ h2 {
   border-radius: 2px;
 }
 
+.guide-card .eyebrow {
+  font-family: 'Minecraftia', monospace;
+  font-size: 11px;
+  color: #777;
+  margin-bottom: 8px;
+}
+.guide-card h3 {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 22px;
+  line-height: 1.25;
+  margin-bottom: 10px;
+  color: #111;
+}
+.guide-card p {
+  font-size: 13.5px;
+  color: #555;
+  margin-bottom: 20px;
+}
+.card-spacer {
+  flex: 1;
+}
+.learn {
+  font-family: 'Minecraftia', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
 /* ========================================================
-   2. 完美响应式的纸张内页布局 (针对 page.png 适配)
+   5. Recommended Apps 拼贴看板样式
    ======================================================== */
+.rec-board-section {
+  padding: 50px 0;
+}
+.rec-board-header {
+  margin-bottom: 25px;
+}
+.rec-board-header h2 {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 26px;
+}
+.rec-board-canvas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.rec-board-item {
+  background: var(--white);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform .2s;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  display: block;
+}
+.rec-board-item:hover {
+  transform: translateY(-3px);
+}
+.rec-board-img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  background: #eee;
+}
+.rec-board-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.rec-board-item:hover .rec-board-img img {
+  transform: scale(1.05);
+}
+.rec-board-label {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--line);
+}
+.rec-board-label .num {
+  font-family: 'Minecraftia', monospace;
+  font-size: 11px;
+  color: #777;
+}
+.rec-board-label .title {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 档案袋横幅入口 */
+.folder-banner-section {
+  padding: 30px 0 60px;
+}
+.folder-card {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  transition: transform .2s;
+}
+.folder-card:hover {
+  transform: scale(1.01);
+}
+.folder-inner-img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+
+/* ========================================================
+   6. 宿舍详情页 (基于 page.png 响应式底图 + 拍立得相框)
+======================================================== */
 .dorm-native-page {
   background: #55523d;
   min-height: 100vh;
@@ -1297,7 +996,7 @@ h2 {
 
 .dorm-canvas-box {
   position: relative;
-  width: min(920px, 100%);
+  width: min(940px, 100%);
   aspect-ratio: 1.25 / 1;
   box-shadow: 0 30px 70px rgba(0,0,0,0.4);
   border-radius: 12px;
@@ -1305,7 +1004,7 @@ h2 {
   background-color: #fcf8ee;
 }
 
-/* 核心响应式适配：靠左固定，高宽比不变形，手机端自动裁剪右侧多余部分 */
+/* 背景图靠左固定，高宽比不变形，保证手机端完美裁剪 */
 .dorm-bg-img {
   position: absolute;
   inset: 0;
@@ -1323,98 +1022,297 @@ h2 {
   z-index: 2;
 }
 
-/* 顶部精巧小标签栏 */
+/* 顶部 3 个点击切换小标签 (使用 Minecraftia 字体) */
 .dorm-top-tabs {
   position: absolute;
-  top: 22px;
-  left: 110px;
+  top: 25px;
+  left: 120px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   z-index: 10;
 }
 .dorm-tab-pill {
   background: #f0ebd8;
   color: #4a4532;
   border: 1.5px solid #484534;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 6px;
   font-weight: 800;
-  font-size: 11px;
+  font-family: 'Minecraftia', monospace !important;
+  font-size: 11px !important;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: all .15s ease;
-  font-family: 'Minecraftia', monospace;
 }
 .dorm-tab-pill:hover, .dorm-tab-pill.active {
   background: #58553f;
   color: #fffdfa;
+  transform: translateY(-2px);
 }
 
-/* 纸张内部面板内容，严格控制内边距，文字不超出边缘 */
+/* 面板内容区域 */
 .dorm-panel-content {
   display: none;
   position: absolute;
   inset: 0;
-  padding: 85px 70px 30px 110px;
+  padding: 90px 80px 35px 120px;
 }
 .dorm-panel-content.active {
   display: block;
 }
 
+/* 模块大标题统一使用 AlteHaasGrotesk */
 .sheet-sec-title {
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+  font-family: 'AlteHaasGrotesk', sans-serif !important;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: -0.02em;
   color: #1a1a1a;
   text-transform: uppercase;
-  margin: 0 0 5px 0;
-  font-family: 'HeuvelGrotesk', sans-serif;
+  margin: 0 0 6px 0;
 }
 .sheet-sec-line {
-  height: 1px;
+  height: 1.5px;
   background: #d0c9b6;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
+
 .sheet-row-item {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  line-height: 1.4;
+  gap: 15px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  line-height: 1.45;
   color: #2b2b2b;
-  font-family: 'ToxTypewriter', monospace;
 }
 .sheet-row-left {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
 }
 
+/* 一键复制 Icon 按钮 */
 .sheet-copy-icon-btn {
   background: transparent;
   border: 1px solid #b5af9e;
   border-radius: 4px;
   cursor: pointer;
-  padding: 3px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 .sheet-copy-icon-btn:hover {
   background: rgba(0, 0, 0, 0.08);
+  border-color: #333;
 }
 .sheet-copy-icon-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   stroke: #2b2b2b;
   stroke-width: 1.8;
   fill: none;
 }
 
+/* 拍立得照片相框样式（带有旋转和悬停放大效果） */
+.polaroid-photo-frame {
+  position: absolute;
+  width: 160px;
+  background: #fff;
+  padding: 8px 8px 24px 8px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+  cursor: zoom-in;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: 5;
+}
+.polaroid-photo-frame:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+}
+.polaroid-photo-frame img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* ========================================================
+   7. 步骤详情与全屏灯箱 (Lightbox)
+   ======================================================== */
+.guide-layout {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 40px;
+  margin-top: 30px;
+}
+.progress-rail {
+  position: relative;
+}
+.progress-track {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+.progress-fill {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  width: 2px;
+  background: var(--ink);
+  height: 0%;
+  transition: height 0.1s;
+}
+.progress-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+.progress-item {
+  display: flex;
+  align-items: center;
+}
+.progress-dot {
+  width: 26px;
+  height: 26px;
+  background: var(--white);
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  transition: all .2s;
+}
+.progress-item.active .progress-dot {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+.progress-item.done .progress-dot {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  color: var(--ink);
+}
+
+.guide-step {
+  margin-bottom: 80px;
+}
+.step-kicker {
+  font-family: 'Minecraftia', monospace;
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 15px;
+}
+.step-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 30px;
+  align-items: start;
+}
+.step-copy h2 {
+  font-family: 'AlteHaasGrotesk', sans-serif;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.step-copy p {
+  font-size: 14.5px;
+  color: #444;
+  margin-bottom: 15px;
+}
+.step-note {
+  background: #f4efe1;
+  border-left: 3px solid var(--ink);
+  padding: 12px 16px;
+  font-size: 13px;
+  border-radius: 0 8px 8px 0;
+}
+
+.iphone-mockup {
+  background: #111;
+  border-radius: 36px;
+  padding: 12px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+.iphone-screen {
+  background: #fff;
+  border-radius: 26px;
+  overflow: hidden;
+  aspect-ratio: 9/19;
+  display: grid;
+  place-items: center;
+}
+.iphone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 全屏灯箱 (Lightbox) */
+.lightbox-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 15, 15, 0.88);
+  backdrop-filter: blur(8px);
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.lightbox-modal.active {
+  display: flex;
+}
+.lightbox-modal img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* 复制成功 Toast */
+.copy-toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--white);
+  padding: 10px 22px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10000;
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 响应式适配 */
 @media (max-width: 768px) {
+  .hero-inner, .step-grid {
+    grid-template-columns: 1fr;
+  }
+  .guide-layout {
+    grid-template-columns: 1fr;
+  }
+  .progress-rail {
+    display: none;
+  }
   .dorm-panel-content {
     padding: 75px 35px 20px 65px;
   }
