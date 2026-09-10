@@ -435,3 +435,69 @@ button,input{font:inherit}
   .rec-board-canvas{min-height:auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;position:static}
   .rec-board-item{position:static}
 }
+/* ========================================================
+   Dorm 地址栏复制图标与文字高亮交互
+======================================================== */
+.dorm-address-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  position: relative;
+}
+
+.dorm-address-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+/* 仿图 2 的线框双页 Copy 图标按钮 */
+.dorm-copy-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.65;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+.dorm-copy-icon-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
+}
+.dorm-copy-icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  fill: none;
+}
+
+/* 复制成功后的轻量浮动气泡提示 (Toast) */
+.copy-toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--white);
+  padding: 10px 22px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
