@@ -1,508 +1,293 @@
-const app = document.querySelector("#app");
-
-const DATA = {};
-async function getData(name){
-  if(!DATA[name]){
-    const res = await fetch(`data/${name}.json?` + Date.now(), {cache:"no-store"});
-    if(!res.ok) throw new Error(`Cannot load ${name}.json`);
-    DATA[name] = await res.json();
-  }
-  return DATA[name];
-}
-
-const by = (arr, key, val) => arr.find(x => String(x[key]) === String(val));
-const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const titleOf = g => g?.title || g?.guide_title || "Guide";
-const itemName = i => i?._display_name || i?.name || "";
-const iconFor = i => i?.visual?.logo_text || "✦";
-const clsFor = i => i?.visual?.logo_class || "default";
-
-function crumbs(parts){
-  return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
-}
-
-function guideCard(g, item, polaroidImg){
-  return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
-    ${polaroidImg ? `
-      <div class="polaroid-badge-right">
-        <img src="images/${polaroidImg}" alt="Polaroid photo" onerror="this.parentElement.style.display='none';">
-      </div>` : ''}
-    <div class="eyebrow">${esc(itemName(item))}</div>
-    <h3>${esc(titleOf(g))}</h3>
-    <p>${esc(g.short_description || "")}</p>
-    <div class="card-spacer"></div><span class="learn">LEARN MORE</span>
-  </a>`;
-}
-
-const REC_SECTIONS = [
-  {
-    id: "food-delivery",
-    num: "(01)",
-    title: "Food & Delivery",
-    image: "images/food-delivery-thumb.jpg",
-    pageTitle: "01 FOOD & DELIVERY",
-    posClass: "pos-food",
-    apps: [
-      { name: "美团", en: "MeiTuan", iconImg: "images/meituanicon.png", id: "FOO-001" },
-      { name: "淘宝", en: "TaoBao", iconImg: "images/taobaoicon.png", id: "APP-003" },
-      { name: "京东", en: "JingDong", iconImg: "images/taobaoicon.png", id: "APP-004" }
-    ]
-  },
-  {
-    id: "transit-maps",
-    num: "(02)",
-    title: "Transit & Maps",
-    image: "images/transit-maps-thumb.jpg",
-    pageTitle: "02 TRANSIT & MAPS",
-    posClass: "pos-transit",
-    apps: [
-      { name: "高德地图", en: "Amap", iconImg: "images/amapicon.png", id: "TRA-002" },
-      { name: "哈啰", en: "HaLou", iconImg: "images/haloicon.png", id: "TRA-003" }
-    ]
-  },
-  {
-    id: "finance-payments",
-    num: "(03)",
-    title: "Finance & Payments",
-    image: "images/finance-payments-thumb.jpg",
-    pageTitle: "03 FINANCE & PAYMENTS",
-    posClass: "pos-finance",
-    apps: [
-      { name: "支付宝", en: "Alipay", iconImg: "images/alipayicon.png", id: "APP-001" },
-      { name: "工商银行", en: "ICBC", iconImg: "images/icbcicon.png", id: "ICB-001" },
-      { name: "微信", en: "WeChat Pay", iconImg: "images/wechatpayicon.png", id: "APP-005" }
-    ]
-  },
-  {
-    id: "shopping",
-    num: "(04)",
-    title: "Shopping",
-    image: "images/shopping-thumb.jpg",
-    pageTitle: "04 SHOPPING",
-    posClass: "pos-shopping",
-    apps: [
-      { name: "淘宝", en: "TaoBao", iconImg: "images/taobaoicon.png", id: "APP-003" },
-      { name: "京东", en: "JingDong", iconImg: "images/taobaoicon.png", id: "APP-004" },
-      { name: "菜鸟", en: "CaiNiao", iconImg: "images/cainiaoicon.png", id: "APP-002" }
-    ]
-  },
-  {
-    id: "vpn",
-    num: "(05)",
-    title: "VPN",
-    image: "images/vpn-thumb.jpg",
-    pageTitle: "05 VPN",
-    posClass: "pos-vpn",
-    apps: [
-      { name: "Skuracat", en: "", iconImg: "images/sakuracaticon.png", id: "VPN-001" },
-      { name: "IKuuu", en: "", iconImg: "images/ikuuuicon.png", id: "VPN-002" }
-    ]
-  }
-];
-
-window.selectAndCopyText = function(elementId, textToCopy) {
-  const el = document.getElementById(elementId);
-  if (el) {
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    showToast("Address copied & selected!");
-  }).catch(() => {
-    document.execCommand('copy');
-    showToast("Address copied & selected!");
-  });
-};
-
-function showToast(msg) {
-  let toast = document.getElementById("copy-toast");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "copy-toast";
-    toast.className = "copy-toast";
-    document.body.appendChild(toast);
-  }
-  toast.innerText = msg;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2000);
-}
-
-window.openLightbox = function(src){
-  const modal = document.getElementById("lightbox-modal");
-  const img = document.getElementById("lightbox-img");
-  if(modal && img && src){
-    img.src = src;
-    modal.classList.add("active");
-  }
-};
-
-async function home(){
-  const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
-  const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
-
-  const packageFoodConfigs = [
-    { id: "GUIDE-010", photo: "packagesandfood-01.png" }, 
-    { id: "GUIDE-008", photo: "packagesandfood-02.png" }
-  ];
-  const moneyPaymentConfigs = [
-    { id: "GUIDE-011", photo: "moneyandpayments-01.png" }, 
-    { id: "GUIDE-009", photo: "moneyandpayments-02.png" }, 
-    { id: "GUIDE-001", photo: "moneyandpayments-03.png" }
-  ];
-
-  const packageGuides = packageFoodConfigs.map(c => ({ g: pub.get(c.id), photo: c.photo })).filter(x => x.g);
-  const moneyGuides = moneyPaymentConfigs.map(c => ({ g: pub.get(c.id), photo: c.photo })).filter(x => x.g);
-
-  app.innerHTML = `<section class="hero"><div class="container hero-inner">
-    <div>
-      <div class="hero-kicker">THE INTERNATIONAL STUDENT GUIDE</div>
-      <h1>WHAT DO I NEED<br>TO FIGURE OUT?</h1>
-      <p class="hero-copy">A visual, practical guide to the everyday systems you suddenly need to understand after arriving in China.</p>
-      <form class="hero-search" id="hero-search"><input name="q" placeholder="Try “packages”, “Alipay”, “metro”"><button class="btn">SEARCH</button></form>
-    </div>
-    <div class="hero-art">
-      <div class="hero-card">
-        <div class="eyebrow">START HERE</div>
-        <h2>ONE TASK<br>AT A TIME.</h2>
-        <div class="mini-line"></div><div class="mini-line"></div>
-        <p>Choose a topic, pick what you need, and follow the steps.</p>
-      </div>
-      <div class="hero-note">No university jargon. Just what to do.</div>
-    </div>
-  </div></section>
-
-  <div class="home-sections">
-    <section class="section-band blue">
-      <div class="container">
-        <div class="section-tab"><span>01 PACKAGES & FOOD</span><span class="arrow">→</span></div>
-        <p class="section-note">How to order food and retrieve your parcel deliveries around campus.</p>
-        <div class="card-grid">
-          ${packageGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.photo)).join("")}
-        </div>
-      </div>
-    </section>
-
-    <section class="section-band rose">
-      <div class="container">
-        <div class="section-tab"><span>02 MONEY & PAYMENTS</span><span class="arrow">→</span></div>
-        <p class="section-note">Bank debit card, dorm electricity top-ups, and Alipay setup.</p>
-        <div class="card-grid">
-          ${moneyGuides.map(itemObj => guideCard(itemObj.g, by(items, "item_id", itemObj.g.item_id), itemObj.photo)).join("")}
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section class="rec-board-section">
-    <div class="container">
-      <div class="rec-board-header"><h2>RECOMMENDED APPS</h2></div>
-      <div class="rec-board-canvas">
-        ${REC_SECTIONS.map(sec => `
-          <a href="#/rec-category/${sec.id}" class="rec-board-item ${sec.posClass}">
-            <div class="rec-board-img"><img src="${sec.image}" alt="${sec.title}"></div>
-            <div class="rec-board-label"><span class="num">${sec.num}</span><span class="title">${sec.title}</span></div>
-          </a>
-        `).join("")}
-      </div>
-    </div>
-  </section>
-
-  <section class="folder-banner-section">
-    <div class="container">
-      <a href="#/dorm-book" class="folder-card">
-        <img src="images/dorm12file.png" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='images/dorm12file.jpg'">
-      </a>
-    </div>
-  </section>`;
-
-  document.querySelector("#hero-search").addEventListener("submit", e => {
-    e.preventDefault();
-    const q = new FormData(e.currentTarget).get("q") || "";
-    location.hash = `/search?q=${encodeURIComponent(q)}`;
-  });
-}
-
-function recCategoryPage(catId){
-  const sec = REC_SECTIONS.find(s => s.id === catId);
-  if(!sec) return notFound();
-  app.innerHTML = `<section class="category-view"><div class="container">
-    ${crumbs([{label:"Home", href:"/"}, {label: sec.title}])}
-    <div class="category-title-underline">${sec.pageTitle}</div>
-    <div class="category-cards-row">
-      ${sec.apps.map(app => `
-        <a href="#/item/${app.id}" class="square-app-card" style="display:flex;flex-direction:column;border:2px solid var(--line);background:var(--white);">
-          <div style="width:100%;aspect-ratio:1;display:grid;place-items:center;background:#fff;overflow:hidden;">
-            <img src="${app.iconImg}" alt="${app.name}" style="width:100%;height:100%;object-fit:cover;">
-          </div>
-          <div class="square-app-footer" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-top:2px solid var(--line);background:var(--white);">
-            <div class="square-app-name" style="font-size:15px;font-weight:800;">${app.name} <small style="color:#666">${app.en}</small></div>
-            <span class="square-app-arrow" style="font-size:14px;">▶</span>
-          </div>
-        </a>
-      `).join("")}
-    </div>
-  </div></section>`;
-}
-
-/* 使用 page.png 作为底图，并完美排版文字、复制 Icon 与带旋转的拍立得相框照片 */
-async function dormBookPage(){
-  app.innerHTML = `<section class="dorm-native-page">
-    <div class="container" style="margin-bottom:12px; width:min(940px, 100%);">
-      ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
-    </div>
-
-    <div class="dorm-canvas-box">
-      <!-- 纸张底图使用 page.png -->
-      <img src="images/page.png" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/page.jpg'">
-
-      <div class="dorm-interactive-layer">
-        
-        <!-- 顶部图3样式的 3 个点击标签 -->
-        <div class="dorm-top-tabs">
-          <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
-          <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
-          <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
-        </div>
-
-        <!-- Tab 01: Address & Rules (对应图2排版) -->
-        <div class="dorm-panel-content active" id="dorm-panel-0">
-          <div class="sheet-sec-title">DORMITORY ADDRESS</div>
-          <div class="sheet-sec-line"></div>
-          
-          <div class="sheet-row-item">
-            <div class="sheet-row-left">
-              <span>★</span>
-              <div id="addr-en" style="cursor:text;">
-                Building 12, Graduate Student Apartments<br>
-                East China Normal University (Minhang Campus)<br>
-                No. 5800 Hongmei South Road, Minhang District, Shanghai
-              </div>
-            </div>
-            <button class="sheet-copy-icon-btn" title="Copy" onclick="selectAndCopyText('addr-en', 'Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai')">
-              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-            </button>
-          </div>
-
-          <div class="sheet-row-item" style="margin-top:10px;">
-            <div class="sheet-row-left">
-              <span>★</span>
-              <div id="addr-cn" style="cursor:text;">
-                上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
-                研究生公寓12号楼
-              </div>
-            </div>
-            <button class="sheet-copy-icon-btn" title="复制" onclick="selectAndCopyText('addr-cn', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
-              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-            </button>
-          </div>
-
-          <div class="sheet-sec-title" style="margin-top:28px;">ACCESS HOURS</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item">
-            <div class="sheet-row-left"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
-          </div>
-
-          <div class="sheet-sec-title" style="margin-top:28px;">QUIET HOURS</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item">
-            <div class="sheet-row-left"><span>★</span><div>Please keep noise to a minimum after 23:00. Do not use washing machines or hair dryers after 23:00.</div></div>
-          </div>
-        </div>
-
-        <!-- Tab 02: Kitchen & Garbage (对应图4排版与旋转拍立得相框) -->
-        <div class="dorm-panel-content" id="dorm-panel-1">
-          <div class="sheet-sec-title">SHARED KITCHEN</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Please clean the kitchen after use.</div></div></div>
-          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div></div>
-          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div></div>
-
-          <div class="sheet-sec-title" style="margin-top:25px;">GARBAGE DISPOSAL</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item" style="width:55%; margin-left:40%;"><div class="sheet-row-left"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div></div>
-          <div class="sheet-row-item" style="width:55%; margin-left:40%;"><div class="sheet-row-left"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div></div>
-
-          <!-- 右上角与左下角的旋转拍立得相框照片 (可点击放大) -->
-          <div class="polaroid-photo-frame" style="right:8%; top:15%; transform: rotate(5deg);" onclick="openLightbox('images/14.png')">
-            <img src="images/14.png" alt="Kitchen" onerror="this.src='images/14.jpg'">
-          </div>
-          <div class="polaroid-photo-frame" style="left:10%; bottom:8%; transform: rotate(-6deg);" onclick="openLightbox('images/14.png')">
-            <img src="images/14.png" alt="Garbage" onerror="this.src='images/14.jpg'">
-          </div>
-        </div>
-
-        <!-- Tab 03: Water & Facilities (对应图5排版与旋转拍立得相框) -->
-        <div class="dorm-panel-content" id="dorm-panel-2">
-          <div class="sheet-sec-title">DRINKING WATER DISPENSERS</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item" style="width:50%; margin-left:42%;"><div class="sheet-row-left"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div></div>
-
-          <div class="sheet-sec-title" style="margin-top:35px;">HAIR DRYER ROOMS</div>
-          <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item" style="width:50%;"><div class="sheet-row-left"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div></div>
-
-          <!-- 饮水机与吹风机房的旋转拍立得相框照片 (可点击放大) -->
-          <div class="polaroid-photo-frame" style="left:12%; top:18%; transform: rotate(-4deg);" onclick="openLightbox('images/15.png')">
-            <img src="images/15.png" alt="Water Dispenser" onerror="this.src='images/15.jpg'">
-          </div>
-          <div class="polaroid-photo-frame" style="right:10%; bottom:10%; transform: rotate(4deg);" onclick="openLightbox('images/15.png')">
-            <img src="images/15.png" alt="Hair Dryer Room" onerror="this.src='images/15.jpg'">
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>`;
-
-  window.switchDormTab = function(index) {
-    document.querySelectorAll('.dorm-tab-pill').forEach((btn, idx) => {
-      btn.classList.toggle('active', idx === index);
-    });
-    document.querySelectorAll('.dorm-panel-content').forEach((panel, idx) => {
-      panel.classList.toggle('active', idx === index);
-    });
+/**
+ * Campus Life Survival Guide - Dynamic Loader & Interactive Engine
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  // 全局数据状态缓存
+  const state = {
+    categories: [],
+    guides: [],
+    steps: [],
+    screenshots: [],
+    dormInfo: null,
+    currentDormPage: 1
   };
-}
 
-async function itemPage(id){
-  const [items, guides, details] = await Promise.all([getData("items"), getData("guides"), getData("app-details")]);
-  const item = by(items, "item_id", id) || { name: id, chinese_name: id, _display_name: id, visual: { logo_class: "default", logo_text: "✦" } };
-  const detail = details[id] || { tagline:"Useful everyday tool", intro: item._display_description || item.short_description || "Everything you need to know about using this app.", recommended:"Use this for daily campus life.", related_guide_ids: guides.filter(g => g.item_id === id && g.status === "published").map(g => g.guide_id) };
-  const related = (detail.related_guide_ids || []).map(gid => by(guides, "guide_id", gid)).filter(Boolean).filter(g => g.status === "published");
+  // DOM 元素引用
+  const feedSection = document.getElementById('feedSection');
+  const categoryNav = document.getElementById('categoryNav');
+  const guideModal = document.getElementById('guideModal');
+  const closeGuideModal = document.getElementById('closeGuideModal');
+  const modalGuideTitle = document.getElementById('modalGuideTitle');
+  const modalGuideDesc = document.getElementById('modalGuideDesc');
+  const modalStepsScroll = document.getElementById('modalStepsScroll');
 
-  app.innerHTML = `<section class="page"><div class="container">
-    ${crumbs([{label:"Home", href:"/"}, {label: itemName(item)}])}
-    <div class="app-showcase">
-      <div class="app-showcase-grid">
-        <div class="app-logo ${esc(clsFor(item))}">${esc(iconFor(item))}</div>
-        <div class="app-meta">
-          <div class="eyebrow">${esc(item.chinese_name || item.item_type || "app")}</div>
-          <h2>${esc(itemName(item))}</h2>
-          <p><strong>${esc(detail.tagline)}</strong><br>${esc(detail.intro)}</p>
-          <div class="pill-row">
-            ${item.platform ? `<span class="pill">${esc(item.platform)}</span>` : ""}
-            ${item.importance ? `<span class="pill">${esc(item.importance)}</span>` : ""}
-          </div>
-        </div>
-      </div>
-      <div class="app-sections">
-        <div class="info-box"><h3>When you’ll use it</h3><p>${esc(detail.recommended)}</p></div>
-        <div class="info-box"><h3>Start here</h3><p>Pick one of the guides below instead of learning the whole app at once.</p></div>
-      </div>
-    </div>
-    <section class="related"><h2>RELATED GUIDES</h2><div class="related-grid">${related.map(g => guideCard(g, item)).join("") || '<div class="empty" style="padding:20px;border-radius:12px;background:#eee;">More guides coming soon.</div>'}</div></section>
-  </div></section>`;
-}
+  const folderTrigger = document.getElementById('folderTrigger');
+  const dossierModal = document.getElementById('dossierModal');
+  const closeDossierBtn = document.getElementById('closeDossierBtn');
+  const prevPageBtn = document.getElementById('prevPageBtn');
+  const nextPageBtn = document.getElementById('nextPageBtn');
+  const pageIndicator = document.getElementById('pageIndicator');
+  const paperPageContent = document.getElementById('paperPageContent');
+  const toastNotice = document.getElementById('toastNotice');
 
-async function guidePage(id){
-  const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
-  const g = by(guides, "guide_id", id); if(!g) return notFound();
-  const item = by(items, "item_id", g.item_id);
-  const guideSteps = steps.filter(s => String(s.guide_id) === String(id)).sort((a, b) => (a.step_number || 0) - (b.step_number || 0));
-  
-  const shotMapById = new Map(shots.map(s => [s.image_id, s]));
-  const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
+  // 初始化加载所有本地 JSON 数据
+  async function initApp() {
+    try {
+      const [cats, guides, steps, screenshots, dorm] = await Promise.all([
+        fetch('data/categories.json').then(r => r.json()),
+        fetch('data/guides.json').then(r => r.json()),
+        fetch('data/steps.json').then(r => r.json()),
+        fetch('data/screenshots.json').then(r => r.json()),
+        fetch('data/dorm-info.json').then(r => r.json())
+      ]);
 
-  let relatedGuides = guides.filter(x => x.status === "published" && x.guide_id !== id && x.item_id === g.item_id);
+      state.categories = cats;
+      state.guides = guides;
+      state.steps = steps;
+      state.screenshots = screenshots;
+      state.dormInfo = dorm;
 
-  app.innerHTML = `<section class="page"><div class="container">
-    ${crumbs([{label:"Home", href:"/"}, ...(item ? [{label: itemName(item), href:`/item/${item.item_id}`}] : []), {label: titleOf(g)}])}
-    <div class="guide-layout">
-      <aside class="progress-rail"><div class="progress-track"></div><div class="progress-fill" id="progress-fill"></div><div class="progress-list">
-        ${guideSteps.map((s, i) => `<div class="progress-item" data-step="${i}"><div class="progress-dot">${i+1}</div></div>`).join("")}
-      </div></aside>
-      <article>
-        <header class="guide-title">
-          <div class="eyebrow">${esc(itemName(item))}</div>
-          <h1>${esc(titleOf(g))}</h1>
-          <p>${esc(g.user_question || g.short_description || "")}</p>
-        </header>
-        <div class="guide-steps">
-          ${guideSteps.map((s, i) => {
-            let sh = shotMapById.get(s.image_id);
-            if(!sh && s.step_id) {
-              sh = shotMapByStep.get(s.step_id) || shotMapByStep.get(s.step_id.replace('-S', '-S0'));
-            }
-            let rawFilename = sh?.filename || (s.image_path ? s.image_path.split('/').pop() : '');
-            if (!rawFilename && id === "GUIDE-010") rawFilename = `meituan-order-${String(i+1).padStart(2, '0')}.png`;
-            else if (!rawFilename && id === "GUIDE-013") rawFilename = `maintenance-${String(i+1).padStart(2, '0')}.png`;
+      renderCategoryNav();
+      renderFeed();
+    } catch (err) {
+      console.error('Failed to load JSON files:', err);
+    }
+  }
 
-            let primarySrc = rawFilename ? `images/${rawFilename}` : '';
-            return `<section class="guide-step" data-step-section="${i}">
-              <div class="step-kicker">[ ${String(i+1).padStart(2, "0")} ] ${esc(s.step_title || "STEP")}</div>
-              <div class="step-grid">
-                <div class="step-copy">
-                  <h2>${esc(s.step_title || "")}</h2>
-                  <p>${esc(s.instruction || "")}</p>
-                  ${s.tip ? `<div class="step-note">💡 ${esc(s.tip)}</div>` : ""}
-                </div>
-                <div class="iphone-mockup" style="cursor:zoom-in;" onclick="${primarySrc ? `openLightbox('${primarySrc}')` : ''}">
-                  <div class="iphone-screen">
-                    ${primarySrc ? `<img src="${primarySrc}" alt="Step" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;step-image placeholder&quot;>图片未找到：${rawFilename}</div>'">` : `<div class="step-image placeholder">未绑定图片</div>`}
-                  </div>
-                </div>
-              </div>
-            </section>`;
-          }).join("")}
-        </div>
-        
-        ${relatedGuides.length > 0 ? `
-          <section class="related">
-            <h2>YOU MAY ALSO NEED</h2>
-            <div class="related-grid">
-              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id), null)).join("")}
-            </div>
-          </section>
-        ` : ''}
-      </article>
-    </div>
-  </section>
-  
-  <div class="lightbox-modal" id="lightbox-modal" onclick="this.classList.remove('active')">
-    <img id="lightbox-img" src="" alt="Enlarged screenshot">
-  </div>`;
+  // 渲染顶部药丸导航
+  function renderCategoryNav() {
+    categoryNav.innerHTML = `<button class="cat-pill active" data-cat="all">ALL</button>`;
+    state.categories.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-pill';
+      btn.textContent = c.display_name;
+      btn.dataset.cat = c.category_id;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderFeed(c.category_id);
+      });
+      categoryNav.appendChild(btn);
+    });
 
-  const fill = document.querySelector("#progress-fill");
-  const sections = [...document.querySelectorAll("[data-step-section]")];
-  const dots = [...document.querySelectorAll(".progress-item")];
-
-  function guideProgress(){
-    const top = window.scrollY;
-    const start = document.querySelector(".guide-title")?.offsetTop || 0;
-    const end = document.body.scrollHeight;
-    const pct = Math.max(0, Math.min(100, ((top - start) / (end - start)) * 100));
-    if(fill) fill.style.height = `${pct}%`;
-    sections.forEach((sec, i) => {
-      const r = sec.getBoundingClientRect();
-      const active = r.top < window.innerHeight * .45 && r.bottom > 0;
-      dots[i]?.classList.toggle("active", active);
-      if(r.bottom < window.innerHeight * .45) dots[i]?.classList.add("done");
-      else dots[i]?.classList.remove("done");
+    categoryNav.querySelector('[data-cat="all"]').addEventListener('click', (e) => {
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      renderFeed('all');
     });
   }
-  window.addEventListener("scroll", guideProgress, {passive:true});
-  guideProgress();
-}
 
-function notFound(){
-  app.innerHTML = `<section class="page"><div class="container"><div class="step-note"><strong>Page not found.</strong><br><a href="#/">Back to home</a></div></div></section>`;
-}
+  // 渲染卡片信息流
+  function renderFeed(filterCatId = 'all') {
+    feedSection.innerHTML = '';
 
-async function route(){
-  const raw = location.hash.replace(/^#/, "") || "/";
-  const [path, query] = raw.split("?"); 
-  window.scrollTo(0, 0);
-  if(path === "/") return home();
-  if(path === "/dorm-book") return dormBookPage();
-  const parts = path.split("/");
-  if(parts[1] === "rec-category") return recCategoryPage(parts[2]);
-  if(parts[1] === "item") return itemPage(parts[2]);
-  if(parts[1] === "guide") return guidePage(parts[2]);
-  return notFound();
-}
+    const targetCats = filterCatId === 'all' 
+      ? state.categories 
+      : state.categories.filter(c => c.category_id === filterCatId);
 
-window.addEventListener("hashchange", () => route().catch(err => { console.error(err); notFound(); }));
-route().catch(err => { console.error(err); notFound(); });
+    targetCats.forEach(cat => {
+      const catGuides = state.guides.filter(g => g.category_id === cat.category_id && g.status === 'published');
+      if (catGuides.length === 0) return;
+
+      const groupContainer = document.createElement('div');
+      groupContainer.className = 'category-group';
+
+      groupContainer.innerHTML = `
+        <div class="category-group-header">
+          <span class="category-badge">${cat.display_name}</span>
+        </div>
+        <div class="cards-grid"></div>
+      `;
+
+      const grid = groupContainer.querySelector('.cards-grid');
+
+      catGuides.forEach(guide => {
+        const card = document.createElement('div');
+        card.className = 'guide-card';
+        card.innerHTML = `
+          <div>
+            <h3 class="card-title">${guide.guide_title}</h3>
+            <p class="card-desc">${guide.short_description || ''}</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-platform-tag">${guide.platform}</span>
+            <span class="card-action-arrow">→</span>
+          </div>
+        `;
+        card.addEventListener('click', () => openGuideDetails(guide));
+        grid.appendChild(card);
+      });
+
+      feedSection.appendChild(groupContainer);
+    });
+  }
+
+  // 打开步骤指引弹窗（自动匹配 手机外壳 / 实拍相框）
+  function openGuideDetails(guide) {
+    modalGuideTitle.textContent = guide.guide_title;
+    modalGuideDesc.textContent = guide.short_description || '';
+    modalStepsScroll.innerHTML = '';
+
+    const steps = state.steps
+      .filter(s => s.guide_id === guide.guide_id)
+      .sort((a, b) => a.step_number - b.step_number);
+
+    steps.forEach(step => {
+      const screenshot = state.screenshots.find(ss => ss.image_id === step.image_id);
+      const isPhoto = (step.display_frame === 'photo') || (screenshot && screenshot.display_frame === 'photo');
+      const imgSrc = screenshot ? `images/${screenshot.filename}` : 'images/placeholder.png';
+
+      const stepRow = document.createElement('div');
+      stepRow.className = 'step-card-wrapper';
+
+      // 视觉容器渲染：手机外壳 vs 相框
+      const mediaHtml = isPhoto ? `
+        <div class="photo-frame-wrapper">
+          <div class="photo-frame-inner">
+            <img src="${imgSrc}" alt="${step.step_title}" onerror="this.style.background='#CCC'">
+          </div>
+        </div>
+      ` : `
+        <div class="mockup-phone-frame">
+          <div class="phone-screen">
+            <img src="${imgSrc}" alt="${step.step_title}" onerror="this.style.background='#E0E0E0'">
+          </div>
+        </div>
+      `;
+
+      stepRow.innerHTML = `
+        ${mediaHtml}
+        <div class="step-details-side">
+          <span class="step-number-tag">STEP ${String(step.step_number).padStart(2, '0')}</span>
+          <h4 class="step-title-text">${step.step_title}</h4>
+          <p class="step-instruction-text">${step.instruction || ''}</p>
+          ${step.tip ? `<div class="step-tip-callout">Tip: ${step.tip}</div>` : ''}
+        </div>
+      `;
+
+      modalStepsScroll.appendChild(stepRow);
+    });
+
+    guideModal.classList.add('open');
+  }
+
+  closeGuideModal.addEventListener('click', () => {
+    guideModal.classList.remove('open');
+  });
+
+  // ==========================================================================
+  // Building 12 拟物档案渲染与真实剪贴板复制引擎
+  // ==========================================================================
+  folderTrigger.addEventListener('click', () => {
+    state.currentDormPage = 1;
+    renderDormPage(state.currentDormPage);
+    dossierModal.classList.add('open');
+  });
+
+  closeDossierBtn.addEventListener('click', () => {
+    dossierModal.classList.remove('open');
+  });
+
+  prevPageBtn.addEventListener('click', () => {
+    if (state.currentDormPage > 1) {
+      state.currentDormPage--;
+      renderDormPage(state.currentDormPage);
+    }
+  });
+
+  nextPageBtn.addEventListener('click', () => {
+    if (state.currentDormPage < state.dormInfo.pages.length) {
+      state.currentDormPage++;
+      renderDormPage(state.currentDormPage);
+    }
+  });
+
+  // 渲染具体某一页档案纸张内容
+  function renderDormPage(pageNum) {
+    pageIndicator.textContent = `Page ${pageNum} / ${state.dormInfo.pages.length}`;
+    paperPageContent.innerHTML = '';
+
+    const pageData = state.dormInfo.pages.find(p => p.page_number === pageNum);
+    if (!pageData) return;
+
+    pageData.sections.forEach(sec => {
+      const secDiv = document.createElement('div');
+      secDiv.className = sec.photo ? 'paper-section paper-section-with-photo' : 'paper-section';
+
+      let itemsHtml = '';
+
+      sec.items.forEach(item => {
+        if (item.type === 'copyable') {
+          itemsHtml += `
+            <div class="copyable-row">
+              <div class="typewriter-body" style="white-space: pre-line;">★  ${item.text}</div>
+              <button class="copy-icon-btn" data-clipboard="${encodeURIComponent(item.text)}" title="Copy address">
+                <svg class="copy-icon-svg" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          `;
+        } else if (item.type === 'bullet') {
+          itemsHtml += `<div class="typewriter-body" style="margin-bottom: 0.5rem; white-space: pre-line;">★  ${item.text}</div>`;
+        } else {
+          itemsHtml += `<div class="typewriter-body" style="white-space: pre-line;">${item.text}</div>`;
+        }
+      });
+
+      if (sec.photo) {
+        secDiv.innerHTML = `
+          <div>
+            <h3 class="paper-sec-title">${sec.title}</h3>
+            ${itemsHtml}
+          </div>
+          <div class="polaroid-frame" style="transform: rotate(${sec.photo.rotation}deg)">
+            ${sec.photo.has_clip ? '<div class="paper-clip"></div>' : ''}
+            <div class="polaroid-img-box">
+              <img src="${sec.photo.image}" alt="${sec.title}" onerror="this.style.background='#CCC'">
+            </div>
+          </div>
+        `;
+      } else {
+        secDiv.innerHTML = `
+          <h3 class="paper-sec-title">${sec.title}</h3>
+          ${itemsHtml}
+        `;
+      }
+
+      paperPageContent.appendChild(secDiv);
+    });
+
+    // 绑定真实剪贴板复制事件
+    paperPageContent.querySelectorAll('.copy-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rawText = decodeURIComponent(btn.dataset.clipboard);
+        navigator.clipboard.writeText(rawText).then(() => {
+          showToast('Address copied to clipboard!');
+        }).catch(() => {
+          // Fallback 复制兼容
+          const textarea = document.createElement('textarea');
+          textarea.value = rawText;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          showToast('Address copied to clipboard!');
+        });
+      });
+    });
+  }
+
+  // Toast 弹窗通知
+  function showToast(msg) {
+    toastNotice.textContent = msg;
+    toastNotice.classList.add('show');
+    setTimeout(() => {
+      toastNotice.classList.remove('show');
+    }, 2200);
+  }
+
+  initApp();
+});
