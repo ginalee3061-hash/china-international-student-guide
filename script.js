@@ -31,7 +31,6 @@ function guideCard(g, item){
   </a>`;
 }
 
-// 推荐分类板块配置
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -98,7 +97,6 @@ const REC_SECTIONS = [
   }
 ];
 
-// 点击图标自动全选文字并复制到剪贴板
 window.selectAndCopyText = function(elementId, textToCopy) {
   const el = document.getElementById(elementId);
   if (el) {
@@ -132,7 +130,6 @@ function showToast(msg) {
   }, 2000);
 }
 
-// 图片全屏灯箱放大
 window.openLightbox = function(src){
   const modal = document.getElementById("lightbox-modal");
   const img = document.getElementById("lightbox-img");
@@ -146,9 +143,8 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 严格指派前两个板块的卡片
-  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 和 APP-003
-  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; // ICB-001, DOR-001, APP-001
+  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"];
+  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"];
 
   const packageGuides = packageFoodGuideIds.map(id => pub.get(id)).filter(Boolean);
   const moneyGuides = moneyPaymentGuideIds.map(id => pub.get(id)).filter(Boolean);
@@ -171,7 +167,6 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 前两个特色板块 -->
   <div class="home-sections">
     <section class="section-band blue">
       <div class="container">
@@ -194,7 +189,6 @@ async function home(){
     </section>
   </div>
 
-  <!-- RECOMMENDED APPS 拼贴看板板块 -->
   <section class="rec-board-section">
     <div class="container">
       <div class="rec-board-header">
@@ -216,7 +210,6 @@ async function home(){
     </div>
   </section>
 
-  <!-- 档案袋封面 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -255,7 +248,7 @@ function recCategoryPage(catId){
   </section>`;
 }
 
-/* 档案册全屏轮播（拟真底图 + 真实可选文字 + 双页Copy图标 + 拍立得图片点击放大） */
+/* 全屏画报阅读页：完美复现 13, 14, 15 拟真效果 + 文字真实可选 + Icon全选复制 + 图片放大 */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-book-page">
     <div class="container" style="margin-bottom:20px;">
@@ -263,9 +256,9 @@ async function dormBookPage(){
     </div>
 
     <div class="dorm-canvas-wrap" id="dorm-canvas-wrap">
-      <div class="dorm-slide-wrapper" id="dorm-slide-wrapper" style="display:flex;width:100%;height:100%;transition:transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);">
+      <div class="dorm-slide-wrapper" id="dorm-slide-wrapper" style="display:flex;width:100%;height:100%;transition:transform 0.35s ease;">
         
-        <!-- Page 1：地址与门禁信息 (对应 13.png) -->
+        <!-- Page 1 (对应图 2 / 13_2.jpg) -->
         <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
           <img src="images/13.png" alt="Dorm Address" class="dorm-bg-art" onerror="this.src='images/13.jpg'">
           
@@ -276,7 +269,7 @@ async function dormBookPage(){
               East China Normal University (Minhang Campus)<br>
               No. 5800 Hongmei South Road, Minhang District, Shanghai
             </div>
-            <!-- 英文地址复制按钮（对准图上的线框小图标） -->
+            <!-- 英文地址复制按钮（对准图2线框图标） -->
             <button class="hotspot-copy-btn" style="right:17.5%;top:26.5%;" title="Copy English Address" 
               onclick="selectAndCopyText('text-en-addr', 'Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai')">
               <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
@@ -293,7 +286,7 @@ async function dormBookPage(){
               <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
             </button>
 
-            <!-- 门禁与安静时间可选文字 -->
+            <!-- 门禁与静音可选文本 -->
             <div class="selectable-text-block" style="left:35%;top:53.5%;width:46%;font-size:14px;">The dormitory entrance closes at 23:00.</div>
             <div class="selectable-text-block" style="left:35%;top:66.5%;width:46%;font-size:14px;">
               Please keep noise to a minimum after 23:00.<br>
@@ -302,7 +295,7 @@ async function dormBookPage(){
           </div>
         </div>
 
-        <!-- Page 2：厨房与垃圾分类 (对应 14.png) -->
+        <!-- Page 2 (对应图 3 / 14_2.jpg) -->
         <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
           <img src="images/14.png" alt="Kitchen & Garbage" class="dorm-bg-art" onerror="this.src='images/14.jpg'">
           
@@ -317,13 +310,13 @@ async function dormBookPage(){
               • Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.
             </div>
 
-            <!-- 可点击放大的拍立得图片插槽 -->
+            <!-- 可替换的拍立得照片插槽（支持点击放大） -->
             <div class="dorm-photo-slot" style="right:12%;top:24%;width:33%;height:33%;" onclick="openLightbox('images/14.png')"></div>
             <div class="dorm-photo-slot" style="left:24%;bottom:8%;width:26%;height:27%;" onclick="openLightbox('images/14.png')"></div>
           </div>
         </div>
 
-        <!-- Page 3：饮水机与吹风机房 (对应 15.png) -->
+        <!-- Page 3 (对应图 4 / 15_2.jpg) -->
         <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
           <img src="images/15.png" alt="Water & Hair Dryer" class="dorm-bg-art" onerror="this.src='images/15.jpg'">
           
@@ -335,7 +328,7 @@ async function dormBookPage(){
               Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.
             </div>
 
-            <!-- 可点击放大的拍立得图片插槽 -->
+            <!-- 可替换的拍立得照片插槽（支持点击放大） -->
             <div class="dorm-photo-slot" style="left:28%;top:24%;width:29%;height:24%;" onclick="openLightbox('images/15.png')"></div>
             <div class="dorm-photo-slot" style="right:18%;bottom:12%;width:25%;height:29%;" onclick="openLightbox('images/15.png')"></div>
           </div>
@@ -344,7 +337,7 @@ async function dormBookPage(){
       </div>
     </div>
 
-    <!-- 底部操作导航栏 -->
+    <!-- 底部切页操作条 -->
     <div class="dorm-nav-bar">
       <button class="dorm-nav-btn" id="prev-btn">← Prev</button>
       <div class="dorm-indicators">
@@ -361,7 +354,7 @@ async function dormBookPage(){
     <img id="lightbox-img" src="" alt="Enlarged view">
   </div>`;
 
-  // 轮播与滑动逻辑
+  // 轮播与拖动交互逻辑
   let currentIndex = 0;
   const totalSlides = 3;
   const wrapper = document.getElementById("dorm-slide-wrapper");
@@ -387,7 +380,7 @@ async function dormBookPage(){
     });
   });
 
-  // 移动端/触摸滑动翻页
+  // 触控滑动支持
   let startX = 0;
   container.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, {passive:true});
   container.addEventListener("touchend", (e) => {
@@ -429,7 +422,6 @@ async function itemPage(id){
   </div></section>`;
 }
 
-// 步骤详情页（严格关联：仅在属于 Alipay 相关时展示支付宝卡片，支持放大）
 async function guidePage(id){
   const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
@@ -439,7 +431,6 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  // 严格条件过滤：仅当是 Alipay 系列教程时才关联支付宝全套（绑卡/支付/乘车）
   let relatedGuides = [];
   const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
 
