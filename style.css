@@ -1255,3 +1255,171 @@ h2 {
     top: 15px;
   }
 }
+/* ========================================================
+   1. 首页拍立得相框与悬停动效样式
+   ======================================================== */
+.polaroid-badge-right {
+  position: absolute;
+  right: -12px;
+  top: -38px;
+  width: 100px;
+  background: #f7f3e8;
+  padding: 7px 7px 20px 7px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  transform: rotate(6deg);
+  z-index: 5;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+}
+.guide-card:hover .polaroid-badge-right {
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25);
+}
+.polaroid-badge-right img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* ========================================================
+   2. 完美响应式的纸张内页布局 (针对 page.png 适配)
+   ======================================================== */
+.dorm-native-page {
+  background: #55523d;
+  min-height: 100vh;
+  padding: 30px 15px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dorm-canvas-box {
+  position: relative;
+  width: min(920px, 100%);
+  aspect-ratio: 1.25 / 1;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fcf8ee;
+}
+
+/* 核心响应式适配：靠左固定，高宽比不变形，手机端自动裁剪右侧多余部分 */
+.dorm-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dorm-interactive-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* 顶部精巧小标签栏 */
+.dorm-top-tabs {
+  position: absolute;
+  top: 22px;
+  left: 110px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.dorm-tab-pill {
+  background: #f0ebd8;
+  color: #4a4532;
+  border: 1.5px solid #484534;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: 'Minecraftia', monospace;
+}
+.dorm-tab-pill:hover, .dorm-tab-pill.active {
+  background: #58553f;
+  color: #fffdfa;
+}
+
+/* 纸张内部面板内容，严格控制内边距，文字不超出边缘 */
+.dorm-panel-content {
+  display: none;
+  position: absolute;
+  inset: 0;
+  padding: 85px 70px 30px 110px;
+}
+.dorm-panel-content.active {
+  display: block;
+}
+
+.sheet-sec-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin: 0 0 5px 0;
+  font-family: 'HeuvelGrotesk', sans-serif;
+}
+.sheet-sec-line {
+  height: 1px;
+  background: #d0c9b6;
+  margin-bottom: 12px;
+}
+.sheet-row-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #2b2b2b;
+  font-family: 'ToxTypewriter', monospace;
+}
+.sheet-row-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.sheet-copy-icon-btn {
+  background: transparent;
+  border: 1px solid #b5af9e;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.sheet-copy-icon-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+.sheet-copy-icon-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: #2b2b2b;
+  stroke-width: 1.8;
+  fill: none;
+}
+
+@media (max-width: 768px) {
+  .dorm-panel-content {
+    padding: 75px 35px 20px 65px;
+  }
+  .dorm-top-tabs {
+    left: 65px;
+    top: 15px;
+  }
+}
