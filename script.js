@@ -21,7 +21,6 @@ function crumbs(parts){
   return `<div class="breadcrumbs">${parts.map((p, i) => `${i ? '<span>›</span>' : ''}${p.href ? `<a href="#${p.href}">${esc(p.label)}</a>` : `<span>${esc(p.label)}</span>`}`).join("")}</div>`;
 }
 
-// 首页卡片：右上角悬挂拍立得相框小图
 function guideCard(g, item, polaroidImg){
   return `<a class="guide-card" href="#/guide/${g.guide_id}" style="position:relative;">
     ${polaroidImg ? `
@@ -35,7 +34,6 @@ function guideCard(g, item, polaroidImg){
   </a>`;
 }
 
-// 修正后的 5 张推荐板块缩略图文件名（去掉了冒号，确保正常显示）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -145,7 +143,6 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 配置前两大板块的拍立得小图素材（对应你上传的包名）
   const packageFoodConfigs = [
     { id: "GUIDE-010", photo: "packagesandfood-01.png" }, 
     { id: "GUIDE-008", photo: "packagesandfood-02.png" }
@@ -213,7 +210,6 @@ async function home(){
     </div>
   </section>
 
-  <!-- 对应 dorm12file.png 档案袋封面入口 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -251,26 +247,27 @@ function recCategoryPage(catId){
   </div></section>`;
 }
 
-/* 使用 page.png 作为底图的响应式宿舍详情页 */
+/* 使用 page.png 作为底图，并完美排版文字、复制 Icon 与带旋转的拍立得相框照片 */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-native-page">
-    <div class="container" style="margin-bottom:12px; width:min(920px, 100%);">
+    <div class="container" style="margin-bottom:12px; width:min(940px, 100%);">
       ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
     </div>
 
     <div class="dorm-canvas-box">
-      <!-- 纸张底图采用 page.png -->
+      <!-- 纸张底图使用 page.png -->
       <img src="images/page.png" alt="Dorm Information" class="dorm-bg-img" onerror="this.src='images/page.jpg'">
 
       <div class="dorm-interactive-layer">
         
+        <!-- 顶部图3样式的 3 个点击标签 -->
         <div class="dorm-top-tabs">
           <button class="dorm-tab-pill active" onclick="switchDormTab(0)">01. Address & Rules</button>
           <button class="dorm-tab-pill" onclick="switchDormTab(1)">02. Kitchen & Garbage</button>
           <button class="dorm-tab-pill" onclick="switchDormTab(2)">03. Water & Facilities</button>
         </div>
 
-        <!-- Tab 01 -->
+        <!-- Tab 01: Address & Rules (对应图2排版) -->
         <div class="dorm-panel-content active" id="dorm-panel-0">
           <div class="sheet-sec-title">DORMITORY ADDRESS</div>
           <div class="sheet-sec-line"></div>
@@ -302,42 +299,58 @@ async function dormBookPage(){
             </button>
           </div>
 
-          <div class="sheet-sec-title" style="margin-top:25px;">ACCESS HOURS</div>
+          <div class="sheet-sec-title" style="margin-top:28px;">ACCESS HOURS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item">
             <div class="sheet-row-left"><span>★</span><div>The dormitory entrance closes at 23:00.</div></div>
           </div>
 
-          <div class="sheet-sec-title" style="margin-top:25px;">QUIET HOURS</div>
+          <div class="sheet-sec-title" style="margin-top:28px;">QUIET HOURS</div>
           <div class="sheet-sec-line"></div>
           <div class="sheet-row-item">
             <div class="sheet-row-left"><span>★</span><div>Please keep noise to a minimum after 23:00. Do not use washing machines or hair dryers after 23:00.</div></div>
           </div>
         </div>
 
-        <!-- Tab 02 -->
+        <!-- Tab 02: Kitchen & Garbage (对应图4排版与旋转拍立得相框) -->
         <div class="dorm-panel-content" id="dorm-panel-1">
           <div class="sheet-sec-title">SHARED KITCHEN</div>
           <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Please clean the kitchen after use.</div></div></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div></div>
+          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Please clean the kitchen after use.</div></div></div>
+          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div></div>
+          <div class="sheet-row-item" style="width:55%;"><div class="sheet-row-left"><span>•</span><div>Please return them to the cabinets or take them back to your room.</div></div></div>
 
-          <div class="sheet-sec-title" style="margin-top:22px;">GARBAGE DISPOSAL</div>
+          <div class="sheet-sec-title" style="margin-top:25px;">GARBAGE DISPOSAL</div>
           <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div></div>
+          <div class="sheet-row-item" style="width:55%; margin-left:40%;"><div class="sheet-row-left"><span>•</span><div>The kitchen trash bins are for food waste only.</div></div></div>
+          <div class="sheet-row-item" style="width:55%; margin-left:40%;"><div class="sheet-row-left"><span>•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div></div>
+
+          <!-- 右上角与左下角的旋转拍立得相框照片 (可点击放大) -->
+          <div class="polaroid-photo-frame" style="right:8%; top:15%; transform: rotate(5deg);" onclick="openLightbox('images/14.png')">
+            <img src="images/14.png" alt="Kitchen" onerror="this.src='images/14.jpg'">
+          </div>
+          <div class="polaroid-photo-frame" style="left:10%; bottom:8%; transform: rotate(-6deg);" onclick="openLightbox('images/14.png')">
+            <img src="images/14.png" alt="Garbage" onerror="this.src='images/14.jpg'">
+          </div>
         </div>
 
-        <!-- Tab 03 -->
+        <!-- Tab 03: Water & Facilities (对应图5排版与旋转拍立得相框) -->
         <div class="dorm-panel-content" id="dorm-panel-2">
           <div class="sheet-sec-title">DRINKING WATER DISPENSERS</div>
           <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div></div>
+          <div class="sheet-row-item" style="width:50%; margin-left:42%;"><div class="sheet-row-left"><span>•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div></div>
 
-          <div class="sheet-sec-title" style="margin-top:25px;">HAIR DRYER ROOMS</div>
+          <div class="sheet-sec-title" style="margin-top:35px;">HAIR DRYER ROOMS</div>
           <div class="sheet-sec-line"></div>
-          <div class="sheet-row-item"><div class="sheet-row-left"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div></div>
+          <div class="sheet-row-item" style="width:50%;"><div class="sheet-row-left"><span>•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div></div>
+
+          <!-- 饮水机与吹风机房的旋转拍立得相框照片 (可点击放大) -->
+          <div class="polaroid-photo-frame" style="left:12%; top:18%; transform: rotate(-4deg);" onclick="openLightbox('images/15.png')">
+            <img src="images/15.png" alt="Water Dispenser" onerror="this.src='images/15.jpg'">
+          </div>
+          <div class="polaroid-photo-frame" style="right:10%; bottom:10%; transform: rotate(4deg);" onclick="openLightbox('images/15.png')">
+            <img src="images/15.png" alt="Hair Dryer Room" onerror="this.src='images/15.jpg'">
+          </div>
         </div>
 
       </div>
