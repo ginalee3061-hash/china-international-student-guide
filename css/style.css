@@ -54,7 +54,7 @@ button,input{font:inherit}
 .mini-line:nth-child(2){width:46%;background:#efcfd2}
 .hero-note{position:absolute;right:2%;bottom:5%;padding:11px 15px;background:var(--ink);color:#fff;border-radius:13px;font-size:12px;transform:rotate(6deg)}
 
-/* Sections & Bands */
+/* Bands & Featured Sections */
 .home-sections{padding-bottom:40px}
 .section-band{padding:0 0 80px}
 .section-band.blue{background:var(--blue)}
@@ -68,10 +68,10 @@ button,input{font:inherit}
 .section-tab .arrow{font-size:28px;font-weight:400}
 .section-note{max-width:720px;margin:20px auto 26px;color:rgba(35,35,35,.73);font-size:14px}
 
-/* Cards & Categories */
-.card-grid,.apps-grid,.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.guide-card,.app-card,.category-card{position:relative;min-height:420px;padding:104px 30px 28px;background:var(--white);border:1.5px solid var(--line);border-radius:42px;text-decoration:none;display:flex;flex-direction:column;transition:.18s ease;box-shadow:0 15px 30px rgba(35,35,35,.09)}
-.guide-card:hover,.app-card:hover,.category-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px rgba(35,35,35,.14)}
+/* Guide Cards */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.guide-card{position:relative;min-height:420px;padding:104px 30px 28px;background:var(--white);border:1.5px solid var(--line);border-radius:42px;text-decoration:none;display:flex;flex-direction:column;transition:.18s ease;box-shadow:0 15px 30px rgba(35,35,35,.09)}
+.guide-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px rgba(35,35,35,.14)}
 
 .polaroid{position:absolute;right:-12px;top:-35px;width:154px;padding:10px 10px 33px;background:#f4efe1;box-shadow:0 10px 22px rgba(0,0,0,.09);transform:rotate(6deg)}
 .polaroid-inner{height:112px;display:grid;place-items:center;font-weight:900;font-size:50px;background:#dfe5df}
@@ -84,24 +84,164 @@ button,input{font:inherit}
 .polaroid-inner.wifi, .app-card-visual.wifi, .app-logo.wifi{background:#4f46e5;color:white}
 .polaroid-inner.meituan, .app-card-visual.meituan, .app-logo.meituan{background:#ffd101;color:#222}
 .polaroid-inner.icbc, .app-card-visual.icbc, .app-logo.icbc{background:#c8102e;color:white}
-.polaroid-inner.laundry, .app-card-visual.laundry, .app-logo.laundry{background:#3b82f6;color:white}
+.polaroid-inner.wechat, .app-card-visual.wechat, .app-logo.wechat{background:#07c160;color:white}
+.polaroid-inner.amap, .app-card-visual.amap, .app-logo.amap{background:#0091ff;color:white}
+.polaroid-inner.halou, .app-card-visual.halou, .app-logo.halou{background:#0086f6;color:white}
+.polaroid-inner.jingdong, .app-card-visual.jingdong, .app-logo.jingdong{background:#e1251b;color:white}
+.polaroid-inner.skuracat, .app-card-visual.skuracat, .app-logo.skuracat{background:#ff5c5c;color:white}
+.polaroid-inner.ikuuu, .app-card-visual.ikuuu, .app-logo.ikuuu{background:#5c7cfa;color:white}
 
-.guide-card h3,.category-card h3{font-size:30px;line-height:.98;letter-spacing:-.045em;margin:12px 0 16px}
-.guide-card p,.category-card p{margin:0;color:var(--muted);font-size:15px}
+.guide-card h3{font-size:30px;line-height:.98;letter-spacing:-.045em;margin:12px 0 16px}
+.guide-card p{margin:0;color:var(--muted);font-size:15px}
 .card-spacer{flex:1}
 .learn{display:inline-flex;align-self:flex-start;padding:11px 18px;border:1.5px solid var(--line);border-radius:999px;font-size:12px;font-weight:900;margin-top:23px}
 
-/* App Card & Category Grid Style */
-.app-card{min-height:unset;padding:0;overflow:hidden}
-.app-card-visual{aspect-ratio:1;display:grid;place-items:center;font-size:80px;font-weight:900}
-.app-card-body{display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--line);padding:16px 20px;background:var(--white)}
-.app-card-body strong{font-size:17px}
-.triangle{font-size:22px}
+/* ========================================================
+   RECOMMENDED APPS 拼贴看板板块 (严格对应 5_2.jpg 视觉)
+======================================================== */
+.rec-board-section{
+  padding:80px 0 100px;
+  background:var(--cream);
+  text-align:center;
+}
+.rec-board-header h2{
+  font-size:clamp(40px,5.5vw,68px);
+  font-weight:900;
+  letter-spacing:-.05em;
+  margin:0 0 50px;
+  text-transform:uppercase;
+}
+.rec-board-canvas{
+  position:relative;
+  width:min(1000px, 100%);
+  min-height:580px;
+  margin:0 auto;
+}
+.rec-board-item{
+  position:absolute;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .2s ease;
+}
+.rec-board-item:hover{
+  transform:scale(1.04);
+  z-index:10;
+}
+.rec-board-img{
+  border:1.5px solid var(--line);
+  background:#fff;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
+}
+.rec-board-img img{
+  display:block;
+  object-fit:cover;
+}
+.rec-board-label{
+  margin-top:10px;
+  text-align:left;
+}
+.rec-board-label .num{
+  font-family:monospace;
+  font-weight:900;
+  font-size:15px;
+  color:var(--ink);
+  display:block;
+}
+.rec-board-label .title{
+  font-weight:800;
+  font-size:17px;
+  letter-spacing:-.02em;
+  color:var(--ink);
+}
 
-/* 档案袋模块样式 (对应 12.jpg) */
+/* 5个分类在画布上的绝对定位 */
+.pos-food{ left:12%; top:0; }
+.pos-food img{ width:180px; height:130px; }
+
+.pos-transit{ right:14%; top:20px; }
+.pos-transit img{ width:210px; height:135px; }
+
+.pos-finance{ left:4%; top:210px; }
+.pos-finance img{ width:190px; height:130px; }
+
+.pos-shopping{ left:18%; bottom:0; }
+.pos-shopping img{ width:195px; height:135px; }
+
+.pos-vpn{ right:18%; bottom:15px; }
+.pos-vpn img{ width:190px; height:130px; }
+
+/* ========================================================
+   分类列表页 (严格对应 6_2 ~ 10_2.png 视觉)
+======================================================== */
+.category-view{
+  padding:90px 0 130px;
+  text-align:center;
+  min-height:80vh;
+}
+.category-title-underline{
+  display:inline-block;
+  font-size:clamp(32px,4vw,44px);
+  font-weight:900;
+  letter-spacing:-.03em;
+  text-transform:uppercase;
+  border-bottom:4px solid var(--line);
+  padding-bottom:10px;
+  margin-bottom:70px;
+}
+.category-cards-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:36px;
+  flex-wrap:wrap;
+}
+.square-app-card{
+  width:230px;
+  border:2px solid var(--line);
+  background:var(--white);
+  box-shadow:0 15px 35px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  text-decoration:none;
+  transition:.2s;
+}
+.square-app-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 22px 45px rgba(0,0,0,.15);
+}
+.square-app-icon{
+  width:100%;
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  font-size:80px;
+  font-weight:900;
+}
+.square-app-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 18px;
+  border-top:2px solid var(--line);
+  background:var(--white);
+}
+.square-app-name{
+  font-size:15px;
+  font-weight:800;
+}
+.square-app-arrow{
+  font-size:14px;
+}
+
+/* 档案袋模块样式 (12.jpg) */
 .folder-banner-section{
   padding:40px 0 80px;
-  background:#58553f; /* 档案袋深橄榄绿背景 */
+  background:#58553f;
 }
 .folder-card{
   position:relative;
@@ -127,87 +267,7 @@ button,input{font:inherit}
   display:block;
 }
 
-/* Page Layouts & Breadcrumbs */
-.page{padding:68px 0 100px}
-.breadcrumbs{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:26px}
-.breadcrumbs a{text-decoration:none}
-.page-head{max-width:900px;margin-bottom:44px}
-.page-head h1{font-size:clamp(45px,6vw,80px);line-height:.88;letter-spacing:-.06em;margin:8px 0 16px}
-.page-head p{font-size:18px;max-width:720px;color:var(--muted)}
-
-/* App Showcase Page */
-.app-showcase{background:var(--white);border:1.5px solid var(--line);border-radius:36px;padding:45px;box-shadow:var(--shadow)}
-.app-showcase-grid{display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:center}
-.app-logo{aspect-ratio:1;display:grid;place-items:center;font-size:75px;font-weight:900;border:1.5px solid var(--line);border-radius:24px}
-.app-meta h2{font-size:46px;line-height:.9;letter-spacing:-.055em;margin:6px 0 12px}
-.app-meta p{max-width:680px;color:var(--muted);font-size:16px}
-.pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.pill{padding:8px 16px;border:1.5px solid var(--line);border-radius:999px;font-size:12px;font-weight:900;background:var(--cream);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.app-sections{display:grid;grid-template-columns:repeat(2,1fr);margin-top:35px;border-top:1.5px solid var(--line);padding-top:25px;gap:20px}
-.info-box h3{margin:0 0 6px;font-size:15px;text-transform:uppercase;letter-spacing:.05em}
-.info-box p{margin:0;color:var(--muted);font-size:15px}
-.related{margin-top:70px;padding-top:36px;border-top:1.5px solid var(--line)}
-.related h2{font-size:38px;letter-spacing:-.05em;margin:0 0 24px}
-
-/* Guide & Step Layout with iPhone Mockup */
-.guide-layout{display:grid;grid-template-columns:140px 1fr;gap:46px;align-items:start}
-.progress-rail{position:sticky;top:102px;height:calc(100vh - 140px)}
-.progress-track,.progress-fill{position:absolute;left:34px;top:8px;bottom:8px;width:4px;border-radius:99px}
-.progress-track{background:#ddd9ca}
-.progress-fill{height:0;background:var(--cyan);bottom:auto;transition:height .1s ease}
-.progress-list{position:absolute;inset:0;display:flex;flex-direction:column}
-.progress-item{position:relative;flex:1}
-.progress-dot{position:absolute;left:15px;top:0;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);background:var(--cream);font-size:12px;font-weight:900;z-index:2;transition:.2s}
-.progress-item.active .progress-dot,.progress-item.done .progress-dot{background:var(--cyan)}
-
-.guide-title h1{font-size:clamp(44px,6vw,84px);line-height:.88;letter-spacing:-.06em;margin:0 0 16px}
-.guide-title p{font-size:18px;color:var(--muted);max-width:760px}
-.guide-steps{display:grid;gap:80px;margin-top:56px}
-.step-grid{display:grid;grid-template-columns:1fr .9fr;gap:50px;align-items:start}
-.step-kicker{font:900 16px/1 monospace;margin-bottom:18px;color:var(--muted)}
-.step-copy h2{font-size:38px;line-height:.95;letter-spacing:-.045em;margin:0 0 15px}
-.step-copy p{color:var(--muted);font-size:16px;max-width:600px}
-.step-note{margin-top:18px;padding:13px 16px;border-left:4px solid var(--cyan);background:#efede4;color:#5f5c55;font-size:14px;border-radius:0 8px 8px 0}
-
-/* iPhone Mockup Container */
-.iphone-mockup{
-  position:relative;
-  width:min(320px, 100%);
-  margin:0 auto;
-  background:#1a1a1a;
-  border-radius:44px;
-  padding:12px;
-  box-shadow:0 25px 50px rgba(0,0,0,0.2), inset 0 0 0 2px #444;
-}
-.iphone-screen{
-  background:var(--white);
-  border-radius:34px;
-  overflow:hidden;
-  aspect-ratio:9/19.5;
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-.iphone-screen img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.step-image.placeholder{
-  width:100%;
-  aspect-ratio:9/19.5;
-  border-radius:34px;
-  border:1.5px dashed var(--line);
-  background:var(--white);
-  display:grid;
-  place-items:center;
-  color:var(--muted);
-  font-size:13px;
-  text-align:center;
-  padding:20px;
-}
-
-/* 档案册全屏轮播阅读页样式 (对应 13, 14, 15.jpg) */
+/* 档案册全屏轮播阅读页样式 (13, 14, 15.jpg) */
 .dorm-book-page{
   background:#58553f;
   min-height:calc(100vh - 72px);
@@ -291,24 +351,87 @@ button,input{font:inherit}
   transform:scale(1.2);
 }
 
-/* Search Results & FAQ */
-.search-result{display:block;background:var(--white);border:1.5px solid var(--line);padding:20px 24px;text-decoration:none;border-radius:20px;margin-bottom:12px;transition:.15s}
-.search-result:hover{transform:translateX(4px)}
-.search-result strong{display:block;font-size:18px;margin-bottom:4px}
-.search-result span{font-size:13px;color:var(--muted)}
-.faq-list details{background:var(--white);border:1.5px solid var(--line);padding:20px 24px;border-radius:20px;margin-bottom:14px;cursor:pointer}
-.faq-list summary{font-weight:bold;font-size:17px}
-.faq-list p{margin:12px 0 0;color:var(--muted)}
-.empty{padding:30px;border:1.5px dashed #c6c0af;background:rgba(255,255,255,.3);color:var(--muted);border-radius:20px;text-align:center}
+/* App Showcase Page */
+.page{padding:68px 0 100px}
+.breadcrumbs{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:26px}
+.breadcrumbs a{text-decoration:none}
+.app-showcase{background:var(--white);border:1.5px solid var(--line);border-radius:36px;padding:45px;box-shadow:var(--shadow)}
+.app-showcase-grid{display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:center}
+.app-logo{aspect-ratio:1;display:grid;place-items:center;font-size:75px;font-weight:900;border:1.5px solid var(--line);border-radius:24px}
+.app-meta h2{font-size:46px;line-height:.9;letter-spacing:-.055em;margin:6px 0 12px}
+.app-meta p{max-width:680px;color:var(--muted);font-size:16px}
+.pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.pill{padding:8px 16px;border:1.5px solid var(--line);border-radius:999px;font-size:12px;font-weight:900;background:var(--cream);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.app-sections{display:grid;grid-template-columns:repeat(2,1fr);margin-top:35px;border-top:1.5px solid var(--line);padding-top:25px;gap:20px}
+.info-box h3{margin:0 0 6px;font-size:15px;text-transform:uppercase;letter-spacing:.05em}
+.info-box p{margin:0;color:var(--muted);font-size:15px}
+.related{margin-top:70px;padding-top:36px;border-top:1.5px solid var(--line)}
+.related h2{font-size:38px;letter-spacing:-.05em;margin:0 0 24px}
 
-/* Footer */
-.footer{max-width:var(--max);margin:auto;padding:60px 24px 80px;color:var(--muted);border-top:1px solid rgba(0,0,0,.16);font-size:13px;display:flex;justify-content:space-between;gap:30px}
+/* Guide & Step Layout with iPhone Mockup */
+.guide-layout{display:grid;grid-template-columns:140px 1fr;gap:46px;align-items:start}
+.progress-rail{position:sticky;top:102px;height:calc(100vh - 140px)}
+.progress-track,.progress-fill{position:absolute;left:34px;top:8px;bottom:8px;width:4px;border-radius:99px}
+.progress-track{background:#ddd9ca}
+.progress-fill{height:0;background:var(--cyan);bottom:auto;transition:height .1s ease}
+.progress-list{position:absolute;inset:0;display:flex;flex-direction:column}
+.progress-item{position:relative;flex:1}
+.progress-dot{position:absolute;left:15px;top:0;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);background:var(--cream);font-size:12px;font-weight:900;z-index:2;transition:.2s}
+.progress-item.active .progress-dot,.progress-item.done .progress-dot{background:var(--cyan)}
+
+.guide-title h1{font-size:clamp(44px,6vw,84px);line-height:.88;letter-spacing:-.06em;margin:0 0 16px}
+.guide-title p{font-size:18px;color:var(--muted);max-width:760px}
+.guide-steps{display:grid;gap:80px;margin-top:56px}
+.step-grid{display:grid;grid-template-columns:1fr .9fr;gap:50px;align-items:start}
+.step-kicker{font:900 16px/1 monospace;margin-bottom:18px;color:var(--muted)}
+.step-copy h2{font-size:38px;line-height:.95;letter-spacing:-.045em;margin:0 0 15px}
+.step-copy p{color:var(--muted);font-size:16px;max-width:600px}
+.step-note{margin-top:18px;padding:13px 16px;border-left:4px solid var(--cyan);background:#efede4;color:#5f5c55;font-size:14px;border-radius:0 8px 8px 0}
+
+/* iPhone Mockup */
+.iphone-mockup{
+  position:relative;
+  width:min(320px, 100%);
+  margin:0 auto;
+  background:#1a1a1a;
+  border-radius:44px;
+  padding:12px;
+  box-shadow:0 25px 50px rgba(0,0,0,0.2), inset 0 0 0 2px #444;
+}
+.iphone-screen{
+  background:var(--white);
+  border-radius:34px;
+  overflow:hidden;
+  aspect-ratio:9/19.5;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+.iphone-screen img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.step-image.placeholder{
+  width:100%;
+  aspect-ratio:9/19.5;
+  border-radius:34px;
+  border:1.5px dashed var(--line);
+  background:var(--white);
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  padding:20px;
+}
 
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr}
-  .hero-art{min-height:340px}
-  .card-grid,.apps-grid,.related-grid,.app-sections,.step-grid{grid-template-columns:1fr}
+  .card-grid,.app-sections,.step-grid{grid-template-columns:1fr}
   .app-showcase-grid{grid-template-columns:1fr}
   .guide-layout{grid-template-columns:1fr}
   .progress-rail{display:none}
+  .rec-board-canvas{min-height:auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;position:static}
+  .rec-board-item{position:static}
 }
