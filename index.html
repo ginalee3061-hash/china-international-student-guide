@@ -1,22 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>China Student Guide</title>
-<link rel="stylesheet" href="style.css?v=1001">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Life Survival Guide</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="#/"><span class="brand-dot"></span><span>China Student Guide</span></a>
-  <nav class="topnav">
-    <a href="#/search">Search</a>
-    <a href="#/faq">FAQ</a>
-  </nav>
-</header>
 
-<main id="app"></main>
+  <!-- 顶部极简导航 -->
+  <header class="site-header">
+    <div class="logo-area">CAMPUS LIFE GUIDE</div>
+    <nav class="category-nav" id="categoryNav"></nav>
+  </header>
 
-<script src="script.js?v=1001"></script>
+  <!-- 主内容区域：指南卡片列表 -->
+  <main class="main-container">
+    <section class="feed-section" id="feedSection">
+      <!-- 动态卡片容器通过 script.js 渲染 -->
+    </section>
+  </main>
+
+  <!-- 步骤指引模态全屏抽屉 -->
+  <div class="guide-modal-overlay" id="guideModal" aria-hidden="true">
+    <div class="guide-modal-container">
+      <button class="modal-close-btn" id="closeGuideModal" aria-label="Close">✕</button>
+      <div class="guide-modal-header">
+        <h2 class="modal-guide-title" id="modalGuideTitle">HOW TO GET MY PACKAGES?</h2>
+        <p class="modal-guide-desc" id="modalGuideDesc"></p>
+      </div>
+      <div class="guide-steps-scroll" id="modalStepsScroll">
+        <!-- 动态注入带有手机外壳或相框的步骤列表 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部拟物 Building 12 档案公文袋组件 -->
+  <aside class="dossier-dock">
+    <div class="folder-trigger" id="folderTrigger">
+      <div class="folder-tab">
+        <span class="folder-label-text">Building 12</span>
+        <div class="polaroid-stamp">
+          <div class="stamp-inner"></div>
+        </div>
+      </div>
+      <div class="folder-pocket-edge"></div>
+    </div>
+  </aside>
+
+  <!-- 抽出的 Building 12 档案纸张模态 -->
+  <div class="dossier-modal-overlay" id="dossierModal" aria-hidden="true">
+    <div class="dossier-wrapper">
+      <div class="manila-folder-back"></div>
+      
+      <!-- 档案纸张本体 -->
+      <article class="typewriter-paper" id="paperContainer">
+        <!-- 顶部打孔及纸张纹理细节 -->
+        <div class="paper-header-tabs">
+          <span class="confidential-tag">OFFICIAL DORMITORY RECORD</span>
+          <div class="pagination-controls">
+            <button class="page-arrow" id="prevPageBtn" title="Previous page">‹</button>
+            <span class="page-indicator" id="pageIndicator">Page 1 / 3</span>
+            <button class="page-arrow" id="nextPageBtn" title="Next page">›</button>
+          </div>
+          <button class="dossier-close-btn" id="closeDossierBtn" title="Close folder">✕</button>
+        </div>
+
+        <div class="paper-page-content" id="paperPageContent">
+          <!-- 动态渲染 Page 1 / 2 / 3 -->
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- 复制成功的轻提示 Toast -->
+  <div class="toast-notice" id="toastNotice">Address copied to clipboard!</div>
+
+  <script src="script.js"></script>
 </body>
 </html>
