@@ -31,6 +31,7 @@ function guideCard(g, item){
   </a>`;
 }
 
+// 推荐分类板块配置（对应图 2 到图 7 布局）
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -97,12 +98,57 @@ const REC_SECTIONS = [
   }
 ];
 
+// 复制与自动全选对应段落文字
+window.selectAndCopyText = function(elementId, textToCopy) {
+  const el = document.getElementById(elementId);
+  if (el) {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    showToast("Address copied & selected!");
+  }).catch(() => {
+    document.execCommand('copy');
+    showToast("Address copied & selected!");
+  });
+};
+
+function showToast(msg) {
+  let toast = document.getElementById("copy-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "copy-toast";
+    toast.className = "copy-toast";
+    document.body.appendChild(toast);
+  }
+  toast.innerText = msg;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+// 图片全屏灯箱放大
+window.openLightbox = function(src){
+  const modal = document.getElementById("lightbox-modal");
+  const img = document.getElementById("lightbox-img");
+  if(modal && img && src){
+    img.src = src;
+    modal.classList.add("active");
+  }
+};
+
 async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; 
-  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; 
+  // 精确配置前部两大特色板块指南
+  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 和 APP-003
+  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; // ICB-001, DOR-001, APP-001
 
   const packageGuides = packageFoodGuideIds.map(id => pub.get(id)).filter(Boolean);
   const moneyGuides = moneyPaymentGuideIds.map(id => pub.get(id)).filter(Boolean);
@@ -125,6 +171,7 @@ async function home(){
     </div>
   </div></section>
 
+  <!-- 特色指南板块 -->
   <div class="home-sections">
     <section class="section-band blue">
       <div class="container">
@@ -147,6 +194,7 @@ async function home(){
     </section>
   </div>
 
+  <!-- RECOMMENDED APPS 拼贴看板板块 -->
   <section class="rec-board-section">
     <div class="container">
       <div class="rec-board-header">
@@ -168,6 +216,7 @@ async function home(){
     </div>
   </section>
 
+  <!-- Building 12 档案袋封面 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -183,6 +232,7 @@ async function home(){
   });
 }
 
+// 推荐分类详情展示页
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -206,6 +256,7 @@ function recCategoryPage(catId){
   </section>`;
 }
 
+// 档案册阅读器（真实文字排版 + 支持选取、复制 + 拍立得图片点击放大）
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-book-page">
     <div class="container" style="margin-bottom:20px;">
@@ -213,9 +264,123 @@ async function dormBookPage(){
     </div>
     <div class="dorm-book-container" id="dorm-book-container">
       <div class="dorm-slide-wrapper" id="dorm-slide-wrapper">
-        <div class="dorm-slide"><img src="images/13.png" alt="Dormitory Information 1" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/13.jpg';}"></div>
-        <div class="dorm-slide"><img src="images/14.png" alt="Dormitory Information 2" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/14.jpg';}"></div>
-        <div class="dorm-slide"><img src="images/15.png" alt="Dormitory Information 3" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/15.jpg';}"></div>
+        
+        <!-- 页 1：文字真实可选 + 双页图标点击全选并复制 (13.jpg) -->
+        <div class="dorm-slide">
+          <div class="dorm-paper">
+            <div class="dorm-sec">
+              <h2>DORMITORY ADDRESS</h2>
+              <div class="dorm-divider"></div>
+              
+              <!-- 英文地址 -->
+              <div class="dorm-address-line">
+                <div class="dorm-address-content">
+                  <span class="dorm-star">★</span>
+                  <div id="addr-en" style="cursor:text;">
+                    Building 12, Graduate Student Apartments<br>
+                    East China Normal University (Minhang Campus)<br>
+                    No. 5800 Hongmei South Road, Minhang District, Shanghai
+                  </div>
+                </div>
+                <button class="dorm-copy-icon-btn" title="Click to select and copy" onclick="selectAndCopyText('addr-en', 'Building 12, Graduate Student Apartments\\nEast China Normal University (Minhang Campus)\\nNo. 5800 Hongmei South Road, Minhang District, Shanghai')">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- 中文地址 -->
+              <div class="dorm-address-line" style="margin-top:22px;">
+                <div class="dorm-address-content">
+                  <span class="dorm-star">★</span>
+                  <div id="addr-cn" style="cursor:text;">
+                    上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
+                    研究生公寓12号楼
+                  </div>
+                </div>
+                <button class="dorm-copy-icon-btn" title="点击全选并复制" onclick="selectAndCopyText('addr-cn', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="dorm-sec" style="margin-top:40px;">
+              <h2>ACCESS HOURS</h2>
+              <div class="dorm-divider"></div>
+              <div class="dorm-item">
+                <span class="dorm-star">★</span>
+                <div>The dormitory entrance closes at 23:00.</div>
+              </div>
+            </div>
+
+            <div class="dorm-sec" style="margin-top:40px;">
+              <h2>QUIET HOURS</h2>
+              <div class="dorm-divider"></div>
+              <div class="dorm-item">
+                <span class="dorm-star">★</span>
+                <div>
+                  Please keep noise to a minimum after 23:00.<br>
+                  Do not use washing machines or hair dryers after 23:00.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 页 2：真实文字 + 独立拍立得图片 (14.jpg) -->
+        <div class="dorm-slide">
+          <div class="dorm-paper" style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:30px;align-items:center;">
+            <div>
+              <div class="dorm-sec">
+                <h2>SHARED KITCHEN</h2>
+                <div class="dorm-divider"></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Please clean the kitchen after use.</div></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Please return them to the cabinets or take them back to your room.</div></div>
+              </div>
+
+              <div class="dorm-sec" style="margin-top:40px;">
+                <h2>GARBAGE DISPOSAL</h2>
+                <div class="dorm-divider"></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>The kitchen trash bins are for food waste only.</div></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:25px;align-items:center;">
+              <img src="images/kitchen-photo.jpg" alt="Kitchen" class="dorm-polaroid-wrap" onerror="this.src='images/14.png'" style="width:170px;border:6px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.15);transform:rotate(4deg);" onclick="openLightbox(this.src)">
+              <img src="images/garbage-photo.jpg" alt="Garbage Station" class="dorm-polaroid-wrap" onerror="this.src='images/14.png'" style="width:170px;border:6px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.15);transform:rotate(-4deg);" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+        </div>
+
+        <!-- 页 3：饮水机与吹风机房 (15.jpg) -->
+        <div class="dorm-slide">
+          <div class="dorm-paper">
+            <div class="dorm-sec" style="display:grid;grid-template-columns:1fr 140px;gap:20px;align-items:center;">
+              <div>
+                <h2>DRINKING WATER DISPENSERS</h2>
+                <div class="dorm-divider"></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div>
+              </div>
+              <img src="images/water-photo.jpg" alt="Water Dispenser" class="dorm-polaroid-wrap" onerror="this.src='images/15.png'" style="width:130px;border:5px solid #fff;box-shadow:0 6px 15px rgba(0,0,0,0.15);" onclick="openLightbox(this.src)">
+            </div>
+
+            <div class="dorm-sec" style="margin-top:50px;display:grid;grid-template-columns:1fr 140px;gap:20px;align-items:center;">
+              <div>
+                <h2>HAIR DRYER ROOMS</h2>
+                <div class="dorm-divider"></div>
+                <div class="dorm-item"><span class="dorm-star">•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div>
+              </div>
+              <img src="images/dryer-photo.jpg" alt="Hair Dryer Room" class="dorm-polaroid-wrap" onerror="this.src='images/15.png'" style="width:130px;border:5px solid #fff;box-shadow:0 6px 15px rgba(0,0,0,0.15);transform:rotate(-3deg);" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <div class="dorm-nav-bar">
@@ -227,7 +392,12 @@ async function dormBookPage(){
       </div>
       <button class="dorm-nav-btn" id="next-btn">Next →</button>
     </div>
-  </section>`;
+  </section>
+
+  <!-- 全屏灯箱查看容器 -->
+  <div class="lightbox-modal" id="lightbox-modal" onclick="this.classList.remove('active')">
+    <img id="lightbox-img" src="" alt="Enlarged view">
+  </div>`;
 
   let currentIndex = 0;
   const totalSlides = 3;
@@ -316,7 +486,7 @@ async function itemPage(id){
   </div></section>`;
 }
 
-/* 步骤详情页：修复 Related 卡片与图片加载 */
+// 步骤详情页（仅 Alipay 展示专属卡片，图片支持放大）
 async function guidePage(id){
   const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
@@ -326,16 +496,22 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  // 聚合关联指南：同 App、关联交通（如支付宝乘车）、或其它已发布教程
-  let relatedGuides = guides.filter(x => {
-    if (x.guide_id === id || x.status !== "published") return false;
-    if (x.item_id === g.item_id) return true;
-    if (g.item_id === "APP-001" && x.guide_id === "GUIDE-004") return true; // 支付宝与乘车联动
-    return false;
-  });
-  if (relatedGuides.length < 3) {
-    const others = guides.filter(x => x.status === "published" && x.guide_id !== id && !relatedGuides.some(rg => rg.guide_id === x.guide_id));
-    relatedGuides = [...relatedGuides, ...others].slice(0, 3);
+  // 严格过滤：只有浏览支付宝相关指南时，才展示全套支付宝指南；其它 App 仅展示该 App 自己名下的指南
+  let relatedGuides = [];
+  const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
+
+  if (isAlipayRelated) {
+    relatedGuides = guides.filter(x => 
+      x.status === "published" && 
+      x.guide_id !== id && 
+      (x.item_id === "APP-001" || x.guide_id === "GUIDE-004")
+    );
+  } else {
+    relatedGuides = guides.filter(x => 
+      x.status === "published" && 
+      x.guide_id !== id && 
+      x.item_id === g.item_id
+    );
   }
 
   app.innerHTML = `<section class="page"><div class="container">
@@ -374,7 +550,7 @@ async function guidePage(id){
                   <p>${esc(s.instruction || "")}</p>
                   ${s.tip ? `<div class="step-note">💡 ${esc(s.tip)}</div>` : ""}
                 </div>
-                <div class="iphone-mockup">
+                <div class="iphone-mockup" style="cursor:zoom-in;" onclick="${primarySrc ? `openLightbox('${primarySrc}')` : ''}">
                   <div class="iphone-screen">
                     ${primarySrc ? `
                       <img src="${primarySrc}" 
@@ -385,7 +561,7 @@ async function guidePage(id){
                                this.dataset.t = 1;
                                this.src = '${rawFilename}';
                              } else {
-                               this.parentElement.innerHTML = '<div class=&quot;step-image placeholder&quot; style=&quot;padding:15px;font-size:12px;color:#c8102e;&quot;>未找到图片文件：<br><b>${rawFilename}</b></div>';
+                               this.parentElement.innerHTML = '<div class=&quot;step-image placeholder&quot; style=&quot;padding:15px;font-size:12px;color:#c8102e;&quot;>未找到图片：<br><b>${rawFilename}</b></div>';
                              }
                            ">
                     ` : `<div class="step-image placeholder">未绑定图片</div>`}
@@ -396,16 +572,21 @@ async function guidePage(id){
           }).join("")}
         </div>
         
-        <!-- 重新补充的 RELATED 卡片展示区 -->
-        <section class="related">
-          <h2>YOU MAY ALSO NEED</h2>
-          <div class="related-grid">
-            ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id))).join("")}
-          </div>
-        </section>
+        ${relatedGuides.length > 0 ? `
+          <section class="related">
+            <h2>YOU MAY ALSO NEED</h2>
+            <div class="related-grid">
+              ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id))).join("")}
+            </div>
+          </section>
+        ` : ''}
       </article>
     </div>
-  </div></section>`;
+  </section>
+  
+  <div class="lightbox-modal" id="lightbox-modal" onclick="this.classList.remove('active')">
+    <img id="lightbox-img" src="" alt="Enlarged screenshot">
+  </div>`;
 
   const fill = document.querySelector("#progress-fill");
   const sections = [...document.querySelectorAll("[data-step-section]")];
@@ -414,7 +595,7 @@ async function guidePage(id){
   function guideProgress(){
     const top = window.scrollY;
     const start = document.querySelector(".guide-title")?.offsetTop || 0;
-    const end = document.querySelector(".related")?.offsetTop || document.body.scrollHeight;
+    const end = document.body.scrollHeight;
     const pct = Math.max(0, Math.min(100, ((top - start) / (end - start)) * 100));
     if(fill) fill.style.height = `${pct}%`;
     sections.forEach((sec, i) => {
