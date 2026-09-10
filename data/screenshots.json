@@ -237,7 +237,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-021",
@@ -249,7 +249,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-022",
@@ -261,7 +261,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-023",
@@ -273,7 +273,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-024",
@@ -285,7 +285,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-025",
@@ -297,7 +297,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-026",
@@ -309,7 +309,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-027",
@@ -321,7 +321,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-028",
@@ -333,7 +333,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-029",
@@ -345,7 +345,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-030",
@@ -357,7 +357,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-031",
@@ -369,7 +369,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-032",
@@ -381,7 +381,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-033",
@@ -393,7 +393,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-034",
@@ -405,7 +405,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-035",
@@ -417,7 +417,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-036",
@@ -429,7 +429,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-037",
@@ -441,7 +441,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-038",
@@ -453,7 +453,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-039",
@@ -465,7 +465,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-040",
@@ -477,7 +477,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-041",
@@ -489,7 +489,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-042",
@@ -501,7 +501,7 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
   },
   {
     "image_id": "IMG-043",
@@ -513,6 +513,162 @@
     "order": null,
     "alt_text": null,
     "source": null,
-    "status": null
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-044",
+    "filename": "meituan-order-01.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S1",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-045",
+    "filename": "meituan-order-02.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S2",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-046",
+    "filename": "meituan-order-03.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S3",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-047",
+    "filename": "meituan-order-04.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S4",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-048",
+    "filename": "meituan-order-05.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S5",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-049",
+    "filename": "meituan-order-06.png",
+    "guide_id": "GUIDE-010",
+    "step_id": "GUIDE-010-S6",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-050",
+    "filename": "maintenance-01.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S1",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-051",
+    "filename": "maintenance-02.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S2",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-052",
+    "filename": "maintenance-03.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S3",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-053",
+    "filename": "maintenance-04.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S4",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-054",
+    "filename": "maintenance-05.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S5",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-055",
+    "filename": "maintenance-06.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S6",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
+  },
+  {
+    "image_id": "IMG-056",
+    "filename": "maintenance-07.png",
+    "guide_id": "GUIDE-013",
+    "step_id": "GUIDE-013-S7",
+    "image_type": null,
+    "caption": null,
+    "order": null,
+    "alt_text": null,
+    "source": null,
+    "status": "ready"
   }
 ]
