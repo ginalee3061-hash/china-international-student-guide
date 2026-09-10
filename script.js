@@ -31,7 +31,6 @@ function guideCard(g, item){
   </a>`;
 }
 
-// 对应图 2 到图 7 的精确推荐分类定义
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -102,9 +101,8 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 严格绑定要求的项目指南
-  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 与 APP-003
-  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; // ICB-001, DOR-001, APP-001
+  const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; 
+  const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; 
 
   const packageGuides = packageFoodGuideIds.map(id => pub.get(id)).filter(Boolean);
   const moneyGuides = moneyPaymentGuideIds.map(id => pub.get(id)).filter(Boolean);
@@ -127,9 +125,7 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 前部特色板块 -->
   <div class="home-sections">
-    <!-- PACKAGES & FOOD -->
     <section class="section-band blue">
       <div class="container">
         <div class="section-tab"><span>01 PACKAGES & FOOD</span><span class="arrow">→</span></div>
@@ -140,7 +136,6 @@ async function home(){
       </div>
     </section>
 
-    <!-- MONEY & PAYMENTS -->
     <section class="section-band rose">
       <div class="container">
         <div class="section-tab"><span>02 MONEY & PAYMENTS</span><span class="arrow">→</span></div>
@@ -152,7 +147,6 @@ async function home(){
     </section>
   </div>
 
-  <!-- RECOMMENDED APPS 拼贴看板区 (图 2 / 5_2.jpg) -->
   <section class="rec-board-section">
     <div class="container">
       <div class="rec-board-header">
@@ -174,11 +168,10 @@ async function home(){
     </div>
   </section>
 
-  <!-- 档案袋模块 (对应 12.jpg) -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
-        <img src="images/12.jpg" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="this.src='12.jpg'; this.onerror=null;">
+        <img src="images/12.png" alt="Building 12 Dormitory Information" class="folder-inner-img" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/12.jpg';}">
       </a>
     </div>
   </section>`;
@@ -190,7 +183,6 @@ async function home(){
   });
 }
 
-/* 分类展示页 (图 3 ~ 图 7) */
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -214,7 +206,6 @@ function recCategoryPage(catId){
   </section>`;
 }
 
-/* 档案册全屏阅读页 (13, 14, 15.jpg) */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-book-page">
     <div class="container" style="margin-bottom:20px;">
@@ -222,9 +213,9 @@ async function dormBookPage(){
     </div>
     <div class="dorm-book-container" id="dorm-book-container">
       <div class="dorm-slide-wrapper" id="dorm-slide-wrapper">
-        <div class="dorm-slide"><img src="images/13.jpg" alt="Dormitory Information 1" onerror="this.src='13.jpg'; this.onerror=null;"></div>
-        <div class="dorm-slide"><img src="images/14.jpg" alt="Dormitory Information 2" onerror="this.src='14.jpg'; this.onerror=null;"></div>
-        <div class="dorm-slide"><img src="images/15.jpg" alt="Dormitory Information 3" onerror="this.src='15.jpg'; this.onerror=null;"></div>
+        <div class="dorm-slide"><img src="images/13.png" alt="Dormitory Information 1" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/13.jpg';}"></div>
+        <div class="dorm-slide"><img src="images/14.png" alt="Dormitory Information 2" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/14.jpg';}"></div>
+        <div class="dorm-slide"><img src="images/15.png" alt="Dormitory Information 3" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='images/15.jpg';}"></div>
       </div>
     </div>
     <div class="dorm-nav-bar">
@@ -295,7 +286,6 @@ async function dormBookPage(){
   updateSlide(0);
 }
 
-/* App 详情页 */
 async function itemPage(id){
   const [items, guides, details] = await Promise.all([getData("items"), getData("guides"), getData("app-details")]);
   const item = by(items, "item_id", id) || { name: id, chinese_name: id, _display_name: id, visual: { logo_class: "default", logo_text: "✦" } };
@@ -326,13 +316,27 @@ async function itemPage(id){
   </div></section>`;
 }
 
-/* 步骤详情页（全智能图片加载与 iPhone Mockup 渲染） */
+/* 步骤详情页：修复 Related 卡片与图片加载 */
 async function guidePage(id){
   const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
   const item = by(items, "item_id", g.item_id);
   const guideSteps = steps.filter(s => String(s.guide_id) === String(id)).sort((a, b) => (a.step_number || 0) - (b.step_number || 0));
-  const shotMap = new Map(shots.map(s => [s.image_id, s]));
+  
+  const shotMapById = new Map(shots.map(s => [s.image_id, s]));
+  const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
+
+  // 聚合关联指南：同 App、关联交通（如支付宝乘车）、或其它已发布教程
+  let relatedGuides = guides.filter(x => {
+    if (x.guide_id === id || x.status !== "published") return false;
+    if (x.item_id === g.item_id) return true;
+    if (g.item_id === "APP-001" && x.guide_id === "GUIDE-004") return true; // 支付宝与乘车联动
+    return false;
+  });
+  if (relatedGuides.length < 3) {
+    const others = guides.filter(x => x.status === "published" && x.guide_id !== id && !relatedGuides.some(rg => rg.guide_id === x.guide_id));
+    relatedGuides = [...relatedGuides, ...others].slice(0, 3);
+  }
 
   app.innerHTML = `<section class="page"><div class="container">
     ${crumbs([{label:"Home", href:"/"}, ...(item ? [{label: itemName(item), href:`/item/${item.item_id}`}] : []), {label: titleOf(g)}])}
@@ -348,9 +352,18 @@ async function guidePage(id){
         </header>
         <div class="guide-steps">
           ${guideSteps.map((s, i) => {
-            const sh = shotMap.get(s.image_id);
-            // 自动提取纯文件名
+            let sh = shotMapById.get(s.image_id);
+            if(!sh && s.step_id) {
+              sh = shotMapByStep.get(s.step_id) || shotMapByStep.get(s.step_id.replace('-S', '-S0'));
+            }
+            
             let rawFilename = sh?.filename || (s.image_path ? s.image_path.split('/').pop() : '');
+            if (!rawFilename && id === "GUIDE-010") {
+              rawFilename = `meituan-order-${String(i+1).padStart(2, '0')}.png`;
+            } else if (!rawFilename && id === "GUIDE-013") {
+              rawFilename = `maintenance-${String(i+1).padStart(2, '0')}.png`;
+            }
+
             let primarySrc = rawFilename ? `images/${rawFilename}` : '';
             
             return `<section class="guide-step" data-step-section="${i}">
@@ -368,20 +381,28 @@ async function guidePage(id){
                            alt="Step screenshot" 
                            loading="lazy" 
                            onerror="
-                             if(!this.dataset.retried) {
-                               this.dataset.retried = '1';
+                             if(!this.dataset.t) {
+                               this.dataset.t = 1;
                                this.src = '${rawFilename}';
                              } else {
-                               this.parentElement.innerHTML = '<div class=&quot;step-image placeholder&quot; style=&quot;padding:15px;font-size:12px;color:#c8102e;&quot;>未找到图片文件：<br><b>${rawFilename}</b><br><small style=&quot;color:#666;&quot;>请检查 images 目录下是否有此文件</small></div>';
+                               this.parentElement.innerHTML = '<div class=&quot;step-image placeholder&quot; style=&quot;padding:15px;font-size:12px;color:#c8102e;&quot;>未找到图片文件：<br><b>${rawFilename}</b></div>';
                              }
                            ">
-                    ` : `<div class="step-image placeholder">未绑定图片<br><small>${s.image_id || '暂无ID'}</small></div>`}
+                    ` : `<div class="step-image placeholder">未绑定图片</div>`}
                   </div>
                 </div>
               </div>
             </section>`;
           }).join("")}
         </div>
+        
+        <!-- 重新补充的 RELATED 卡片展示区 -->
+        <section class="related">
+          <h2>YOU MAY ALSO NEED</h2>
+          <div class="related-grid">
+            ${relatedGuides.map(x => guideCard(x, by(items, "item_id", x.item_id))).join("")}
+          </div>
+        </section>
       </article>
     </div>
   </div></section>`;
@@ -393,7 +414,7 @@ async function guidePage(id){
   function guideProgress(){
     const top = window.scrollY;
     const start = document.querySelector(".guide-title")?.offsetTop || 0;
-    const end = document.body.scrollHeight;
+    const end = document.querySelector(".related")?.offsetTop || document.body.scrollHeight;
     const pct = Math.max(0, Math.min(100, ((top - start) / (end - start)) * 100));
     if(fill) fill.style.height = `${pct}%`;
     sections.forEach((sec, i) => {
