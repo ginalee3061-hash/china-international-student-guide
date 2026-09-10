@@ -1,18 +1,60 @@
 /**
- * Campus Life Survival Guide - Complete Engine
+ * Campus Life Survival Guide - Engine
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 数据总线
-  const appData = {
+  const state = {
     guides: [],
     steps: [],
-    dormInfo: null,
+    screenshots: [],
     currentDormPage: 1
+  };
+
+  // RECOMMEND APPS 图 6~10 的配置元数据
+  const appGalleries = {
+    '01': {
+      title: '01 FOOD & DELIVERY',
+      apps: [
+        { name: '美团', sub: 'MeiTuan', icon: 'images/meituanicon.png' },
+        { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
+        { name: '京东', sub: 'JingDong', icon: 'images/JDIcon.png' }
+      ]
+    },
+    '02': {
+      title: '02 TRANSIT & MAPS',
+      apps: [
+        { name: '高德地图', sub: 'Amap', icon: 'images/amapicon.png' },
+        { name: '哈喽', sub: 'HaLou', icon: 'images/haloicon.png' }
+      ]
+    },
+    '03': {
+      title: '03 FINANCE & PAYMENTS',
+      apps: [
+        { name: '支付宝', sub: 'Alipay', icon: 'images/alipayicon.png' },
+        { name: '工商银行', sub: 'ICBC', icon: 'images/icbcicon.png' },
+        { name: '微信', sub: 'WeChat Pay', icon: 'images/wechatpayicon.png' }
+      ]
+    },
+    '04': {
+      title: '04 SHOPPING',
+      apps: [
+        { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
+        { name: '京东', sub: 'JingDong', icon: 'images/JDIcon.png' },
+        { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
+      ]
+    },
+    '05': {
+      title: '05 VPN',
+      apps: [
+        { name: 'Skuracat', sub: '', icon: 'images/sakuracaticon.png' },
+        { name: 'Ikuuu', sub: '', icon: 'images/ikuuicon.png' }
+      ]
+    }
   };
 
   // 视图节点
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
+  const appGalleryView = document.getElementById('appGalleryView');
   const dormDossierView = document.getElementById('dormDossierView');
 
   // 组件节点
@@ -20,9 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const stepsFlowContainer = document.getElementById('stepsFlowContainer');
   const trackLineFill = document.getElementById('trackLineFill');
   const btnBackHome = document.getElementById('btnBackHome');
+  const btnBackFromGallery = document.getElementById('btnBackFromGallery');
+
+  const galleryCatTitle = document.getElementById('galleryCatTitle');
+  const galleryCardsGrid = document.getElementById('galleryCardsGrid');
 
   const dormFileTrigger = document.getElementById('dormFileTrigger');
-  const openDormDossierLink = document.getElementById('openDormDossierLink');
+  const openDormLink = document.getElementById('openDormLink');
   const dossierCloseBtn = document.getElementById('dossierCloseBtn');
   const dossierPrevBtn = document.getElementById('dossierPrevBtn');
   const dossierNextBtn = document.getElementById('dossierNextBtn');
@@ -30,166 +76,219 @@ document.addEventListener('DOMContentLoaded', () => {
   const dossierBodyViewport = document.getElementById('dossierBodyViewport');
   const toastPopup = document.getElementById('toastPopup');
 
-  // 1. 初始化并拉取数据
   async function init() {
     try {
-      const [guidesRes, stepsRes, dormRes] = await Promise.all([
+      const [guides, steps, screenshots] = await Promise.all([
         fetch('data/guides.json').then(r => r.json()),
         fetch('data/steps.json').then(r => r.json()),
-        fetch('data/dorm-info.json').then(r => r.json())
+        fetch('data/screenshots.json').then(r => r.json())
       ]);
 
-      appData.guides = guidesRes;
-      appData.steps = stepsRes;
-      appData.dormInfo = dormRes;
+      state.guides = guides;
+      state.steps = steps;
+      state.screenshots = screenshots;
 
-      bindEventListeners();
-    } catch (e) {
-      console.error('Data loading error:', e);
+      bindEvents();
+    } catch (err) {
+      console.error('Data initialization error:', err);
     }
   }
 
-  // 2. 绑定事件
-  function bindEventListeners() {
-    // 点击主页任一指南卡片 -> 切到详情页
+  function bindEvents() {
+    // 点击主页卡片 -> 打开对应指南
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
-        const guideId = card.dataset.guideId;
-        openGuideDetailPage(guideId);
+        const gid = card.dataset.guideId;
+        openGuideDetail(gid);
       });
     });
 
-    // 详情页返回主页
+    // 点击散落拍立得 (01) ~ (05) -> 打开图 6~10 App 展台
+    document.querySelectorAll('.pin-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const catKey = card.dataset.appCat;
+        openAppGallery(catKey);
+      });
+    });
+
+    // 返回主页
     btnBackHome.addEventListener('click', () => {
       switchView('home');
       window.scrollTo(0, 0);
     });
 
-    // 打开 Building 12 档案
-    dormFileTrigger.addEventListener('click', () => openDormDossier());
-    openDormDossierLink.addEventListener('click', () => openDormDossier());
-
-    // 关闭档案
-    dossierCloseBtn.addEventListener('click', () => {
+    btnBackFromGallery.addEventListener('click', () => {
       switchView('home');
+      window.scrollTo(0, 0);
     });
 
-    // 档案翻页
+    // Building 12 档案
+    dormFileTrigger.addEventListener('click', openDossier);
+    openDormLink.addEventListener('click', openDossier);
+
+    dossierCloseBtn.addEventListener('click', () => switchView('home'));
+
     dossierPrevBtn.addEventListener('click', () => {
-      if (appData.currentDormPage > 1) {
-        appData.currentDormPage--;
-        renderDormPage(appData.currentDormPage);
+      if (state.currentDormPage > 1) {
+        state.currentDormPage--;
+        renderDormPage(state.currentDormPage);
       }
     });
 
     dossierNextBtn.addEventListener('click', () => {
-      if (appData.currentDormPage < 3) {
-        appData.currentDormPage++;
-        renderDormPage(appData.currentDormPage);
+      if (state.currentDormPage < 3) {
+        state.currentDormPage++;
+        renderDormPage(state.currentDormPage);
       }
     });
 
-    // 监听窗口滚动 -> 驱动竖直蓝色灌浆进度条
-    window.addEventListener('scroll', handleScrollProgressBar);
+    window.addEventListener('scroll', updateScrollProgress);
   }
 
-  // 视图切换控制器
   function switchView(viewName) {
     homeView.classList.remove('active');
     guideDetailView.classList.remove('active');
+    appGalleryView.classList.remove('active');
     dormDossierView.classList.remove('active');
 
     if (viewName === 'home') homeView.classList.add('active');
     if (viewName === 'guide') guideDetailView.classList.add('active');
+    if (viewName === 'gallery') appGalleryView.classList.add('active');
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 3. 打开指南步骤新页面（图 4 效果）
-  function openGuideDetailPage(guideId) {
-    const guide = appData.guides.find(g => g.guide_id === guideId) || {
-      guide_title: 'HOW TO GET MY PACKAGES?'
+  // 1. 严格对应 Excel 的步骤与图片判断引擎
+  function openGuideDetail(guideId) {
+    const guide = state.guides.find(g => g.guide_id === guideId) || {
+      guide_title: 'CAMPUS LIFE GUIDE'
     };
 
     detailMainTitle.innerHTML = guide.guide_title.replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
 
-    // 过滤此 guide 的所有步骤
-    let steps = appData.steps.filter(s => s.guide_id === guideId);
-    if (steps.length === 0) {
-      // 若是菜鸟默认步骤，聚合呈现
-      steps = appData.steps.filter(s => ['GUIDE-005', 'GUIDE-006', 'GUIDE-008'].includes(s.guide_id));
+    const currentSteps = state.steps.filter(s => s.guide_id === guideId);
+
+    if (currentSteps.length === 0) {
+      stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:#666;">Step details for this guide are being updated...</p>`;
+    } else {
+      currentSteps.forEach(step => {
+        const ss = state.screenshots.find(s => s.image_id === step.image_id);
+        const hasRealImage = ss && ss.filename && ss.filename.trim() !== '';
+        const isExcelNone = ss && ss.status === 'none';
+        const isPhoto = (step.display_frame === 'photo') || (ss && ss.display_frame === 'photo');
+
+        const stepCard = document.createElement('div');
+
+        // 情况 C：Excel 中 status === 'none' -> 纯文字卡片，不加图片也不留预留框架
+        if (isExcelNone) {
+          stepCard.className = 'step-item-card step-card-text-only';
+          stepCard.innerHTML = `
+            <div class="step-info-col">
+              <div class="step-circle-badge">${step.step_number || 1}</div>
+              <h4 class="step-instruction-heading">${step.step_title}</h4>
+              <p class="step-detail-text">${step.instruction || ''}</p>
+              ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
+            </div>
+          `;
+        } else {
+          // 情况 A & B：有真实图片渲染图片，无真实图片渲染预留占位容器
+          stepCard.className = 'step-item-card';
+
+          let mediaBox = '';
+          if (isPhoto) {
+            mediaBox = hasRealImage ? `
+              <div class="mockup-photo-body">
+                <img src="images/${ss.filename}" alt="${step.step_title}">
+              </div>
+            ` : `
+              <div class="mockup-photo-body">
+                <div class="mockup-photo-placeholder">[ Photo Preview Pending ]</div>
+              </div>
+            `;
+          } else {
+            mediaBox = hasRealImage ? `
+              <div class="mockup-phone-body">
+                <div class="mockup-screen">
+                  <img src="images/${ss.filename}" alt="${step.step_title}">
+                </div>
+              </div>
+            ` : `
+              <div class="mockup-phone-body">
+                <div class="mockup-screen-placeholder">[ Mobile Screen Preview Pending ]</div>
+              </div>
+            `;
+          }
+
+          stepCard.innerHTML = `
+            ${mediaBox}
+            <div class="step-info-col">
+              <div class="step-circle-badge">${step.step_number || 1}</div>
+              <h4 class="step-instruction-heading">${step.step_title}</h4>
+              <p class="step-detail-text">${step.instruction || ''}</p>
+              ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
+            </div>
+          `;
+        }
+
+        stepsFlowContainer.appendChild(stepCard);
+      });
     }
-
-    let currentSection = '';
-    steps.forEach(step => {
-      // 分段小标题（例如 [iOS] Download the Cainiao App）
-      if (step.step_title && step.step_title.startsWith('[')) {
-        const secHeader = document.createElement('h3');
-        secHeader.className = 'step-section-header';
-        secHeader.textContent = step.step_title;
-        stepsFlowContainer.appendChild(secHeader);
-      }
-
-      const isPhoto = step.display_frame === 'photo';
-      const imgSrc = step.image_id ? `images/cainiao-code-01.png` : 'images/cainiao-code-01.png'; // 优先展示对应截图
-
-      const stepCard = document.createElement('div');
-      stepCard.className = 'step-item-card';
-
-      const mediaHtml = isPhoto ? `
-        <div class="mockup-photo-body">
-          <img src="${imgSrc}" alt="${step.step_title}">
-        </div>
-      ` : `
-        <div class="mockup-phone-body">
-          <div class="mockup-screen">
-            <img src="${imgSrc}" alt="${step.step_title}">
-          </div>
-        </div>
-      `;
-
-      stepCard.innerHTML = `
-        ${mediaHtml}
-        <div class="step-info-col">
-          <div class="step-circle-badge">${step.step_number || 1}</div>
-          <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-          <p class="step-detail-text">${step.instruction || ''}</p>
-        </div>
-      `;
-
-      stepsFlowContainer.appendChild(stepCard);
-    });
 
     switchView('guide');
     window.scrollTo(0, 0);
-    setTimeout(handleScrollProgressBar, 100);
+    setTimeout(updateScrollProgress, 100);
   }
 
-  // 4. 竖直蓝色进度条随页面滑动灌浆填充
-  function handleScrollProgressBar() {
+  // 2. 打开图 6~10 RECOMMEND APPS 展台
+  function openAppGallery(catKey) {
+    const config = appGalleries[catKey] || appGalleries['01'];
+    galleryCatTitle.textContent = config.title;
+    galleryCardsGrid.innerHTML = '';
+
+    config.apps.forEach(app => {
+      const card = document.createElement('div');
+      card.className = 'app-exhibit-card';
+      card.innerHTML = `
+        <div class="app-exhibit-icon-box">
+          <img src="${app.icon}" alt="${app.name}" onerror="this.style.background='#EEE'">
+        </div>
+        <div class="app-exhibit-footer">
+          <span class="app-exhibit-name">${app.name} ${app.sub}</span>
+          <span class="app-exhibit-arrow">▶</span>
+        </div>
+      `;
+      galleryCardsGrid.appendChild(card);
+    });
+
+    switchView('gallery');
+    window.scrollTo(0, 0);
+  }
+
+  // 3. 蓝色进度条灌浆
+  function updateScrollProgress() {
     if (!guideDetailView.classList.contains('active')) return;
 
-    const scrollLayout = document.querySelector('.detail-scroll-layout');
-    if (!scrollLayout) return;
+    const layout = document.querySelector('.detail-scroll-layout');
+    if (!layout) return;
 
-    const rect = scrollLayout.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const totalHeight = rect.height - windowHeight;
+    const rect = layout.getBoundingClientRect();
+    const winH = window.innerHeight;
+    const totalH = rect.height - winH;
 
-    if (totalHeight <= 0) {
+    if (totalH <= 0) {
       trackLineFill.style.height = '100%';
       return;
     }
 
-    const currentPassed = Math.max(0, -rect.top + 100);
-    const percent = Math.min(100, Math.max(0, (currentPassed / totalHeight) * 100));
+    const scrolled = Math.max(0, -rect.top + 80);
+    const percent = Math.min(100, Math.max(0, (scrolled / totalH) * 100));
     trackLineFill.style.height = `${percent}%`;
   }
 
-  // 5. 打开 Building 12 沉浸式档案页（底图 page.png）
-  function openDormDossier() {
-    appData.currentDormPage = 1;
-    renderDormPage(appData.currentDormPage);
+  // 4. Building 12 档案渲染
+  function openDossier() {
+    state.currentDormPage = 1;
+    renderDormPage(state.currentDormPage);
     switchView('dossier');
     window.scrollTo(0, 0);
   }
@@ -252,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
 
-        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
+        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2rem;">
           <div class="polaroid-holder" style="transform: rotate(-4deg);">
             <img src="images/packagesandfood-02.png" alt="Garbage">
           </div>
@@ -279,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
 
-        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
+        <div class="dorm-section-block dossier-split-photo" style="margin-top: 2rem;">
           <div>
             <h3 class="dorm-sec-heading">HAIR DRYER ROOMS</h3>
             <div class="dorm-typewriter-text">
@@ -294,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }
 
-    // 绑定复制真实触发事件
     dossierBodyViewport.querySelectorAll('.copy-trigger-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
