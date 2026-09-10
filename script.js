@@ -31,7 +31,7 @@ function guideCard(g, item){
   </a>`;
 }
 
-// 推荐分类板块配置（对应图 2 到图 7 布局）
+// 推荐分类板块配置
 const REC_SECTIONS = [
   {
     id: "food-delivery",
@@ -98,7 +98,7 @@ const REC_SECTIONS = [
   }
 ];
 
-// 复制与自动全选对应段落文字
+// 点击图标自动全选文字并复制到剪贴板
 window.selectAndCopyText = function(elementId, textToCopy) {
   const el = document.getElementById(elementId);
   if (el) {
@@ -146,7 +146,7 @@ async function home(){
   const [items, guides] = await Promise.all([getData("items"), getData("guides")]);
   const pub = new Map(guides.filter(g => g.status === "published").map(g => [g.guide_id, g]));
 
-  // 精确配置前部两大特色板块指南
+  // 严格指派前两个板块的卡片
   const packageFoodGuideIds = ["GUIDE-010", "GUIDE-008"]; // FOO-001 和 APP-003
   const moneyPaymentGuideIds = ["GUIDE-011", "GUIDE-009", "GUIDE-001"]; // ICB-001, DOR-001, APP-001
 
@@ -171,7 +171,7 @@ async function home(){
     </div>
   </div></section>
 
-  <!-- 特色指南板块 -->
+  <!-- 前两个特色板块 -->
   <div class="home-sections">
     <section class="section-band blue">
       <div class="container">
@@ -216,7 +216,7 @@ async function home(){
     </div>
   </section>
 
-  <!-- Building 12 档案袋封面 -->
+  <!-- 档案袋封面 -->
   <section class="folder-banner-section">
     <div class="container">
       <a href="#/dorm-book" class="folder-card">
@@ -232,7 +232,6 @@ async function home(){
   });
 }
 
-// 推荐分类详情展示页
 function recCategoryPage(catId){
   const sec = REC_SECTIONS.find(s => s.id === catId);
   if(!sec) return notFound();
@@ -256,136 +255,99 @@ function recCategoryPage(catId){
   </section>`;
 }
 
-// 档案册阅读器（真实文字排版 + 支持选取、复制 + 拍立得图片点击放大）
+/* 档案册全屏轮播（拟真底图 + 真实可选文字 + 双页Copy图标 + 拍立得图片点击放大） */
 async function dormBookPage(){
   app.innerHTML = `<section class="dorm-book-page">
     <div class="container" style="margin-bottom:20px;">
       ${crumbs([{label:"Home", href:"/"}, {label:"Building 12: Dormitory Information"}])}
     </div>
-    <div class="dorm-book-container" id="dorm-book-container">
-      <div class="dorm-slide-wrapper" id="dorm-slide-wrapper">
+
+    <div class="dorm-canvas-wrap" id="dorm-canvas-wrap">
+      <div class="dorm-slide-wrapper" id="dorm-slide-wrapper" style="display:flex;width:100%;height:100%;transition:transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);">
         
-        <!-- 页 1：文字真实可选 + 双页图标点击全选并复制 (13.jpg) -->
-        <div class="dorm-slide">
-          <div class="dorm-paper">
-            <div class="dorm-sec">
-              <h2>DORMITORY ADDRESS</h2>
-              <div class="dorm-divider"></div>
-              
-              <!-- 英文地址 -->
-              <div class="dorm-address-line">
-                <div class="dorm-address-content">
-                  <span class="dorm-star">★</span>
-                  <div id="addr-en" style="cursor:text;">
-                    Building 12, Graduate Student Apartments<br>
-                    East China Normal University (Minhang Campus)<br>
-                    No. 5800 Hongmei South Road, Minhang District, Shanghai
-                  </div>
-                </div>
-                <button class="dorm-copy-icon-btn" title="Click to select and copy" onclick="selectAndCopyText('addr-en', 'Building 12, Graduate Student Apartments\\nEast China Normal University (Minhang Campus)\\nNo. 5800 Hongmei South Road, Minhang District, Shanghai')">
-                  <svg viewBox="0 0 24 24">
-                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- 中文地址 -->
-              <div class="dorm-address-line" style="margin-top:22px;">
-                <div class="dorm-address-content">
-                  <span class="dorm-star">★</span>
-                  <div id="addr-cn" style="cursor:text;">
-                    上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
-                    研究生公寓12号楼
-                  </div>
-                </div>
-                <button class="dorm-copy-icon-btn" title="点击全选并复制" onclick="selectAndCopyText('addr-cn', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
-                  <svg viewBox="0 0 24 24">
-                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                  </svg>
-                </button>
-              </div>
+        <!-- Page 1：地址与门禁信息 (对应 13.png) -->
+        <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
+          <img src="images/13.png" alt="Dorm Address" class="dorm-bg-art" onerror="this.src='images/13.jpg'">
+          
+          <div class="dorm-overlay-layer">
+            <!-- 英文地址可选文字层 -->
+            <div id="text-en-addr" class="selectable-text-block" style="left:35%;top:27%;width:46%;font-size:14px;">
+              Building 12, Graduate Student Apartments<br>
+              East China Normal University (Minhang Campus)<br>
+              No. 5800 Hongmei South Road, Minhang District, Shanghai
             </div>
+            <!-- 英文地址复制按钮（对准图上的线框小图标） -->
+            <button class="hotspot-copy-btn" style="right:17.5%;top:26.5%;" title="Copy English Address" 
+              onclick="selectAndCopyText('text-en-addr', 'Building 12, Graduate Student Apartments, East China Normal University (Minhang Campus), No. 5800 Hongmei South Road, Minhang District, Shanghai')">
+              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            </button>
 
-            <div class="dorm-sec" style="margin-top:40px;">
-              <h2>ACCESS HOURS</h2>
-              <div class="dorm-divider"></div>
-              <div class="dorm-item">
-                <span class="dorm-star">★</span>
-                <div>The dormitory entrance closes at 23:00.</div>
-              </div>
+            <!-- 中文地址可选文字层 -->
+            <div id="text-cn-addr" class="selectable-text-block" style="left:35%;top:35%;width:46%;font-size:14px;">
+              上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
+              研究生公寓12号楼
             </div>
+            <!-- 中文地址复制按钮 -->
+            <button class="hotspot-copy-btn" style="right:17.5%;top:36.5%;" title="复制中文地址" 
+              onclick="selectAndCopyText('text-cn-addr', '上海市闵行区虹梅南路5800号华东师范大学闵行校区研究生公寓12号楼')">
+              <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            </button>
 
-            <div class="dorm-sec" style="margin-top:40px;">
-              <h2>QUIET HOURS</h2>
-              <div class="dorm-divider"></div>
-              <div class="dorm-item">
-                <span class="dorm-star">★</span>
-                <div>
-                  Please keep noise to a minimum after 23:00.<br>
-                  Do not use washing machines or hair dryers after 23:00.
-                </div>
-              </div>
+            <!-- 门禁与安静时间可选文字 -->
+            <div class="selectable-text-block" style="left:35%;top:53.5%;width:46%;font-size:14px;">The dormitory entrance closes at 23:00.</div>
+            <div class="selectable-text-block" style="left:35%;top:66.5%;width:46%;font-size:14px;">
+              Please keep noise to a minimum after 23:00.<br>
+              Do not use washing machines or hair dryers after 23:00.
             </div>
           </div>
         </div>
 
-        <!-- 页 2：真实文字 + 独立拍立得图片 (14.jpg) -->
-        <div class="dorm-slide">
-          <div class="dorm-paper" style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:30px;align-items:center;">
-            <div>
-              <div class="dorm-sec">
-                <h2>SHARED KITCHEN</h2>
-                <div class="dorm-divider"></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Please clean the kitchen after use.</div></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Do not leave personal items, pots, dishes, or cooking utensils on the countertops.</div></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Please return them to the cabinets or take them back to your room.</div></div>
-              </div>
-
-              <div class="dorm-sec" style="margin-top:40px;">
-                <h2>GARBAGE DISPOSAL</h2>
-                <div class="dorm-divider"></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>The kitchen trash bins are for food waste only.</div></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.</div></div>
-              </div>
+        <!-- Page 2：厨房与垃圾分类 (对应 14.png) -->
+        <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
+          <img src="images/14.png" alt="Kitchen & Garbage" class="dorm-bg-art" onerror="this.src='images/14.jpg'">
+          
+          <div class="dorm-overlay-layer">
+            <div class="selectable-text-block" style="left:29%;top:26%;width:32%;font-size:13px;">
+              • Please clean the kitchen after use.<br><br>
+              • Do not leave personal items, pots, dishes, or cooking utensils on the countertops.<br><br>
+              • Please return them to the cabinets or take them back to your room.
+            </div>
+            <div class="selectable-text-block" style="left:50%;top:63%;width:30%;font-size:13px;">
+              • The kitchen trash bins are for food waste only.<br><br>
+              • Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria.
             </div>
 
-            <div style="display:flex;flex-direction:column;gap:25px;align-items:center;">
-              <img src="images/kitchen-photo.jpg" alt="Kitchen" class="dorm-polaroid-wrap" onerror="this.src='images/14.png'" style="width:170px;border:6px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.15);transform:rotate(4deg);" onclick="openLightbox(this.src)">
-              <img src="images/garbage-photo.jpg" alt="Garbage Station" class="dorm-polaroid-wrap" onerror="this.src='images/14.png'" style="width:170px;border:6px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.15);transform:rotate(-4deg);" onclick="openLightbox(this.src)">
-            </div>
+            <!-- 可点击放大的拍立得图片插槽 -->
+            <div class="dorm-photo-slot" style="right:12%;top:24%;width:33%;height:33%;" onclick="openLightbox('images/14.png')"></div>
+            <div class="dorm-photo-slot" style="left:24%;bottom:8%;width:26%;height:27%;" onclick="openLightbox('images/14.png')"></div>
           </div>
         </div>
 
-        <!-- 页 3：饮水机与吹风机房 (15.jpg) -->
-        <div class="dorm-slide">
-          <div class="dorm-paper">
-            <div class="dorm-sec" style="display:grid;grid-template-columns:1fr 140px;gap:20px;align-items:center;">
-              <div>
-                <h2>DRINKING WATER DISPENSERS</h2>
-                <div class="dorm-divider"></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Water dispensers are located near the small staircases on the 2nd and 5th floors.</div></div>
-              </div>
-              <img src="images/water-photo.jpg" alt="Water Dispenser" class="dorm-polaroid-wrap" onerror="this.src='images/15.png'" style="width:130px;border:5px solid #fff;box-shadow:0 6px 15px rgba(0,0,0,0.15);" onclick="openLightbox(this.src)">
+        <!-- Page 3：饮水机与吹风机房 (对应 15.png) -->
+        <div class="dorm-slide" style="min-width:100%;height:100%;position:relative;">
+          <img src="images/15.png" alt="Water & Hair Dryer" class="dorm-bg-art" onerror="this.src='images/15.jpg'">
+          
+          <div class="dorm-overlay-layer">
+            <div class="selectable-text-block" style="left:61%;top:30%;width:24%;font-size:13px;">
+              Water dispensers are located near the small staircases on the 2nd and 5th floors.
+            </div>
+            <div class="selectable-text-block" style="left:26.5%;top:63%;width:26%;font-size:13px;">
+              Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.
             </div>
 
-            <div class="dorm-sec" style="margin-top:50px;display:grid;grid-template-columns:1fr 140px;gap:20px;align-items:center;">
-              <div>
-                <h2>HAIR DRYER ROOMS</h2>
-                <div class="dorm-divider"></div>
-                <div class="dorm-item"><span class="dorm-star">•</span><div>Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors.</div></div>
-              </div>
-              <img src="images/dryer-photo.jpg" alt="Hair Dryer Room" class="dorm-polaroid-wrap" onerror="this.src='images/15.png'" style="width:130px;border:5px solid #fff;box-shadow:0 6px 15px rgba(0,0,0,0.15);transform:rotate(-3deg);" onclick="openLightbox(this.src)">
-            </div>
+            <!-- 可点击放大的拍立得图片插槽 -->
+            <div class="dorm-photo-slot" style="left:28%;top:24%;width:29%;height:24%;" onclick="openLightbox('images/15.png')"></div>
+            <div class="dorm-photo-slot" style="right:18%;bottom:12%;width:25%;height:29%;" onclick="openLightbox('images/15.png')"></div>
           </div>
         </div>
 
       </div>
     </div>
+
+    <!-- 底部操作导航栏 -->
     <div class="dorm-nav-bar">
       <button class="dorm-nav-btn" id="prev-btn">← Prev</button>
-      <div class="dorm-indicators" id="dorm-indicators">
+      <div class="dorm-indicators">
         <div class="dorm-dot active" data-index="0"></div>
         <div class="dorm-dot" data-index="1"></div>
         <div class="dorm-dot" data-index="2"></div>
@@ -399,13 +361,14 @@ async function dormBookPage(){
     <img id="lightbox-img" src="" alt="Enlarged view">
   </div>`;
 
+  // 轮播与滑动逻辑
   let currentIndex = 0;
   const totalSlides = 3;
   const wrapper = document.getElementById("dorm-slide-wrapper");
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
   const dots = document.querySelectorAll(".dorm-dot");
-  const container = document.getElementById("dorm-book-container");
+  const container = document.getElementById("dorm-canvas-wrap");
 
   function updateSlide(index){
     currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
@@ -424,33 +387,13 @@ async function dormBookPage(){
     });
   });
 
+  // 移动端/触摸滑动翻页
   let startX = 0;
-  let isDragging = false;
-
-  container.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-  });
-
-  container.addEventListener("touchmove", (e) => {
-    if(!isDragging) return;
-    const currentX = e.touches[0].clientX;
-    const diff = currentX - startX;
-    wrapper.style.transform = `translateX(calc(-${currentIndex * 100}% + ${diff}px))`;
-  });
-
+  container.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, {passive:true});
   container.addEventListener("touchend", (e) => {
-    if(!isDragging) return;
-    isDragging = false;
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX;
-    if(diff < -50 && currentIndex < totalSlides - 1){
-      updateSlide(currentIndex + 1);
-    } else if(diff > 50 && currentIndex > 0){
-      updateSlide(currentIndex - 1);
-    } else {
-      updateSlide(currentIndex);
-    }
+    const diff = e.changedTouches[0].clientX - startX;
+    if(diff < -50 && currentIndex < totalSlides - 1) updateSlide(currentIndex + 1);
+    else if(diff > 50 && currentIndex > 0) updateSlide(currentIndex - 1);
   });
 
   updateSlide(0);
@@ -486,7 +429,7 @@ async function itemPage(id){
   </div></section>`;
 }
 
-// 步骤详情页（仅 Alipay 展示专属卡片，图片支持放大）
+// 步骤详情页（严格关联：仅在属于 Alipay 相关时展示支付宝卡片，支持放大）
 async function guidePage(id){
   const [items, guides, steps, shots] = await Promise.all([getData("items"), getData("guides"), getData("steps"), getData("screenshots")]);
   const g = by(guides, "guide_id", id); if(!g) return notFound();
@@ -496,7 +439,7 @@ async function guidePage(id){
   const shotMapById = new Map(shots.map(s => [s.image_id, s]));
   const shotMapByStep = new Map(shots.map(s => [s.step_id, s]));
 
-  // 严格过滤：只有浏览支付宝相关指南时，才展示全套支付宝指南；其它 App 仅展示该 App 自己名下的指南
+  // 严格条件过滤：仅当是 Alipay 系列教程时才关联支付宝全套（绑卡/支付/乘车）
   let relatedGuides = [];
   const isAlipayRelated = g.item_id === "APP-001" || id === "GUIDE-004";
 
