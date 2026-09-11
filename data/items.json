@@ -1,4 +1,4 @@
-"ITEM":[
+{"ITEM":[
  {
   "item_id": "TP-001",
   "category_id": "CAT-002",
@@ -83,3 +83,4 @@
   "status": "active"
  }
 ]
+}
