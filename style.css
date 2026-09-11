@@ -1181,3 +1181,195 @@ body {
     margin: 0 auto;
   }
 }
+/* ==========================================================================
+   FAQ 模块样式 (1:1 还原设计图)
+   ========================================================================== */
+.faq-section-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faq-header-center {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+/* 顶部 F.A.Q 小胶囊药丸 */
+.faq-pill-badge {
+  display: inline-block;
+  font-family: 'HeuvelGrotesk', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: #383B3D;
+  background-color: #E2E6DF;
+  padding: 0.45rem 1.4rem;
+  border-radius: 30px;
+  margin-bottom: 1.5rem;
+}
+
+/* Questions People Often Ask 衬线大标题 */
+.faq-serif-title {
+  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
+  font-size: 2.8rem;
+  line-height: 1.15;
+  font-weight: 400;
+  color: var(--text-dark);
+  letter-spacing: -0.01em;
+}
+
+/* 手风琴列表 */
+.faq-accordion-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.faq-item {
+  width: 100%;
+  border-radius: 26px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 默认折叠状态的白色胶囊按钮 */
+.faq-question-btn {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  padding: 1.5rem 2rem;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  text-align: left;
+  transition: all 0.25s ease;
+}
+
+.faq-question-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* 问题文字（衬线质感） */
+.faq-q-text {
+  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+/* 右侧 + / ✕ 圆形小按钮 */
+.faq-toggle-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(128, 128, 128, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'AlteHaasGroteskRegular', sans-serif;
+  font-size: 1.2rem;
+  color: #555;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+/* 答案抽屉面板 */
+.faq-answer-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* 展开后的答案浅绿/橄榄米色内嵌卡片（严格还原图 1） */
+.faq-answer-content {
+  margin-top: 0.75rem;
+  background-color: #E8EDE4;
+  color: #2D332D;
+  padding: 1.8rem 2.2rem;
+  border-radius: 22px;
+  font-family: 'AlteHaasGroteskRegular', -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* 激活展开状态 */
+.faq-item.active .faq-question-btn {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.faq-item.active .faq-toggle-icon {
+  background: #222;
+  color: #FFF;
+  transform: rotate(45deg); /* + 旋转变 ✕ */
+}
+
+.faq-item.active .faq-answer-panel {
+  opacity: 1;
+}
+
+/* ---------------- 深色模式自适应 (Dark Mode) ---------------- */
+[data-theme="dark"] .faq-pill-badge {
+  background-color: #2D332D;
+  color: #CFD6CE;
+}
+
+[data-theme="dark"] .faq-question-btn {
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .faq-toggle-icon {
+  background: rgba(255, 255, 255, 0.1);
+  color: #DDD;
+}
+
+[data-theme="dark"] .faq-item.active .faq-toggle-icon {
+  background: #EEE;
+  color: #111;
+}
+
+[data-theme="dark"] .faq-answer-content {
+  background-color: #272C25;
+  color: #DDE3DA;
+}
+
+/* ---------------- 手机移动端适配 ---------------- */
+@media (max-width: 768px) {
+  .faq-section-wrapper {
+    padding: 3.5rem 1.2rem 4.5rem;
+  }
+  .faq-serif-title {
+    font-size: 2.1rem;
+  }
+  .faq-question-btn {
+    padding: 1.2rem 1.4rem;
+    border-radius: 20px;
+  }
+  .faq-q-text {
+    font-size: 1.05rem;
+  }
+  .faq-toggle-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 1.05rem;
+  }
+  .faq-answer-content {
+    padding: 1.4rem 1.5rem;
+    font-size: 0.92rem;
+    border-radius: 18px;
+  }
+}
