@@ -56,6 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
       searchPlaceholder: "Search guides (e.g. Cainiao, Laundry, Alipay, Delivery)...",
       noResults: "No matching guides found.",
       copiedToast: "Address copied to clipboard!"
+   ,
+      faqMainTitle: "Questions People<br>Often Ask",
+faqQ1: "What time is the dormitory curfew? What should I do if I return late?",
+faqA1: "The dormitory doors are locked at 11:00 PM. If you return late, check the dorm staff's phone number displayed at the front desk through the glass door and call her to open the door. After entering, you will need to register your late return.",
+faqQ2: "Can I bring visitors into the dormitory?",
+faqA2: "Yes. All visitors must register at the front desk when entering the dormitory and must leave before 10:00 PM.",
+faqQ3: "What should I do if I have a conflict with another resident?",
+faqA3: "Please contact the Dorm Leader as soon as possible for help with communication and mediation. Please avoid arguing or escalating the situation.",
+faqQ4: "What numbers should I call in an emergency?",
+faqA4: "In an emergency, call the appropriate number:<br><br>🚓 <strong>Police:</strong> 110<br>🚑 <strong>Ambulance:</strong> 120<br>🚒 <strong>Fire:</strong> 119",
+
     },
     zh: {
       logoTitle: "校园生活指引",
@@ -97,7 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
       searchPlaceholder: "搜索指南 (例如：菜鸟, 洗衣, 外卖, 支付宝)...",
       noResults: "未找到相关指南。",
       copiedToast: "地址已成功复制到剪贴板！"
-    }
+  , faqMainTitle: "常见宿舍疑问解答<br>FAQ",
+faqQ1: "宿舍几点门禁？晚归怎么办？",
+faqA1: "宿舍将在 23:00 锁门。如果晚归，请透过玻璃门查看前台宿管阿姨的手机号码，并拨打电话请她帮忙开门。进入宿舍后，需要进行晚归登记。",
+faqQ2: "可以带访客进入宿舍吗？",
+faqA2: "可以，但所有访客进入宿舍时都必须在前台登记，并且必须在 22:00 前离开宿舍。",
+faqQ3: "如果和其他住户发生矛盾或冲突怎么办？",
+faqA3: "请第一时间联系楼长协助沟通和调解。请尽量避免自行争执或让冲突升级。",
+faqQ4: "遇到紧急情况应该拨打什么电话？",
+faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警 Police:</strong> 110<br>🚑 <strong>急救 Ambulance:</strong> 120<br>🚒 <strong>火警 Fire:</strong> 119",}
   };
 
   const appGalleries = {
@@ -309,6 +328,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const next = state.currentTheme === 'light' ? 'dark' : 'light';
       applyTheme(next);
     });
+    // FAQ 手风琴展开与收起
+document.querySelectorAll('.faq-item').forEach(item => {
+  const btn = item.querySelector('.faq-question-btn');
+  const panel = item.querySelector('.faq-answer-panel');
+
+  btn.addEventListener('click', () => {
+    const isOpen = item.classList.contains('active');
+
+    // 如果希望每次只展开一个，可以取消下面两行注释：
+    // document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('active'); i.querySelector('.faq-answer-panel').style.maxHeight = null; });
+
+    if (isOpen) {
+      item.classList.remove('active');
+      panel.style.maxHeight = null;
+    } else {
+      item.classList.add('active');
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    }
+  });
+});
   }
 
   function applyLanguage(lang) {
