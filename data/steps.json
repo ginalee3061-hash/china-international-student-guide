@@ -1,4 +1,4 @@
-"STEPS":[
+{"STEPS":[
  {
   "step_id": "GUIDE-001-S01",
   "guide_id": "GUIDE-001",
@@ -505,3 +505,4 @@
   "status": "active"
  }
 ]
+}
