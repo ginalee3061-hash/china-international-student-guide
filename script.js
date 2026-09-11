@@ -1,93 +1,18 @@
 /**
- * Campus Life Survival Guide - Engine (All 61 Steps + Real-time Search)
+ * Campus Life Survival Guide - Dynamic Engine
+ * 完全从 data/*.json 动态加载数据，无任何本地硬编码固化
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. 全部完整指南元数据 (9 篇发布指南)
-  const GUIDES = [
-    { "guide_id": "GUIDE-001", "guide_title": "How to register Alipay", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-002", "guide_title": "How to add a bank card", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-003", "guide_title": "How to pay with Alipay", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-004", "guide_title": "How to take metro with Alipay?", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-008", "guide_title": "How to get my packages？", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-009", "guide_title": "Top up your campus card & dorm electricity", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-010", "guide_title": "How to get my delivery?", "platform": "iOS, Android" },
-    { "guide_id": "GUIDE-011", "guide_title": "Doing your laundry", "platform": "all" },
-    { "guide_id": "GUIDE-012", "guide_title": "Getting things fixed", "platform": "all" }
-  ];
+  // 全局动态数据状态
+  const state = {
+    guides: [],
+    steps: [],
+    screenshots: [],
+    dormInfo: null,
+    currentDormPage: 1
+  };
 
-  // 2. 全部 61 个完整步骤与截图配置 (直接内嵌，避免 fetch 旧 json 污染)
-  const ALL_STEPS = [
-    // GUIDE-001 (Alipay 注册)
-    {"guide_id":"GUIDE-001","step_number":1,"step_title":"Open Alipay","instruction":"","tip":"","filename":"alipay-register-ios-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":2,"step_title":"Start registration","instruction":"","tip":"","filename":"alipay-register-ios-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":3,"step_title":"Enter your phone number","instruction":"Use the number you can receive SMS on","tip":"","filename":"","status":"none","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":4,"step_title":"Verify your number","instruction":"","tip":"","filename":"alipay-register-ios-04.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":5,"step_title":"Enter your identity card number","instruction":"","tip":"","filename":"alipay-register-ios-05.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":6,"step_title":"Enter your passport number","instruction":"","tip":"","filename":"alipay-register-ios-06.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":7,"step_title":"Go to settings","instruction":"","tip":"","filename":"alipay-register-ios-07.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":8,"step_title":"Go to Account and Security","instruction":"","tip":"","filename":"alipay-register-ios-08.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-001","step_number":9,"step_title":"Set your email and identity information","instruction":"","tip":"","filename":"alipay-register-ios-09.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-002 (绑定银行卡)
-    {"guide_id":"GUIDE-002","step_number":1,"step_title":"Click Account","instruction":"","tip":"","filename":"alipay-bank-ios-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-002","step_number":2,"step_title":"Go to Bank Cards","instruction":"","tip":"","filename":"alipay-bank-ios-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-002","step_number":3,"step_title":"Add Bank card","instruction":"","tip":"","filename":"alipay-bank-ios-03.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-002","step_number":4,"step_title":"Enter your bank card number","instruction":"","tip":"","filename":"alipay-bank-ios-04.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-003 (支付宝付款)
-    {"guide_id":"GUIDE-003","step_number":1,"step_title":"Go to Pay/Receive","instruction":"","tip":"","filename":"alipay-pay-ios-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-003","step_number":2,"step_title":"Use the QR code to pay","instruction":"","tip":"","filename":"alipay-pay-ios-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-003","step_number":3,"step_title":"Go to receive","instruction":"","tip":"","filename":"alipay-pay-ios-03.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-003","step_number":4,"step_title":"Use the QR code to receive","instruction":"","tip":"","filename":"alipay-pay-ios-04.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-004 (地铁乘车码)
-    {"guide_id":"GUIDE-004","step_number":1,"step_title":"Go to Transport","instruction":"","tip":"","filename":"alipay-metro-ios-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-004","step_number":2,"step_title":"Use the QR code to Scan","instruction":"","tip":"","filename":"alipay-metro-ios-02.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-008 (取快递)
-    {"guide_id":"GUIDE-008","step_number":1,"step_title":"Open TaoBao and tap 菜鸟驿站","instruction":"","tip":"","filename":"cainiao-code-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-008","step_number":2,"step_title":"Use the 取件码 (pickup code) to find your package","instruction":"","tip":"","filename":"cainiao-code-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-008","step_number":3,"step_title":"Scan the barcode on your package","instruction":"","tip":"","filename":"cainiao-code-03.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-008","step_number":4,"step_title":"Just scan your identity code at the machine and you're good to go","instruction":"","tip":"","filename":"cainiao-code-04.png","status":"ready","display_frame":"photo"},
-
-    // GUIDE-009 (校园卡及电费充值)
-    {"guide_id":"GUIDE-009","step_number":1,"step_title":"Open WeChat","instruction":"","tip":"","filename":"Ecard-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":2,"step_title":"Search for 华东师大Ecard at the top","instruction":"","tip":"","filename":"Ecard-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":3,"step_title":"Open the ECNU Ecard Mini Program","instruction":"","tip":"","filename":"Ecard-03.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":4,"step_title":"Tap Login and enter your Campus Card ID and password","instruction":"","tip":"","filename":"Ecard-04.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":5,"step_title":"To recharge your campus card","instruction":"Tap Recharge","tip":"","filename":"Ecard-05.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":6,"step_title":"Enter the amount you want to recharge","instruction":"","tip":"","filename":"Ecard-06.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":7,"step_title":"To recharge your dormitory electricity","instruction":"Tap Water & Electricity Top-Up","tip":"","filename":"Ecard-07.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":8,"step_title":"Enter your dormitory room information, then tap Next","instruction":"","tip":"","filename":"Ecard-08.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":9,"step_title":"Enter the amount you want to top up and complete the payment","instruction":"","tip":"","filename":"Ecard-09.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":10,"step_title":"To open the Mini Program more quickly next time","instruction":"Tap the ··· icon in the top-right corner","tip":"","filename":"Ecard-10.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-009","step_number":11,"step_title":"Select Add to My Mini Programs or Add to Home Screen","instruction":"","tip":"","filename":"Ecard-11.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-010 (点外卖 - 取外卖)
-    {"guide_id":"GUIDE-010","step_number":1,"step_title":"Tap “外卖” on the home page","instruction":"","tip":"","filename":"meituan-order-01.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-010","step_number":2,"step_title":"Remember to update the delivery address to our dorm","instruction":"","tip":"","filename":"meituan-order-02.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-010","step_number":3,"step_title":"Scroll down or search for what you want to eat, then tap the yellow button to add it to your cart","instruction":"","tip":"","filename":"meituan-order-03.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-010","step_number":4,"step_title":"Once you're done selecting, tap “去结算” in the bottom right corner","instruction":"","tip":"","filename":"meituan-order-04.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-010","step_number":5,"step_title":"Make sure to select your delivery address and tap 支付","instruction":"(Optional) Scroll down to find the “备注” section, where you can write down preferences or ingredients to avoid.","tip":"","filename":"meituan-order-05.png","status":"ready","display_frame":"phone"},
-    {"guide_id":"GUIDE-010","step_number":6,"step_title":"You will get a call from the delivery driver telling you where on the shelf they placed it","instruction":"If you didn't catch it clearly, you can check the driver's info in the app where they uploaded a photo.","tip":"","filename":"meituan-order-06.png","status":"ready","display_frame":"phone"},
-
-    // GUIDE-011 (洗衣房指南)
-    {"guide_id":"GUIDE-011","step_number":1,"step_title":"The washing machines and dryers are located around the corner of the stairs on the 1st floor.","instruction":"Turn left after entering the door and go all the way to the end.","tip":"","filename":"","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-011","step_number":2,"step_title":"Put your clothes into the washing machine and add laundry detergent","instruction":"","tip":"","filename":"","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-011","step_number":3,"step_title":"Use WeChat on your phone to scan the QR code on the machine","instruction":"","tip":"","filename":"","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-011","step_number":4,"step_title":"Once successful, press the button on the machine and set a timer","instruction":"People in the dorm chat group remind each other. Notify group if someone else can help take clothes out.","tip":"","filename":"","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-011","step_number":5,"step_title":"The dryer looks like this, and you operate it following the exact same steps","instruction":"","tip":"","filename":"","status":"ready","display_frame":"photo"},
-
-    // GUIDE-012 (报修系统)
-    {"guide_id":"GUIDE-012","step_number":1,"step_title":"Join the ECNU WeChat Enterprise account","instruction":"Follow the steps on the official website: [https://eoffice.ecnu.edu.cn/sjdpzwqywxw/list.htm]","tip":"","filename":"maintenance-01.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":2,"step_title":"Go to “Contacts” at the bottom of WeChat, find and click on “华东师范大学”","instruction":"","tip":"","filename":"maintenance-02.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":3,"step_title":"Click on the “报修系统”","instruction":"","tip":"","filename":"maintenance-03.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":4,"step_title":"Click on the “报修系统” at the bottom","instruction":"","tip":"","filename":"maintenance-04.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":5,"step_title":"Click “统一认证登录”","instruction":"","tip":"","filename":"maintenance-05.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":6,"step_title":"Click “我要报修”","instruction":"","tip":"","filename":"maintenance-06.png","status":"ready","display_frame":"photo"},
-    {"guide_id":"GUIDE-012","step_number":7,"step_title":"Fill in details such as your dorm room number and issue description, then submit","instruction":"","tip":"","filename":"maintenance-07.png","status":"ready","display_frame":"photo"}
-  ];
-
+  // RECOMMEND APPS (01) ~ (05) 展台配置
   const appGalleries = {
     '01': {
       title: '01 FOOD & DELIVERY',
@@ -129,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // DOM 节点
+  // DOM 节点引用
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
   const appGalleryView = document.getElementById('appGalleryView');
@@ -155,10 +80,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchInput');
   const searchNoResults = document.getElementById('searchNoResults');
 
-  let currentDormPage = 1;
+  // 初始化：纯动态读取你整理好的 json 文件
+  async function init() {
+    try {
+      const [guides, steps, screenshots, dorm] = await Promise.all([
+        fetch('data/guides.json').then(r => r.json()).catch(() => []),
+        fetch('data/steps.json').then(r => r.json()).catch(() => []),
+        fetch('data/screenshots.json').then(r => r.json()).catch(() => []),
+        fetch('data/dorm-info.json').then(r => r.json()).catch(() => null)
+      ]);
+
+      state.guides = guides;
+      state.steps = steps;
+      state.screenshots = screenshots;
+      state.dormInfo = dorm;
+
+      bindEvents();
+    } catch (err) {
+      console.error('Failed to load dynamic data:', err);
+    }
+  }
 
   function bindEvents() {
-    // 监听卡片点击
+    // 监听主页卡片点击
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
@@ -166,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 监听 (01) ~ (05) 拍立得点击
+    // 监听 (01) ~ (05) 推荐 App 拍立得点击
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -174,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // 返回按钮
     btnBackHome.addEventListener('click', () => {
       switchView('home');
       window.scrollTo(0, 0);
@@ -184,27 +129,30 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo(0, 0);
     });
 
+    // Building 12 档案抽页
     dormFileTrigger.addEventListener('click', openDossier);
-    openDormLink.addEventListener('click', openDossier);
+    if (openDormLink) openDormLink.addEventListener('click', openDossier);
     dossierCloseBtn.addEventListener('click', () => switchView('home'));
 
     dossierPrevBtn.addEventListener('click', () => {
-      if (currentDormPage > 1) {
-        currentDormPage--;
-        renderDormPage(currentDormPage);
+      if (state.currentDormPage > 1) {
+        state.currentDormPage--;
+        renderDormPage(state.currentDormPage);
       }
     });
 
     dossierNextBtn.addEventListener('click', () => {
-      if (currentDormPage < 3) {
-        currentDormPage++;
-        renderDormPage(currentDormPage);
+      const totalPages = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
+      if (state.currentDormPage < totalPages) {
+        state.currentDormPage++;
+        renderDormPage(state.currentDormPage);
       }
     });
 
+    // 滚动监听灌浆进度条
     window.addEventListener('scroll', updateScrollProgress);
 
-    // 核心：实时模糊搜索功能绑定
+    // 实时搜索功能
     if (searchInput) {
       searchInput.addEventListener('input', handleSearch);
     }
@@ -217,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let visibleCount = 0;
 
     allCards.forEach(card => {
-      const cardTitle = card.querySelector('.card-headline').innerText.toLowerCase();
-      const appName = card.querySelector('.card-app-name').innerText.toLowerCase();
+      const cardTitle = card.querySelector('.card-headline')?.innerText.toLowerCase() || '';
+      const appName = card.querySelector('.card-app-name')?.innerText.toLowerCase() || '';
       const tags = (card.dataset.tags || '').toLowerCase();
 
       if (!query || cardTitle.includes(query) || appName.includes(query) || tags.includes(query)) {
@@ -229,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 控制大模块的显隐
+    // 控制大模块显隐
     document.querySelectorAll('.category-block-wrapper').forEach(block => {
       const visibleInside = block.querySelectorAll('.guide-card[style*="display: flex"], .guide-card:not([style*="display: none"])');
       if (!query) {
@@ -241,12 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 搜索无匹配项提示
     if (searchNoResults) {
       searchNoResults.style.display = (visibleCount === 0 && query) ? 'block' : 'none';
     }
   }
 
+  // 视图切换控制
   function switchView(viewName) {
     homeView.classList.remove('active');
     guideDetailView.classList.remove('active');
@@ -259,16 +207,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 渲染步骤详情（直接从固化 ALL_STEPS 读取）
+  // 步骤详情渲染（直接从你的 JSON 动态读取）
   function openGuideDetail(guideId) {
-    const guide = GUIDES.find(g => g.guide_id === guideId) || {
+    const guide = state.guides.find(g => g.guide_id === guideId) || {
       guide_title: 'CAMPUS LIFE GUIDE'
     };
 
     detailMainTitle.innerHTML = guide.guide_title.replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
 
-    const currentSteps = ALL_STEPS
+    // 筛选当前指南步骤
+    const currentSteps = state.steps
       .filter(s => s.guide_id === guideId)
       .sort((a, b) => a.step_number - b.step_number);
 
@@ -276,30 +225,35 @@ document.addEventListener('DOMContentLoaded', () => {
       stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:#666; padding: 2rem 0;">Step details are being updated...</p>`;
     } else {
       currentSteps.forEach(step => {
-        const hasRealImage = step.filename && step.filename.trim() !== '';
-        const isExcelNone = (step.status === 'none');
-        const isPhoto = (step.display_frame === 'photo');
+        // 从 screenshots.json 匹配图片，如果 step 本身带有 filename 也优先采用
+        const ss = state.screenshots.find(s => s.image_id === step.image_id || s.step_id === step.step_id);
+        const fileName = step.filename || (ss ? ss.filename : '');
+        const hasRealImage = fileName && fileName.trim() !== '';
+        const isExcelNone = (step.status === 'none') || (ss && ss.status === 'none');
+        const isPhoto = (step.display_frame === 'photo') || (ss && ss.display_frame === 'photo');
 
         const stepCard = document.createElement('div');
 
+        // status 为 none：纯文字卡片，不占位
         if (isExcelNone) {
           stepCard.className = 'step-item-card step-card-text-only';
           stepCard.innerHTML = `
             <div class="step-info-col">
               <div class="step-circle-badge">${step.step_number || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title}</h4>
+              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
               <p class="step-detail-text">${step.instruction || ''}</p>
               ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
             </div>
           `;
         } else {
+          // 有图显示真实图片，无图显示预留占位框架
           stepCard.className = 'step-item-card';
           let mediaBox = '';
 
           if (isPhoto) {
             mediaBox = hasRealImage ? `
               <div class="mockup-photo-body">
-                <img src="images/${step.filename}" alt="${step.step_title}" onerror="this.src='images/packagesandfood-01.png'">
+                <img src="images/${fileName}" alt="${step.step_title}">
               </div>
             ` : `
               <div class="mockup-photo-body">
@@ -310,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaBox = hasRealImage ? `
               <div class="mockup-phone-body">
                 <div class="mockup-screen">
-                  <img src="images/${step.filename}" alt="${step.step_title}" onerror="this.src='images/packagesandfood-01.png'">
+                  <img src="images/${fileName}" alt="${step.step_title}">
                 </div>
               </div>
             ` : `
@@ -324,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${mediaBox}
             <div class="step-info-col">
               <div class="step-circle-badge">${step.step_number || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title}</h4>
+              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
               <p class="step-detail-text">${step.instruction || ''}</p>
               ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
             </div>
@@ -340,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateScrollProgress, 100);
   }
 
+  // 打开 RECOMMEND APPS 展台
   function openAppGallery(catKey) {
     const config = appGalleries[catKey] || appGalleries['01'];
     galleryCatTitle.textContent = config.title;
@@ -364,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
   }
 
+  // 蓝色进度条灌浆
   function updateScrollProgress() {
     if (!guideDetailView.classList.contains('active')) return;
     const layout = document.querySelector('.detail-scroll-layout');
@@ -383,22 +339,94 @@ document.addEventListener('DOMContentLoaded', () => {
     trackLineFill.style.height = `${percent}%`;
   }
 
+  // Building 12 档案渲染
   function openDossier() {
-    currentDormPage = 1;
-    renderDormPage(currentDormPage);
+    state.currentDormPage = 1;
+    renderDormPage(state.currentDormPage);
     switchView('dossier');
     window.scrollTo(0, 0);
   }
 
   function renderDormPage(pageNum) {
-    dossierPageLabel.textContent = `Page ${pageNum} / 3`;
+    const totalPages = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
+    dossierPageLabel.textContent = `Page ${pageNum} / ${totalPages}`;
     dossierBodyViewport.innerHTML = '';
 
+    // 如果 dorm-info.json 存在则从动态数据读取，否则使用默认档案模板
+    if (state.dormInfo && state.dormInfo.pages) {
+      const pageData = state.dormInfo.pages.find(p => p.page_number === pageNum);
+      if (pageData && pageData.sections) {
+        pageData.sections.forEach(sec => {
+          const secDiv = document.createElement('div');
+          secDiv.className = sec.photo ? 'dorm-section-block dossier-split-photo' : 'dorm-section-block';
+
+          let itemsHtml = '';
+          sec.items.forEach(item => {
+            if (item.type === 'copyable') {
+              itemsHtml += `
+                <div class="dossier-copyable-box">
+                  <div class="dorm-typewriter-text" style="white-space: pre-line;">★ ${item.text}</div>
+                  <button class="copy-trigger-btn" data-copy="${encodeURIComponent(item.text)}" title="Copy Address">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              `;
+            } else {
+              itemsHtml += `<div class="dorm-typewriter-text" style="margin-bottom: 0.5rem; white-space: pre-line;">${item.type === 'bullet' ? '• ' : '★ '}${item.text}</div>`;
+            }
+          });
+
+          if (sec.photo) {
+            secDiv.innerHTML = `
+              <div>
+                <h3 class="dorm-sec-heading">${sec.title}</h3>
+                ${itemsHtml}
+              </div>
+              <div class="polaroid-holder" style="transform: rotate(${sec.photo.rotation || 0}deg);">
+                ${sec.photo.has_clip ? '<div class="metal-clip"></div>' : ''}
+                <img src="${sec.photo.image}" alt="${sec.title}">
+              </div>
+            `;
+          } else {
+            secDiv.innerHTML = `
+              <h3 class="dorm-sec-heading">${sec.title}</h3>
+              ${itemsHtml}
+            `;
+          }
+
+          dossierBodyViewport.appendChild(secDiv);
+        });
+      }
+    } else {
+      // 备用展示模版
+      renderDefaultDormHtml(pageNum);
+    }
+
+    // 绑定真实剪贴板复制事件
+    dossierBodyViewport.querySelectorAll('.copy-trigger-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = decodeURIComponent(btn.dataset.copy);
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Address copied to clipboard!');
+        }).catch(() => {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast('Address copied to clipboard!');
+        });
+      });
+    });
+  }
+
+  function renderDefaultDormHtml(pageNum) {
     if (pageNum === 1) {
       dossierBodyViewport.innerHTML = `
         <div class="dorm-section-block">
           <h3 class="dorm-sec-heading">DORMITORY ADDRESS</h3>
-          
           <div class="dossier-copyable-box">
             <div class="dorm-typewriter-text">
               ★ Building 12, Graduate Student Apartments<br>
@@ -409,7 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
-
           <div class="dossier-copyable-box">
             <div class="dorm-typewriter-text">
               ★ 上海市闵行区虹梅南路5800号华东师范大学闵行校区<br>
@@ -420,12 +447,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
           </div>
         </div>
-
         <div class="dorm-section-block">
           <h3 class="dorm-sec-heading">ACCESS HOURS</h3>
           <div class="dorm-typewriter-text">★ The dormitory entrance closes at 23:00.</div>
         </div>
-
         <div class="dorm-section-block">
           <h3 class="dorm-sec-heading">QUIET HOURS</h3>
           <div class="dorm-typewriter-text">★ Please keep noise to a minimum after 23:00.<br>Do not use washing machines or hair dryers after 23:00.</div>
@@ -447,7 +472,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="images/packagesandfood-01.png" alt="Kitchen">
           </div>
         </div>
-
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
           <div class="polaroid-holder" style="transform: rotate(-4deg);">
             <img src="images/packagesandfood-02.png" alt="Garbage">
@@ -474,7 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="images/dormlife-01.png" alt="Water Dispenser">
           </div>
         </div>
-
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
           <div>
             <h3 class="dorm-sec-heading">HAIR DRYER ROOMS</h3>
@@ -489,24 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
     }
-
-    dossierBodyViewport.querySelectorAll('.copy-trigger-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const text = btn.dataset.copy;
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('Address copied to clipboard!');
-        }).catch(() => {
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-          showToast('Address copied to clipboard!');
-        });
-      });
-    });
   }
 
   function showToast(msg) {
@@ -515,5 +520,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => toastPopup.classList.remove('show'), 2000);
   }
 
-  bindEvents();
+  init();
 });
