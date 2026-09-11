@@ -25,7 +25,7 @@
 }
 
 /* ==========================================================================
-   2. 严格对齐参考图 1、2、3 的模块配色与基础设定
+   2. 配色与基础设置
    ========================================================================== */
 :root {
   --bg-sand: #FAF7F2;
@@ -149,7 +149,7 @@ body {
 }
 
 /* ==========================================================================
-   4. 参考图 1、2、3：大模块纯色底色区与不遮挡文字的卡片
+   4. 大模块纯色底色区与不遮挡文字的卡片
    ========================================================================== */
 .main-content {
   display: flex;
@@ -158,7 +158,6 @@ body {
   padding-bottom: 4rem;
 }
 
-/* 核心：为三大模块增加参考图所示的饱满背景底色块 */
 .category-block-wrapper {
   width: 100%;
   padding: 3rem 4rem 4rem;
@@ -197,11 +196,10 @@ body {
   display: flex;
   gap: 2.8rem;
   overflow-x: auto;
-  padding-top: 30px; /* 为右上角探头的拍立得相框留出高度 */
+  padding-top: 30px;
   padding-bottom: 15px;
 }
 
-/* 白底卡片 */
 .guide-card {
   flex: 0 0 310px;
   background: #FFFFFF;
@@ -220,10 +218,10 @@ body {
   transform: translateY(-8px);
 }
 
-/* 核心修复：拍立得相框移至卡片右上角顶端上方，绝不遮挡卡片正文标题 */
+/* 拍立得相框探出卡片上边缘，绝不遮挡卡片正文标题 */
 .card-polaroid {
   position: absolute;
-  top: -28px; /* 向上探出卡片上边缘 */
+  top: -28px;
   right: 20px;
   width: 96px;
   height: 110px;
@@ -669,7 +667,7 @@ body {
 .dossier-sheet-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1050px; /* 容器由 820px 放大至 1050px */
+  max-width: 1050px; /* 宽度由 820px 放大至 1050px */
   min-height: 940px;
   box-shadow: none;
 }
@@ -685,7 +683,7 @@ body {
   pointer-events: none;
 }
 
-/* 核心留白修复：左侧让出 24% 的空间（彻底离开深色折痕），顶部与右侧留足空间 */
+/* 核心留白修复：左侧让出 24% 的空间（避开深色折痕与打孔），文字不再贴边 */
 .dossier-content-surface {
   position: relative;
   z-index: 2;
@@ -731,7 +729,7 @@ body {
 }
 .dorm-sec-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.45rem; /* 标题放大 */
+  font-size: 1.45rem;
   letter-spacing: 0.04em;
   margin-bottom: 0.9rem;
   border-bottom: 1px solid rgba(0,0,0,0.12);
@@ -739,7 +737,7 @@ body {
 }
 .dorm-typewriter-text {
   font-family: 'ToxTypewriter', serif;
-  font-size: 1.02rem; /* 正文放大 */
+  font-size: 1.02rem;
   line-height: 1.8;
   color: #2A2A2A;
 }
