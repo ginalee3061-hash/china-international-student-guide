@@ -1,0 +1,85 @@
+"ITEM":[
+ {
+  "item_id": "TP-001",
+  "category_id": "CAT-002",
+  "name": "Alipay",
+  "chinese_name": "支付宝",
+  "item_type": "app",
+  "short_description": "Mobile payment and daily services",
+  "status": "active"
+ },
+ {
+  "item_id": "TP-002",
+  "category_id": "CAT-002",
+  "name": "Ecard",
+  "chinese_name": "Ecard",
+  "item_type": "Money & Payment",
+  "short_description": "Mobile payment and daily services",
+  "status": "active"
+ },
+ {
+  "category_id": "CAT-004",
+  "name": "CaiNiao",
+  "chinese_name": "菜鸟",
+  "item_type": "app",
+  "short_description": "Papckage",
+  "status": "waiting"
+ },
+ {
+  "item_id": "TP-003",
+  "category_id": "CAT-002",
+  "name": "Alipay- metro",
+  "chinese_name": "支付宝-地铁",
+  "item_type": "app",
+  "short_description": "Dormitory laundry facilities",
+  "status": "active"
+ },
+ {
+  "name": "Campus Wi-Fi",
+  "chinese_name": "校园 Wi-Fi",
+  "item_type": "service",
+  "short_description": "University internet access",
+  "status": "waiting"
+ },
+ {
+  "item_id": "FP-001",
+  "category_id": "CAT-001",
+  "name": "Taobao",
+  "chinese_name": "淘宝",
+  "item_type": "app",
+  "short_description": "Papckage",
+  "status": "active"
+ },
+ {
+  "item_id": "FP-002",
+  "category_id": "CAT-001",
+  "name": "MeiTuan",
+  "chinese_name": "美团",
+  "item_type": "Food",
+  "short_description": "Food",
+  "status": "active"
+ },
+ {
+  "item_id": "TP-004",
+  "category_id": "CAT-002",
+  "name": "ICBC",
+  "chinese_name": "工商银行",
+  "item_type": "Money & Payment",
+  "status": "active"
+ },
+ {
+  "item_id": "DL-001",
+  "category_id": "CAT-005",
+  "name": "Laundry",
+  "item_type": "Dorm facilities ",
+  "status": "active"
+ },
+ {
+  "item_id": "DL-002",
+  "category_id": "CAT-005",
+  "name": "Report for repairs",
+  "chinese_name": "报修",
+  "item_type": "Dorm facilities ",
+  "status": "active"
+ }
+]
