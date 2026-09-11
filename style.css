@@ -25,7 +25,7 @@
 }
 
 /* ==========================================================================
-   2. 主题色彩系统 (Light & Dark Mode)
+   2. 主题色彩变量 (Light / Dark)
    ========================================================================== */
 :root {
   --bg-sand: #FAF7F2;
@@ -34,17 +34,14 @@
   --card-bg: #FFFFFF;
   --search-border: #DFD9CE;
   
-  /* 模块 1：粉蓝 */
   --module-packages-bg: #98B6CD;
   --bar-blue: #4A6E86;
   --btn-blue: #86A8BF;
 
-  /* 模块 2：烟粉豆沙 */
   --module-finance-bg: #CF9D9D;
   --bar-rose: #7D4949;
   --btn-rose: #BF8787;
 
-  /* 模块 3：抹茶暖灰绿 */
   --module-dorm-bg: #C7C39E;
   --bar-sage: #6E6845;
   --btn-sage: #B3AE84;
@@ -56,14 +53,17 @@
   
   --dropdown-bg: #FFFFFF;
   --dropdown-hover: #F3EFE9;
+  
+  --nav-bar-bg: rgba(250, 247, 242, 0.88);
+  --crumb-sep-color: #9CA3AF;
+  --crumb-link-hover: #111111;
 }
 
-/* 深色模式 Dark Mode */
 [data-theme="dark"] {
-  --bg-sand: #18191B;
+  --bg-sand: #161719;
   --text-dark: #F3F4F6;
   --text-muted: #9CA3AF;
-  --card-bg: #232528;
+  --card-bg: #222428;
   --search-border: #383B40;
 
   --module-packages-bg: #2B3A45;
@@ -78,12 +78,16 @@
   --bar-sage: #5A5638;
   --btn-sage: #6D6946;
 
-  --earth-bg: #2E2A1C;
-  --earth-btn-bg: #3E3827;
+  --earth-bg: #2B271A;
+  --earth-btn-bg: #3B3524;
   --earth-btn-text: #F3F4F6;
 
-  --dropdown-bg: #232528;
-  --dropdown-hover: #31343A;
+  --dropdown-bg: #222428;
+  --dropdown-hover: #2E3137;
+  
+  --nav-bar-bg: rgba(22, 23, 25, 0.88);
+  --crumb-sep-color: #6B7280;
+  --crumb-link-hover: #FFFFFF;
 }
 
 * {
@@ -95,10 +99,11 @@
 body {
   background-color: var(--bg-sand);
   color: var(--text-dark);
-  font-family: 'AlteHaasGroteskRegular', -apple-system, sans-serif;
+  font-family: 'AlteHaasGroteskRegular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  padding-bottom: 90px; /* 留出底部浮动 Bar 的避让高度 */
 }
 
 .page-view {
@@ -111,15 +116,15 @@ body {
 }
 
 /* ==========================================================================
-   3. 顶部导航与控制栏 (中英文 + 亮暗模式)
+   3. 顶部 Header 与 按钮排版 (问题 2：严格统一高度、字体与基线对齐)
    ========================================================================== */
 .site-header {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 2.5rem 1.5rem;
+  padding: 2.2rem 3rem 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
+  gap: 1.5rem;
 }
 
 .header-top-row {
@@ -142,7 +147,7 @@ body {
 }
 .logo-title {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.18rem;
+  font-size: 1.2rem;
   letter-spacing: 0.05em;
 }
 .badge-dorm {
@@ -153,33 +158,45 @@ body {
   border-radius: 4px;
 }
 
-/* 控制按钮组（语言 & 主题） */
+/* 问题 2 修复：严格对齐、同一字体、相同高宽排布的控制按钮 */
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
 }
+
 .ctrl-pill-btn {
+  height: 36px;
+  padding: 0 1rem;
   background: var(--card-bg);
   color: var(--text-dark);
   border: 1.5px solid var(--search-border);
-  padding: 0.45rem 0.85rem;
-  border-radius: 24px;
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.72rem;
-  display: flex;
+  border-radius: 20px;
+  /* 解决字体不一：统一采用 HeuvelGrotesk，中英文排版一致对齐 */
+  font-family: 'HeuvelGrotesk', -apple-system, sans-serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: center;
+  gap: 0.45rem;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   transition: all 0.2s ease;
+  line-height: 1;
 }
 .ctrl-pill-btn:hover {
   transform: translateY(-1px);
-  border-color: var(--accent-cyan);
+  border-color: var(--bar-blue);
+}
+.ctrl-icon {
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
 }
 
-/* 搜索栏与下拉联想 (问题 5) */
+/* 搜索栏与下拉联想 */
 .search-bar-wrap {
   width: 100%;
   max-width: 680px;
@@ -222,7 +239,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* 搜索下拉联想框 (问题 5) */
 .search-results-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -250,12 +266,8 @@ body {
   cursor: pointer;
   transition: background 0.15s ease;
 }
-.search-item-row:hover {
-  background: var(--dropdown-hover);
-}
-.search-item-row:last-child {
-  border-bottom: none;
-}
+.search-item-row:hover { background: var(--dropdown-hover); }
+.search-item-row:last-child { border-bottom: none; }
 .search-item-main {
   display: flex;
   flex-direction: column;
@@ -279,34 +291,46 @@ body {
   color: var(--text-muted);
 }
 
-/* 手机端胶囊平滑滚动条 (问题 2) */
-.top-nav-scroller {
-  width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  padding: 0.3rem 0;
+/* ==========================================================================
+   4. 问题 4 修复：下滑时一直吸附在底部的浮动导航条 (Floating Bottom Nav Bar)
+   ========================================================================== */
+.floating-bottom-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 990;
+  background: var(--nav-bar-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px 8px;
+  border-radius: 36px;
+  border: 1.5px solid rgba(128,128,128,0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  max-width: 92vw;
 }
-.top-nav-scroller::-webkit-scrollbar {
-  display: none;
-}
-.nav-pills-track {
+
+.floating-nav-track {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  min-width: max-content;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.floating-nav-track::-webkit-scrollbar { display: none; }
+
 .nav-pill {
   font-family: 'HeuvelGrotesk', sans-serif;
   font-size: 0.78rem;
   letter-spacing: 0.08em;
-  padding: 0.45rem 1.1rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 20px;
   background: rgba(128,128,128,0.08);
   color: var(--text-dark);
   text-decoration: none;
   white-space: nowrap;
   transition: all 0.2s ease;
+  display: inline-block;
 }
 .nav-pill:hover, .nav-pill.active {
   background: var(--text-dark);
@@ -319,13 +343,13 @@ body {
 }
 
 /* ==========================================================================
-   4. 主体卡片大模块与不遮挡探头相框 (问题 4)
+   5. 卡片大模块排版
    ========================================================================== */
 .main-content {
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
-  padding: 0 2rem 4rem;
+  padding: 1rem 2rem 4rem;
 }
 
 .category-block-wrapper {
@@ -334,7 +358,7 @@ body {
   border-radius: 32px;
   max-width: 1420px;
   margin: 0 auto;
-  overflow: visible !important; /* 核心修复：允许相框超出顶部探头 */
+  overflow: visible !important;
 }
 .module-packages { background-color: var(--module-packages-bg); }
 .module-finance { background-color: var(--module-finance-bg); }
@@ -362,7 +386,7 @@ body {
   gap: 2.5rem;
   overflow-x: auto;
   overflow-y: visible !important;
-  padding-top: 35px; /* 留出探出相框空间 */
+  padding-top: 35px;
   padding-bottom: 15px;
   scrollbar-width: none;
 }
@@ -386,7 +410,6 @@ body {
   transform: translateY(-8px);
 }
 
-/* 探头式拍立得相框 (问题 4：绝不遮挡卡片标题) */
 .card-polaroid {
   position: absolute;
   top: -32px;
@@ -445,7 +468,7 @@ body {
 .module-dorm .btn-learn-more { background: var(--btn-sage); }
 
 /* ==========================================================================
-   5. RECOMMEND APPS 散落舞台与大公文袋 (问题 6)
+   6. RECOMMEND APPS 散落舞台与大公文袋
    ========================================================================== */
 .recommend-scattered-zone {
   max-width: 1400px;
@@ -512,7 +535,6 @@ body {
 .pin-04 { bottom: 20px; left: 42%; transform: rotate(-2deg); }
 .pin-05 { bottom: 80px; right: 8%; transform: rotate(3deg); }
 
-/* 底部纯大地色延伸底屏 (问题 6 修复) */
 .earth-footer-plane {
   width: 100vw;
   background-color: var(--earth-bg);
@@ -540,7 +562,6 @@ body {
   filter: drop-shadow(0 14px 35px rgba(0,0,0,0.3));
 }
 
-/* 按钮紧凑美化 (问题 6) */
 .folder-click-pill {
   margin-top: 1.4rem;
   background: var(--earth-btn-bg);
@@ -562,35 +583,65 @@ body {
 }
 
 /* ==========================================================================
-   6. 视图 2：全屏步骤详情与长宽比自动嗅探 (问题 3)
+   7. 问题 3：新页面顶部现代面包屑路径导航 (Breadcrumb)
    ========================================================================== */
+.detail-breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(128,128,128,0.15);
+}
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'HeuvelGrotesk', sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+.crumb-link {
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+.crumb-link:hover {
+  color: var(--crumb-link-hover);
+  text-decoration: underline;
+}
+
+.crumb-sep {
+  color: var(--crumb-sep-color);
+  font-size: 0.85rem;
+  user-select: none;
+}
+
+.crumb-current {
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+/* 档案深色背景上的面包屑 */
+.dossier-crumb-bar {
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 1.8rem;
+  max-width: 1060px;
+  width: 100%;
+}
+.light-crumb { color: rgba(255,255,255,0.7) !important; }
+.light-crumb:hover { color: #FFF !important; }
+.light-sep { color: rgba(255,255,255,0.4) !important; }
+.light-current { color: #FFF !important; }
+
+/* 步骤详情页样式 */
 .detail-page-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 3rem 2.5rem 8rem;
-}
-.detail-top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-.btn-back-home {
-  font-family: 'HeuvelGrotesk', sans-serif;
-  background: none;
-  border: none;
-  font-size: 0.88rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: var(--text-dark);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.detail-guide-tag {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.75rem;
-  color: var(--text-muted);
 }
 .detail-main-title {
   font-family: 'AlteHaasGroteskBold', sans-serif;
@@ -655,7 +706,6 @@ body {
   max-width: 680px;
 }
 
-/* 真实手机外壳 Mockup (比例正常时) */
 .mockup-phone-body {
   width: 260px;
   height: 520px;
@@ -677,7 +727,6 @@ body {
   object-fit: cover;
 }
 
-/* 照片/截图自适应相框 Photo Frame (问题 3：比例偏扁时自动切换) */
 .mockup-photo-body {
   width: 280px;
   background: #FFF;
@@ -736,14 +785,13 @@ body {
 }
 
 /* ==========================================================================
-   7. 视图 3：RECOMMEND APPS 展台
+   8. 视图 3：RECOMMEND APPS 展台
    ========================================================================== */
 .gallery-page-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 3rem 2.5rem 8rem;
 }
-.gallery-top-bar { margin-bottom: 3rem; }
 .gallery-center-content {
   display: flex;
   flex-direction: column;
@@ -812,16 +860,16 @@ body {
 }
 
 /* ==========================================================================
-   8. 视图 4：BUILDING 12 档案页 (问题 1 & 7 精修)
+   9. 视图 4：BUILDING 12 档案页 (电脑端保留素材，手机端纯米白无素材)
    ========================================================================== */
 .dossier-full-viewport {
   width: 100vw;
   min-height: 100vh;
   background-color: var(--earth-bg);
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 4rem 1.5rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 6rem;
 }
 
 .dossier-sheet-wrapper {
@@ -832,7 +880,7 @@ body {
   overflow: hidden;
 }
 
-/* 电脑端底图自然展开 */
+/* 电脑端底图 */
 .dossier-page-bg {
   width: 100%;
   height: 100%;
@@ -843,14 +891,13 @@ body {
   pointer-events: none;
 }
 
-/* 电脑端内容定位：留出左侧 23% 折痕空间 */
 .dossier-content-surface {
   position: relative;
   z-index: 2;
   padding: 6rem 12% 5rem 23%;
 }
 
-/* 重新设计的复古工具条 (问题 7：美观优雅的牛皮纸翻页器) */
+/* 优雅翻页工具条 */
 .dossier-toolstrip {
   display: flex;
   justify-content: space-between;
@@ -863,7 +910,7 @@ body {
 .dossier-pager-badge {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.75);
   border: 1.5px solid rgba(0, 0, 0, 0.15);
   padding: 4px 10px;
   border-radius: 30px;
@@ -883,12 +930,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s, background 0.15s;
+  transition: transform 0.15s;
 }
-.pager-step-btn:hover {
-  background: #EEE;
-  transform: scale(1.1);
-}
+.pager-step-btn:hover { transform: scale(1.1); }
 .pager-status-text {
   font-family: 'ToxTypewriter', serif;
   font-size: 0.95rem;
@@ -898,7 +942,7 @@ body {
 }
 
 .dossier-exit-capsule {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.75);
   border: 1.5px solid rgba(0, 0, 0, 0.15);
   padding: 0.45rem 1.1rem;
   border-radius: 20px;
@@ -1003,16 +1047,17 @@ body {
 }
 
 /* ==========================================================================
-   9. 手机移动端自适应 (问题 1、2、6 核心修复)
+   10. 手机移动端自适应 (问题 1 核心修复：取消底图素材，换纯米白卡片)
    ========================================================================== */
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 80px;
+  }
   .site-header {
-    padding: 1.2rem 1.2rem 1rem;
-    gap: 1rem;
+    padding: 1.2rem 1.2rem 0.8rem;
+    gap: 1.2rem;
   }
-  .search-bar-wrap {
-    max-width: 100%;
-  }
+  .search-bar-wrap { max-width: 100%; }
 
   .main-content {
     padding: 0 1rem 3rem;
@@ -1033,10 +1078,18 @@ body {
   }
   .card-headline { font-size: 1.45rem; }
 
-  /* 散落拍立得转为移动端瀑布流 */
-  .recommend-scattered-zone {
-    padding: 1rem 1.2rem 4rem;
+  /* 浮动 Bar 手机端紧凑设计 */
+  .floating-bottom-nav {
+    bottom: 12px;
+    padding: 5px 6px;
+    max-width: 95vw;
   }
+  .nav-pill {
+    font-size: 0.72rem;
+    padding: 0.42rem 0.9rem;
+  }
+
+  .recommend-scattered-zone { padding: 1rem 1.2rem 4rem; }
   .scattered-stage {
     min-height: auto;
     display: flex;
@@ -1056,10 +1109,7 @@ body {
     width: 230px;
   }
 
-  /* 底部公文袋手机端缩小放大比例 (问题 6) */
-  .earth-footer-plane {
-    padding: 4.5rem 1rem 5.5rem;
-  }
+  .earth-footer-plane { padding: 4.5rem 1rem 5.5rem; }
   .folder-big-img {
     width: 88vw;
     max-width: 360px;
@@ -1070,10 +1120,7 @@ body {
     padding: 0.65rem 1.4rem;
   }
 
-  /* 步骤流单栏排版 */
-  .detail-page-container {
-    padding: 2rem 1.2rem 6rem;
-  }
+  .detail-page-container { padding: 2rem 1.2rem 6rem; }
   .detail-main-title {
     font-size: 2.2rem;
     margin-bottom: 2.5rem;
@@ -1092,32 +1139,45 @@ body {
     margin: 0 auto;
   }
 
-  /* 核心修复 (问题 1)：手机端 Building 12 底图露出左侧折叠，右侧裁剪 */
+  /* ========================================================================
+     核心修复 (问题 1)：手机版直接取消 page.png 素材，换为优雅全米白背景纯色
+     ======================================================================== */
   .dossier-full-viewport {
-    padding: 1.5rem 0.5rem 3rem;
+    padding: 1.5rem 1rem 4rem;
+    background-color: var(--earth-bg);
   }
-  .dossier-sheet-wrapper {
-    min-height: 820px;
-    width: 100%;
-  }
-  /* 底图放大 160%，左上对齐露出左侧公文袋卡扣 */
+  
+  /* 彻底隐藏 page.png 图片素材 */
   .dossier-page-bg {
-    width: 160% !important;
-    max-width: none !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: left top !important;
+    display: none !important;
   }
-  /* 文字精准锚定在露出的白纸区域内，绝不遮挡左侧纸质折痕 */
+
+  /* 档案纸张本体：转为纯色质感卡片容器 */
+  .dossier-sheet-wrapper {
+    min-height: auto;
+    width: 100%;
+    background-color: #FCFAF6; /* 全米白纯色背景 */
+    border-radius: 20px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+    padding: 0;
+  }
+
+  /* 内边距规整居中，不偏靠任何死角 */
   .dossier-content-surface {
-    padding: 5rem 6% 3rem 24% !important;
+    padding: 2.2rem 1.5rem 3rem !important;
   }
+
+  .dossier-toolstrip {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+
   .dossier-split-photo {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
   .polaroid-holder {
-    max-width: 190px;
+    max-width: 200px;
     margin: 0 auto;
   }
 }
