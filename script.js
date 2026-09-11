@@ -1,17 +1,110 @@
 /**
- * Campus Life Survival Guide - Adaptive Dynamic Engine
- * 自动解包兼容 { "STEPS": [...] }, { "GUIDE": [...] } 等各类 JSON 格式
+ * Campus Life Survival Guide - Interactive Engine
+ * 包含：动态 JSON 加载、中英双语切换、亮暗模式、模糊下拉搜索、长宽比相框自动嗅探
  */
 document.addEventListener('DOMContentLoaded', () => {
+  // 全局数据状态
   const state = {
     guides: [],
     steps: [],
     screenshots: [],
     dormInfo: null,
-    currentDormPage: 1
+    currentDormPage: 1,
+    currentLang: localStorage.getItem('site_lang') || 'en',
+    currentTheme: localStorage.getItem('site_theme') || 'light'
   };
 
-  // RECOMMEND APPS (01) ~ (05) 展台配置
+  // 双语字典字典表 (新功能 1)
+  const i18n = {
+    en: {
+      logoTitle: "CAMPUS LIFE",
+      navPackages: "PACKAGES",
+      navFinance: "FINANCE",
+      navDorm: "DORM LIFE",
+      navApps: "APP DIRECTORY",
+      navDormInfo: "DORM INFO",
+      catPackages: "PACKAGES & FOOD",
+      catFinance: "MONEY & PAYMENTS",
+      catDorm: "SETTLING INTO YOUR DORM LIFE",
+      g008Title: "HOW TO<br>GET MY<br>PACKAGES?",
+      g008Desc: "finding pickup stations",
+      g010Title: "HOW TO<br>GET MY<br>DELIVERY?",
+      g010Desc: "where to grab your meal",
+      g001Title: "BANK<br>ACCOUNT<br>SETUP",
+      g001Desc: "Required paperwork & activation",
+      g002Title: "LINKING CARD<br>TO ALIPAY",
+      g002Desc: "Link your card and start paying",
+      g004Title: "HOW TO TAKE<br>METRO WITH<br>ALIPAY?",
+      g004Desc: "Scan using a QR code",
+      g011Title: "DOING YOUR<br>LAUNDRY",
+      g011Desc: "Quick guide to washing machines",
+      g009Title: "KEEPING THE<br>POWER ON",
+      g009Desc: "Easy recharges so you're never stuck",
+      g012Title: "GETTING<br>THINGS FIXED",
+      g012Desc: "How to submit repair requests",
+      learnMore: "LEARN MORE",
+      scatteredIntro: "• Click any category below or browse the full ecosystem •",
+      scatteredHeading: "RECOMMEND<br>APPS",
+      appCat1: "Food & Delivery",
+      appCat2: "Transit & Maps",
+      appCat3: "Finance & Payments",
+      appCat4: "Shopping",
+      appCat5: "VPN & Network",
+      dossierBtn: "Building 12 Dormitory Information",
+      backToGuides: "BACK TO GUIDES",
+      survivalTag: "CAMPUS SURVIVAL GUIDE",
+      backToHome: "BACK TO HOME",
+      closeDossier: "CLOSE",
+      searchPlaceholder: "Search guides (e.g. Cainiao, Laundry, Alipay, Delivery)...",
+      noResults: "No matching guides found.",
+      copiedToast: "Address copied to clipboard!"
+    },
+    zh: {
+      logoTitle: "校园生活指引",
+      navPackages: "快递外卖",
+      navFinance: "金融支付",
+      navDorm: "宿舍生活",
+      navApps: "常用软件",
+      navDormInfo: "宿舍信息",
+      catPackages: "快递与外卖",
+      catFinance: "金融与支付",
+      catDorm: "融入宿舍新生活",
+      g008Title: "如何取<br>我的快递？",
+      g008Desc: "菜鸟驿站与取件码指南",
+      g010Title: "如何取<br>我的外卖？",
+      g010Desc: "美团外卖点餐与外卖架取餐",
+      g001Title: "银行账户<br>开设指南",
+      g001Desc: "所需证件、网点办理与激活",
+      g002Title: "支付宝<br>绑定银行卡",
+      g002Desc: "轻松绑定借记卡开启扫码支付",
+      g004Title: "如何用支付宝<br>乘坐上海地铁？",
+      g004Desc: "扫码乘车与交通出行",
+      g011Title: "宿舍洗衣机<br>使用指南",
+      g011Desc: "一楼洗衣房、烘干机与微信支付",
+      g009Title: "校园卡与<br>宿舍电费充值",
+      g009Desc: "微信小程序快捷缴费指南",
+      g012Title: "宿舍报修<br>全流程",
+      g012Desc: "企业微信报修系统使用方法",
+      learnMore: "查看指南",
+      scatteredIntro: "• 点击下方分类查看常用应用生态 •",
+      scatteredHeading: "推荐应用<br>RECOMMEND",
+      appCat1: "外卖订餐",
+      appCat2: "交通出行",
+      appCat3: "移动支付",
+      appCat4: "网络购物",
+      appCat5: "校园网络",
+      dossierBtn: "12号楼 宿舍规章与档案",
+      backToGuides: "返回指南列表",
+      survivalTag: "留学生校园生存手册",
+      backToHome: "返回主页",
+      closeDossier: "关闭档案",
+      searchPlaceholder: "搜索指南 (例如：菜鸟, 洗衣, 外卖, 支付宝)...",
+      noResults: "未找到相关指南。",
+      copiedToast: "地址已成功复制到剪贴板！"
+    }
+  };
+
+  // RECOMMEND APPS (01) ~ (05) 展台数据
   const appGalleries = {
     '01': {
       title: '01 FOOD & DELIVERY',
@@ -53,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // DOM 节点引用
+  // DOM 元素引用
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
   const appGalleryView = document.getElementById('appGalleryView');
@@ -76,44 +169,67 @@ document.addEventListener('DOMContentLoaded', () => {
   const dossierPageLabel = document.getElementById('dossierPageLabel');
   const dossierBodyViewport = document.getElementById('dossierBodyViewport');
   const toastPopup = document.getElementById('toastPopup');
-  const searchInput = document.getElementById('searchInput');
-  const searchNoResults = document.getElementById('searchNoResults');
 
-  // 通用安全数组提取函数：自动剥离外层的 { "STEPS": [...] } 或 { "GUIDE": [...] }
-  function extractArray(raw) {
-    if (!raw) return [];
-    if (Array.isArray(raw)) return raw;
-    if (typeof raw === 'object') {
-      const keys = Object.keys(raw);
-      for (let k of keys) {
-        if (Array.isArray(raw[k])) return raw[k];
+  const searchInput = document.getElementById('searchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  const searchResultsDropdown = document.getElementById('searchResultsDropdown');
+
+  const langToggleBtn = document.getElementById('langToggleBtn');
+  const langLabel = document.getElementById('langLabel');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+
+  // 通用 JSON 容错解包提取器
+  async function fetchSafeJson(url) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      let text = (await res.text()).trim();
+      if (!text) return [];
+
+      if (text.startsWith('"') && text.includes('":[')) {
+        text = '{' + text;
       }
+      if (text.startsWith('{') && !text.endsWith('}')) {
+        text = text + '}';
+      }
+
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed)) return parsed;
+      if (typeof parsed === 'object' && parsed !== null) {
+        for (let k of Object.keys(parsed)) {
+          if (Array.isArray(parsed[k])) return parsed[k];
+        }
+      }
+      return [];
+    } catch (e) {
+      console.warn('JSON read fallback for ' + url, e);
+      return [];
     }
-    return [];
   }
 
-  // 初始化拉取并解包 JSON
+  // 初始化入口
   async function init() {
+    // 渲染系统偏好主题与语言
+    applyTheme(state.currentTheme);
+    applyLanguage(state.currentLang);
+
+    // 动态拉取 JSON
+    state.guides = await fetchSafeJson('data/guides.json');
+    state.steps = await fetchSafeJson('data/steps.json');
+    state.screenshots = await fetchSafeJson('data/screenshots.json');
+
     try {
-      const [rawGuides, rawSteps, rawScreenshots, rawDorm] = await Promise.all([
-        fetch('data/guides.json').then(r => r.json()).catch(() => []),
-        fetch('data/steps.json').then(r => r.json()).catch(() => []),
-        fetch('data/screenshots.json').then(r => r.json()).catch(() => []),
-        fetch('data/dorm-info.json').then(r => r.json()).catch(() => null)
-      ]);
+      const dRes = await fetch('data/dorm-info.json');
+      if (dRes.ok) state.dormInfo = await dRes.json();
+    } catch (e) {}
 
-      state.guides = extractArray(rawGuides);
-      state.steps = extractArray(rawSteps);
-      state.screenshots = extractArray(rawScreenshots);
-      state.dormInfo = rawDorm;
-
-      bindEvents();
-    } catch (err) {
-      console.error('Failed to parse dynamic data:', err);
-    }
+    bindEvents();
   }
 
   function bindEvents() {
+    // 卡片点击
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
@@ -121,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // 散落拍立得点击
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -138,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo(0, 0);
     });
 
+    // 档案袋
     dormFileTrigger.addEventListener('click', openDossier);
     if (openDormLink) openDormLink.addEventListener('click', openDossier);
     dossierCloseBtn.addEventListener('click', () => switchView('home'));
@@ -150,8 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     dossierNextBtn.addEventListener('click', () => {
-      const totalPages = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
-      if (state.currentDormPage < totalPages) {
+      const total = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
+      if (state.currentDormPage < total) {
         state.currentDormPage++;
         renderDormPage(state.currentDormPage);
       }
@@ -159,44 +277,125 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', updateScrollProgress);
 
+    // 搜索实时下拉列表交互 (问题 5)
     if (searchInput) {
-      searchInput.addEventListener('input', handleSearch);
+      searchInput.addEventListener('input', handleSearchDropdown);
+      searchInput.addEventListener('focus', handleSearchDropdown);
+    }
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        searchResultsDropdown.classList.remove('open');
+      });
+    }
+
+    // 点击空白处关闭搜索下拉
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-bar-wrap')) {
+        searchResultsDropdown.classList.remove('open');
+      }
+    });
+
+    // 语言与主题切换事件 (新功能 1 & 2)
+    langToggleBtn.addEventListener('click', () => {
+      const nextLang = state.currentLang === 'en' ? 'zh' : 'en';
+      applyLanguage(nextLang);
+    });
+
+    themeToggleBtn.addEventListener('click', () => {
+      const nextTheme = state.currentTheme === 'light' ? 'dark' : 'light';
+      applyTheme(nextTheme);
+    });
+  }
+
+  // 语言应用函数
+  function applyLanguage(lang) {
+    state.currentLang = lang;
+    localStorage.setItem('site_lang', lang);
+    document.documentElement.setAttribute('data-lang', lang);
+
+    langLabel.textContent = lang === 'en' ? '中文' : 'EN';
+    const dict = i18n[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key]) el.innerHTML = dict[key];
+    });
+
+    searchInput.placeholder = dict.searchPlaceholder;
+  }
+
+  // 主题应用函数
+  function applyTheme(theme) {
+    state.currentTheme = theme;
+    localStorage.setItem('site_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+
+    if (theme === 'dark') {
+      themeIcon.textContent = '☀️';
+      themeLabel.textContent = 'LIGHT';
+    } else {
+      themeIcon.textContent = '🌙';
+      themeLabel.textContent = 'DARK';
     }
   }
 
-  // 搜索处理
-  function handleSearch(e) {
-    const query = e.target.value.toLowerCase().trim();
-    const allCards = document.querySelectorAll('.guide-card');
-    let visibleCount = 0;
+  // 即时下拉搜索列表 (问题 5)
+  function handleSearchDropdown() {
+    const query = searchInput.value.trim().toLowerCase();
+    searchClearBtn.style.display = query ? 'block' : 'none';
 
-    allCards.forEach(card => {
-      const cardTitle = card.querySelector('.card-headline')?.innerText.toLowerCase() || '';
-      const appName = card.querySelector('.card-app-name')?.innerText.toLowerCase() || '';
+    if (!query) {
+      searchResultsDropdown.classList.remove('open');
+      return;
+    }
+
+    const cards = Array.from(document.querySelectorAll('.guide-card'));
+    const matched = [];
+
+    cards.forEach(card => {
+      const gid = card.dataset.guideId;
+      const title = card.querySelector('.card-headline')?.innerText.replace(/\n/g, ' ') || '';
+      const app = card.querySelector('.card-app-name')?.innerText || '';
+      const desc = card.querySelector('.card-sub-desc')?.innerText || '';
       const tags = (card.dataset.tags || '').toLowerCase();
 
-      if (!query || cardTitle.includes(query) || appName.includes(query) || tags.includes(query)) {
-        card.style.display = 'flex';
-        visibleCount++;
-      } else {
-        card.style.display = 'none';
+      const fullString = `${title} ${app} ${desc} ${tags}`.toLowerCase();
+      if (fullString.includes(query)) {
+        matched.push({ gid, title, app, desc });
       }
     });
 
-    document.querySelectorAll('.category-block-wrapper').forEach(block => {
-      const visibleInside = block.querySelectorAll('.guide-card[style*="display: flex"], .guide-card:not([style*="display: none"])');
-      if (!query) {
-        block.style.display = 'block';
-      } else if (visibleInside.length === 0) {
-        block.style.display = 'none';
-      } else {
-        block.style.display = 'block';
-      }
-    });
-
-    if (searchNoResults) {
-      searchNoResults.style.display = (visibleCount === 0 && query) ? 'block' : 'none';
+    if (matched.length === 0) {
+      searchResultsDropdown.innerHTML = `
+        <div style="padding: 1.2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+          ${i18n[state.currentLang].noResults}
+        </div>
+      `;
+      searchResultsDropdown.classList.add('open');
+      return;
     }
+
+    searchResultsDropdown.innerHTML = matched.map(m => `
+      <div class="search-item-row" data-guide-id="${m.gid}">
+        <div class="search-item-main">
+          <span class="search-item-title">${m.title}</span>
+          <span class="search-item-sub">${m.desc}</span>
+        </div>
+        <span class="search-item-tag">${m.app}</span>
+      </div>
+    `).join('');
+
+    searchResultsDropdown.classList.add('open');
+
+    searchResultsDropdown.querySelectorAll('.search-item-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const gid = row.dataset.guideId;
+        searchResultsDropdown.classList.remove('open');
+        openGuideDetail(gid);
+      });
+    });
   }
 
   function switchView(viewName) {
@@ -211,95 +410,92 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 步骤详情渲染（兼容解包后的数据字段）
+  // 步骤详情渲染 (问题 3：自动嗅探图片长宽比，扁图自动切为相框)
   function openGuideDetail(guideId) {
-    // 兼容可能存在的 guide_id 大小写或下划线
     const targetId = (guideId || '').trim();
-    const guide = state.guides.find(g => (g.guide_id || g['guide_id'] || '').trim() === targetId) || {
-      guide_title: 'CAMPUS LIFE GUIDE'
+    const guide = state.guides.find(g => (g.guide_id || '').trim() === targetId) || {
+      guide_title: 'CAMPUS SURVIVAL'
     };
 
     detailMainTitle.innerHTML = (guide.guide_title || '').replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
 
-    // 严格过滤出本指南的所有步骤
     const currentSteps = state.steps
-      .filter(s => (s.guide_id || s['guide_id'] || '').trim() === targetId)
-      .sort((a, b) => (a.step_number || a['step_number'] || 0) - (b.step_number || b['step_number'] || 0));
+      .filter(s => (s.guide_id || '').trim() === targetId)
+      .sort((a, b) => (Number(a.step_number) || 0) - (Number(b.step_number) || 0));
 
     if (currentSteps.length === 0) {
-      stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:#666; padding: 2rem 0;">Step details are being updated...</p>`;
+      stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:var(--text-muted); padding: 2rem 0;">Step details are being updated...</p>`;
     } else {
       currentSteps.forEach(step => {
-        const imgId = (step.image_id || step['image_id'] || '').trim();
-        const stepId = (step.step_id || step['step_id'] || '').trim();
+        const imgId = String(step.image_id || '').trim();
+        const stepId = String(step.step_id || '').trim();
 
-        // 匹配 screenshots.json
         const ss = state.screenshots.find(s => {
-          const sImgId = (s.image_id || s['image_id'] || '').trim();
-          const sStepId = (s.step_id || s['step_id'] || '').trim();
+          const sImgId = String(s.image_id || '').trim();
+          const sStepId = String(s.step_id || '').trim();
           return (imgId && sImgId === imgId) || (stepId && sStepId === stepId);
         });
 
         const fileName = step.filename || (ss ? ss.filename : '');
         const hasRealImage = fileName && String(fileName).trim() !== '' && fileName !== 'null';
-        const ssStatus = (step.status || (ss ? ss.status : '') || '').toLowerCase().trim();
+        const ssStatus = String(step.status || (ss ? ss.status : '') || '').toLowerCase().trim();
         const isExcelNone = ssStatus === 'none';
-        
-        // 判断相框还是手机壳
-        const isPhoto = (step.display_frame === 'photo') || (ss && ss.display_frame === 'photo') || targetId === 'GUIDE-011' || targetId === 'GUIDE-012' || (fileName && fileName.includes('maintenance'));
 
         const stepCard = document.createElement('div');
 
-        // status 为 none -> 纯文本展示，不留空白相框
         if (isExcelNone) {
           stepCard.className = 'step-item-card step-card-text-only';
           stepCard.innerHTML = `
             <div class="step-info-col">
-              <div class="step-circle-badge">${step.step_number || step['step_number'] || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title || step['step_title'] || ''}</h4>
-              <p class="step-detail-text">${step.instruction || step['instruction'] || ''}</p>
+              <div class="step-circle-badge">${step.step_number || 1}</div>
+              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
+              <p class="step-detail-text">${step.instruction || ''}</p>
               ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
             </div>
           `;
         } else {
-          // 有图显示真实图片，无图显示预留占位框架
           stepCard.className = 'step-item-card';
-          let mediaBox = '';
 
-          if (isPhoto) {
-            mediaBox = hasRealImage ? `
-              <div class="mockup-photo-body">
-                <img src="images/${fileName}" alt="${step.step_title || ''}">
-              </div>
-            ` : `
-              <div class="mockup-photo-body">
-                <div class="mockup-photo-placeholder">[ Photo Preview Pending ]</div>
-              </div>
-            `;
+          // 核心修复 (问题 3)：长宽比自适应容器
+          // 初始默认给一个容器，图片加载后如果发现 aspect-ratio < 1.4，自动切换样式为相框
+          const mediaContainer = document.createElement('div');
+          mediaContainer.className = 'mockup-phone-body'; // 默认外壳
+
+          if (hasRealImage) {
+            const screen = document.createElement('div');
+            screen.className = 'mockup-screen';
+            const img = document.createElement('img');
+            img.src = `images/${fileName}`;
+            img.alt = step.step_title || '';
+
+            // 图像自适应嗅探
+            img.onload = () => {
+              const ratio = img.naturalHeight / img.naturalWidth;
+              // 如果图片是扁平的 (宽高比偏小) 或者非典型竖屏手机比例，立刻换成相框
+              if (ratio < 1.45) {
+                mediaContainer.className = 'mockup-photo-body';
+                screen.className = '';
+              }
+            };
+
+            screen.appendChild(img);
+            mediaContainer.appendChild(screen);
           } else {
-            mediaBox = hasRealImage ? `
-              <div class="mockup-phone-body">
-                <div class="mockup-screen">
-                  <img src="images/${fileName}" alt="${step.step_title || ''}">
-                </div>
-              </div>
-            ` : `
-              <div class="mockup-phone-body">
-                <div class="mockup-screen-placeholder">[ Mobile Screen Preview Pending ]</div>
-              </div>
-            `;
+            mediaContainer.innerHTML = `<div class="mockup-photo-placeholder">[ Step Preview Pending ]</div>`;
           }
 
-          stepCard.innerHTML = `
-            ${mediaBox}
-            <div class="step-info-col">
-              <div class="step-circle-badge">${step.step_number || step['step_number'] || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title || step['step_title'] || ''}</h4>
-              <p class="step-detail-text">${step.instruction || step['instruction'] || ''}</p>
-              ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
-            </div>
+          const infoCol = document.createElement('div');
+          infoCol.className = 'step-info-col';
+          infoCol.innerHTML = `
+            <div class="step-circle-badge">${step.step_number || 1}</div>
+            <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
+            <p class="step-detail-text">${step.instruction || ''}</p>
+            ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
           `;
+
+          stepCard.appendChild(mediaContainer);
+          stepCard.appendChild(infoCol);
         }
 
         stepsFlowContainer.appendChild(stepCard);
@@ -311,7 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateScrollProgress, 100);
   }
 
-  // 推荐 App 展台
   function openAppGallery(catKey) {
     const config = appGalleries[catKey] || appGalleries['01'];
     galleryCatTitle.textContent = config.title;
@@ -336,7 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
   }
 
-  // 竖向蓝色进度条灌浆
   function updateScrollProgress() {
     if (!guideDetailView.classList.contains('active')) return;
     const layout = document.querySelector('.detail-scroll-layout');
@@ -356,7 +550,6 @@ document.addEventListener('DOMContentLoaded', () => {
     trackLineFill.style.height = `${percent}%`;
   }
 
-  // 打开 Building 12 档案
   function openDossier() {
     state.currentDormPage = 1;
     renderDormPage(state.currentDormPage);
@@ -364,9 +557,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
   }
 
+  // 档案渲染
   function renderDormPage(pageNum) {
-    const totalPages = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
-    dossierPageLabel.textContent = `Page ${pageNum} / ${totalPages}`;
+    const total = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
+    dossierPageLabel.textContent = `Page ${pageNum} / ${total}`;
     dossierBodyViewport.innerHTML = '';
 
     if (state.dormInfo && state.dormInfo.pages) {
@@ -422,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         const text = decodeURIComponent(btn.dataset.copy);
         navigator.clipboard.writeText(text).then(() => {
-          showToast('Address copied to clipboard!');
+          showToast(i18n[state.currentLang].copiedToast);
         }).catch(() => {
           const ta = document.createElement('textarea');
           ta.value = text;
@@ -430,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ta.select();
           document.execCommand('copy');
           document.body.removeChild(ta);
-          showToast('Address copied to clipboard!');
+          showToast(i18n[state.currentLang].copiedToast);
         });
       });
     });
