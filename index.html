@@ -18,7 +18,7 @@
       </div>
       <div class="search-bar-wrap">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search guides (e.g. Cainiao, Laundry, Top-up)..." id="searchInput">
+        <input type="text" placeholder="Search guides (e.g. Cainiao, Laundry, Alipay, Delivery)..." id="searchInput">
       </div>
       <nav class="top-nav-links">
         <a href="#packages">PACKAGES</a>
@@ -31,112 +31,119 @@
 
     <main class="main-content">
       
-      <!-- 01 PACKAGES & FOOD -->
-      <section class="category-block" id="packages">
+      <!-- 01 PACKAGES & FOOD 模块（粉蓝底色） -->
+      <section class="category-block-wrapper module-packages" id="packages">
         <div class="category-bar bar-blue">
           <span>PACKAGES &amp; FOOD</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-row">
-          <div class="guide-card" data-guide-id="GUIDE-008">
+        <div class="cards-row" id="packagesCardsRow">
+          <!-- 卡片 1: 取快递 -->
+          <div class="guide-card" data-guide-id="GUIDE-008" data-tags="cainiao packages taobao pickup 菜鸟 快递">
             <div class="card-polaroid">
               <img src="images/packagesandfood-01.png" alt="Packages">
             </div>
             <h3 class="card-headline">HOW TO<br>GET MY<br>PACKAGES?</h3>
             <p class="card-app-name">CaiNiao</p>
-            <p class="card-sub-desc">Finding pickup stations</p>
+            <p class="card-sub-desc">finding pickup stations</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
-          <div class="guide-card" data-guide-id="GUIDE-010">
+          <!-- 卡片 2: 点外卖 -->
+          <div class="guide-card" data-guide-id="GUIDE-010" data-tags="meituan delivery food meal 外卖 美团">
             <div class="card-polaroid">
               <img src="images/packagesandfood-02.png" alt="Delivery">
             </div>
             <h3 class="card-headline">HOW TO<br>GET MY<br>DELIVERY?</h3>
-            <p class="card-app-name">MeiTuan</p>
-            <p class="card-sub-desc">How to order and pick up your meal</p>
+            <p class="card-app-name">MeiTuan &amp; TaoBao</p>
+            <p class="card-sub-desc">where to grab your meal</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
       </section>
 
-      <!-- 02 MONEY & PAYMENTS -->
-      <section class="category-block" id="finance">
+      <!-- 02 MONEY & PAYMENTS 模块（烟粉豆沙底色） -->
+      <section class="category-block-wrapper module-finance" id="finance">
         <div class="category-bar bar-rose">
           <span>MONEY &amp; PAYMENTS</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-row">
-          <div class="guide-card" data-guide-id="GUIDE-001">
+        <div class="cards-row" id="financeCardsRow">
+          <div class="guide-card" data-guide-id="GUIDE-001" data-tags="alipay bank account registration 支付宝 注册 银行卡">
             <div class="card-polaroid">
-              <img src="images/moneyandpayments-01.png" alt="Alipay Register">
+              <img src="images/moneyandpayments-01.png" alt="Bank Account">
             </div>
-            <h3 class="card-headline">HOW TO<br>REGISTER<br>ALIPAY</h3>
+            <h3 class="card-headline">BANK<br>ACCOUNT<br>SETUP</h3>
+            <p class="card-app-name">Alipay</p>
+            <p class="card-sub-desc">Required paperwork &amp; activation</p>
+            <button class="btn-learn-more">LEARN MORE</button>
+          </div>
+
+          <div class="guide-card" data-guide-id="GUIDE-002" data-tags="alipay add bank card link 绑定银行卡 银行">
+            <div class="card-polaroid">
+              <img src="images/moneyandpayments-02.png" alt="Add Bank Card">
+            </div>
+            <h3 class="card-headline">LINKING CARD<br>TO ALIPAY</h3>
             <p class="card-app-name">Alipay</p>
             <p class="card-sub-desc">Link your card and start paying</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
-          <div class="guide-card" data-guide-id="GUIDE-002">
+          <div class="guide-card" data-guide-id="GUIDE-004" data-tags="metro transport subway alipay 地铁 乘车码 交通">
             <div class="card-polaroid">
-              <img src="images/moneyandpayments-02.png" alt="Add Bank Card">
+              <img src="images/moneyandpayments-03.png" alt="Metro">
             </div>
-            <h3 class="card-headline">HOW TO<br>ADD A BANK<br>CARD</h3>
-            <p class="card-app-name">Alipay</p>
-            <p class="card-sub-desc">Link a bank card to Alipay</p>
-            <button class="btn-learn-more">LEARN MORE</button>
-          </div>
-
-          <div class="guide-card" data-guide-id="GUIDE-004">
-            <div class="card-polaroid">
-              <img src="images/moneyandpayments-03.png" alt="Metro Scan">
-            </div>
-            <h3 class="card-headline">HOW TO<br>TAKE METRO<br>WITH ALIPAY?</h3>
-            <p class="card-app-name">Alipay</p>
+            <h3 class="card-headline">HOW TO TAKE<br>METRO WITH<br>ALIPAY?</h3>
+            <p class="card-app-name">Alipay Metro</p>
             <p class="card-sub-desc">Scan using a QR code</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
       </section>
 
-      <!-- 03 SETTLING INTO YOUR DORM LIFE -->
-      <section class="category-block" id="dorm">
+      <!-- 03 SETTLING INTO YOUR DORM LIFE 模块（抹茶暖灰绿底色） -->
+      <section class="category-block-wrapper module-dorm" id="dorm">
         <div class="category-bar bar-sage">
           <span>SETTLING INTO YOUR DORM LIFE</span>
           <span class="bar-arrow">→</span>
         </div>
-        <div class="cards-row">
-          <div class="guide-card" data-guide-id="GUIDE-009">
+        <div class="cards-row" id="dormCardsRow">
+          <div class="guide-card" data-guide-id="GUIDE-011" data-tags="laundry washing machine clothes 洗衣机 烘干机">
             <div class="card-polaroid">
-              <img src="images/dormlife-01.png" alt="Ecard">
+              <img src="images/dormlife-01.png" alt="Laundry">
             </div>
-            <h3 class="card-headline">CAMPUS CARD<br>&amp; ELECTRICITY<br>TOP-UP</h3>
+            <h3 class="card-headline">DOING YOUR<br>LAUNDRY</h3>
+            <p class="card-app-name">Laundry Room</p>
+            <p class="card-sub-desc">Quick guide to washing machines</p>
+            <button class="btn-learn-more">LEARN MORE</button>
+          </div>
+
+          <div class="guide-card" data-guide-id="GUIDE-009" data-tags="power card electricity top up ecard 充值 电费 校园卡">
+            <div class="card-polaroid">
+              <img src="images/dormlife-02.png" alt="Campus Card">
+            </div>
+            <h3 class="card-headline">KEEPING THE<br>POWER ON</h3>
             <p class="card-app-name">ECNU Ecard</p>
             <p class="card-sub-desc">Easy recharges so you're never stuck</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
 
-          <div class="guide-card" data-guide-id="GUIDE-011">
-            <div class="card-polaroid">
-              <img src="images/dormlife-02.png" alt="Laundry">
-            </div>
-            <h3 class="card-headline">DOING YOUR<br>LAUNDRY<br>EASILY</h3>
-            <p class="card-app-name">Laundry</p>
-            <p class="card-sub-desc">Quick guide to washing machines</p>
-            <button class="btn-learn-more">LEARN MORE</button>
-          </div>
-
-          <div class="guide-card" data-guide-id="GUIDE-012">
+          <div class="guide-card" data-guide-id="GUIDE-012" data-tags="repair maintenance fix 报修 维修 后勤">
             <div class="card-polaroid">
               <img src="images/dormlife-03.png" alt="Repair">
             </div>
-            <h3 class="card-headline">GETTING<br>THINGS<br>FIXED</h3>
+            <h3 class="card-headline">GETTING<br>THINGS FIXED</h3>
             <p class="card-app-name">Report for repairs</p>
             <p class="card-sub-desc">How to submit repair requests</p>
             <button class="btn-learn-more">LEARN MORE</button>
           </div>
         </div>
       </section>
+
+      <!-- 搜索无结果时显示的提示 -->
+      <div id="searchNoResults" class="search-empty-state" style="display: none;">
+        No guides found matching your search. Try "Cainiao", "Alipay", or "Laundry".
+      </div>
 
     </main>
 
@@ -176,7 +183,7 @@
       </div>
     </section>
 
-    <!-- 纯大地色独立底屏：素材放大 -->
+    <!-- 底部独立大地色纯色底屏 -->
     <footer class="earth-footer-plane">
       <div class="folder-standalone" id="dormFileTrigger">
         <img src="images/dorm12file.png" alt="Building 12" class="folder-big-img">
@@ -233,13 +240,12 @@
   </div>
 
 
-  <!-- ================= 视图 4：BUILDING 12 档案页（无框、严丝合缝纯色底） ================= -->
+  <!-- ================= 视图 4：BUILDING 12 档案页（超大容器，留足边缘呼吸感） ================= -->
   <div id="dormDossierView" class="page-view">
     <div class="dossier-full-viewport">
       <div class="dossier-sheet-wrapper">
         <img src="images/page.png" alt="Dormitory Document" class="dossier-page-bg">
 
-        <!-- 内容区域严格内嵌于 page.png 右侧白纸部分 -->
         <div class="dossier-content-surface">
           <div class="dossier-toolstrip">
             <div class="dossier-pager">
