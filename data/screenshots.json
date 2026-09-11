@@ -1,5 +1,4 @@
-{
- "SCREENSHOT":[
+{"SCREENSHOT":[
  {
   "image_id": "IMG-001",
   "filename": "alipay-register-ios-01.png",
@@ -393,30 +392,35 @@
  },
  {
   "image_id": "IMG-050",
+  "filename": "laundry-01.png",
   "guide_id": "GUIDE-011",
   "step_id": "GUIDE-011-S1",
   "status": "ready"
  },
  {
   "image_id": "IMG-051",
+  "filename": "laundry-02.png",
   "guide_id": "GUIDE-011",
   "step_id": "GUIDE-011-S2",
   "status": "ready"
  },
  {
   "image_id": "IMG-052",
+  "filename": "laundry-03.png",
   "guide_id": "GUIDE-011",
   "step_id": "GUIDE-011-S3",
   "status": "ready"
  },
  {
   "image_id": "IMG-053",
+  "filename": "laundry-04.png",
   "guide_id": "GUIDE-011",
   "step_id": "GUIDE-011-S4",
   "status": "ready"
  },
  {
   "image_id": "IMG-054",
+  "filename": "laundry-05.png",
   "guide_id": "GUIDE-011",
   "step_id": "GUIDE-011-S5",
   "status": "ready"
