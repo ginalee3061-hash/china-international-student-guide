@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. 字体声明 (fonts/)
+   1. 字体声明
    ========================================================================== */
 @font-face {
   font-family: 'AlteHaasGroteskBold';
@@ -25,17 +25,30 @@
 }
 
 /* ==========================================================================
-   2. 全局基础变量
+   2. 严格对齐参考图 1、2、3 的模块配色与基础设定
    ========================================================================== */
 :root {
   --bg-sand: #FAF7F2;
   --text-dark: #1F2024;
   --text-muted: #7E828B;
-  --bar-blue: #6A90A4;
-  --bar-rose: #BD8787;
-  --bar-sage: #8A9E82;
+  
+  /* 模块 1：粉蓝底色与分类深灰蓝条 */
+  --module-packages-bg: #98B6CD;
+  --bar-blue: #4A6E86;
+  --btn-blue: #86A8BF;
+
+  /* 模块 2：烟粉豆沙底色与分类深红豆沙条 */
+  --module-finance-bg: #CF9D9D;
+  --bar-rose: #7D4949;
+  --btn-rose: #BF8787;
+
+  /* 模块 3：抹茶暖灰绿底色与分类深橄榄条 */
+  --module-dorm-bg: #C7C39E;
+  --bar-sage: #6E6845;
+  --btn-sage: #B3AE84;
+
   --accent-cyan: #3CB5C2;
-  --earth-bg: #5D563B; /* 纯正大地橄榄底色 */
+  --earth-bg: #5D563B;
 }
 
 * {
@@ -62,7 +75,7 @@ body {
 }
 
 /* ==========================================================================
-   3. 顶部导航
+   3. 顶部导航与搜索栏
    ========================================================================== */
 .site-header {
   max-width: 1400px;
@@ -103,20 +116,25 @@ body {
 }
 .search-bar-wrap input {
   width: 100%;
-  padding: 0.7rem 1rem 0.7rem 2.4rem;
+  padding: 0.75rem 1rem 0.75rem 2.6rem;
   border-radius: 30px;
-  border: 1px solid #DFD9CE;
+  border: 1.5px solid #DFD9CE;
   background: #FFF;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-bar-wrap input:focus {
+  border-color: #517087;
+  box-shadow: 0 0 0 3px rgba(81, 112, 135, 0.15);
 }
 .search-icon {
   position: absolute;
-  left: 0.9rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.85rem;
-  opacity: 0.45;
+  font-size: 0.9rem;
+  opacity: 0.5;
 }
 .top-nav-links {
   display: flex;
@@ -131,19 +149,36 @@ body {
 }
 
 /* ==========================================================================
-   4. 分类横条与卡片
+   4. 参考图 1、2、3：大模块纯色底色区与不遮挡文字的卡片
    ========================================================================== */
 .main-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 3rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 4.5rem;
+  gap: 3.5rem;
+  padding-bottom: 4rem;
 }
+
+/* 核心：为三大模块增加参考图所示的饱满背景底色块 */
+.category-block-wrapper {
+  width: 100%;
+  padding: 3rem 4rem 4rem;
+  border-radius: 28px;
+  max-width: 1420px;
+  margin: 0 auto;
+}
+.module-packages {
+  background-color: var(--module-packages-bg);
+}
+.module-finance {
+  background-color: var(--module-finance-bg);
+}
+.module-dorm {
+  background-color: var(--module-dorm-bg);
+}
+
 .category-bar {
-  border-radius: 8px;
-  padding: 1rem 2rem;
+  border-radius: 6px;
+  padding: 0.9rem 2rem;
   color: #FFF;
   display: flex;
   justify-content: space-between;
@@ -151,7 +186,8 @@ body {
   font-family: 'AlteHaasGroteskBold', sans-serif;
   letter-spacing: 0.08em;
   font-size: 1.15rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 .bar-blue { background-color: var(--bar-blue); }
 .bar-rose { background-color: var(--bar-rose); }
@@ -159,81 +195,109 @@ body {
 
 .cards-row {
   display: flex;
-  gap: 2.5rem;
+  gap: 2.8rem;
   overflow-x: auto;
-  padding-top: 15px;
-  padding-bottom: 10px;
-}
-.guide-card {
-  flex: 0 0 320px;
-  background: #FFFFFF;
-  border-radius: 30px;
-  padding: 2.2rem 2.2rem 2.2rem;
-  position: relative;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  border: 1px solid rgba(0,0,0,0.02);
-  transition: transform 0.25s ease;
-}
-.guide-card:hover {
-  transform: translateY(-6px);
+  padding-top: 30px; /* 为右上角探头的拍立得相框留出高度 */
+  padding-bottom: 15px;
 }
 
+/* 白底卡片 */
+.guide-card {
+  flex: 0 0 310px;
+  background: #FFFFFF;
+  border-radius: 36px;
+  padding: 3rem 2rem 2.2rem;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 340px;
+}
+.guide-card:hover {
+  transform: translateY(-8px);
+}
+
+/* 核心修复：拍立得相框移至卡片右上角顶端上方，绝不遮挡卡片正文标题 */
 .card-polaroid {
   position: absolute;
-  top: -18px;
-  right: 25px;
-  width: 95px;
+  top: -28px; /* 向上探出卡片上边缘 */
+  right: 20px;
+  width: 96px;
   height: 110px;
-  background: #FFF;
+  background: #FFFFFF;
   padding: 6px 6px 20px 6px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.14);
-  border-radius: 3px;
-  transform: rotate(5deg);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  border-radius: 4px;
+  transform: rotate(8deg);
+  pointer-events: none;
 }
 .card-polaroid img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 2px;
 }
 
 .card-headline {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   line-height: 1.15;
-  margin-top: 1.8rem;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.2rem;
   letter-spacing: -0.02em;
+  color: #111;
 }
 .card-app-name {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: #222;
 }
 .card-sub-desc {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 0.2rem;
+  margin-top: 0.25rem;
   margin-bottom: 2rem;
+  line-height: 1.35;
 }
 .btn-learn-more {
-  background: #8FAAB9;
+  background: var(--btn-blue);
   color: #FFF;
   border: none;
   font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
-  padding: 0.7rem 1.8rem;
-  border-radius: 20px;
+  padding: 0.65rem 1.6rem;
+  border-radius: 25px;
   cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.2s;
+}
+.btn-learn-more:hover {
+  opacity: 0.9;
+}
+.module-finance .btn-learn-more {
+  background: var(--btn-rose);
+}
+.module-dorm .btn-learn-more {
+  background: var(--btn-sage);
+}
+
+.search-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.1rem;
+  color: #777;
 }
 
 /* ==========================================================================
-   5. RECOMMEND APPS 散落舞台与大公文袋（图 2 放大效果）
+   5. RECOMMEND APPS 散落式排版与大地色底屏
    ========================================================================== */
 .recommend-scattered-zone {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 3rem 6rem;
+  padding: 3rem 3rem 6rem;
   position: relative;
 }
 .scattered-intro {
@@ -296,7 +360,6 @@ body {
 .pin-04 { bottom: 20px; left: 42%; transform: rotate(-2deg); }
 .pin-05 { bottom: 80px; right: 8%; transform: rotate(3deg); }
 
-/* 纯大地色延伸底屏：公文袋大幅放大（图 2 修复） */
 .earth-footer-plane {
   width: 100vw;
   background-color: var(--earth-bg);
@@ -317,7 +380,7 @@ body {
   transform: translateY(-10px) scale(1.03);
 }
 .folder-big-img {
-  width: 660px; /* 大幅放大公文袋尺寸 */
+  width: 660px;
   max-width: 92vw;
   height: auto;
   display: block;
@@ -341,7 +404,7 @@ body {
 }
 
 /* ==========================================================================
-   6. 视图 2：全屏步骤详情
+   6. 视图 2：全屏步骤详情页
    ========================================================================== */
 .detail-page-container {
   max-width: 1200px;
@@ -385,7 +448,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 350px;
+  min-height: 400px;
 }
 .track-node {
   width: 24px;
@@ -510,7 +573,7 @@ body {
 }
 
 /* ==========================================================================
-   7. 视图 3：RECOMMEND APPS 展台独立页
+   7. 视图 3：RECOMMEND APPS 展台
    ========================================================================== */
 .gallery-page-container {
   max-width: 1200px;
@@ -591,27 +654,26 @@ body {
 }
 
 /* ==========================================================================
-   8. 视图 4：BUILDING 12 档案全屏页（图 1 对齐 + 彻底去白框）
+   8. 视图 4：BUILDING 12 档案页（放大容器 + 充裕呼吸感内边距）
    ========================================================================== */
 .dossier-full-viewport {
   width: 100vw;
   min-height: 100vh;
-  background-color: var(--earth-bg); /* 全屏纯大地色，无任何多余边缘 */
+  background-color: var(--earth-bg);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3rem 1rem;
+  padding: 4rem 2rem;
 }
 
 .dossier-sheet-wrapper {
   position: relative;
   width: 100%;
-  max-width: 900px;
-  min-height: 820px;
-  box-shadow: none; /* 彻底去除外围白框与生硬阴影 */
+  max-width: 1050px; /* 容器由 820px 放大至 1050px */
+  min-height: 940px;
+  box-shadow: none;
 }
 
-/* page.png 底图自然铺设 */
 .dossier-page-bg {
   width: 100%;
   height: 100%;
@@ -623,12 +685,11 @@ body {
   pointer-events: none;
 }
 
-/* 核心对齐修复：严格内嵌在 page.png 白纸区域内，绝不盖住左侧牛皮纸 */
+/* 核心留白修复：左侧让出 24% 的空间（彻底离开深色折痕），顶部与右侧留足空间 */
 .dossier-content-surface {
   position: relative;
   z-index: 2;
-  /* 左侧预留 19% 空间（完美避开左侧公文袋折角与孔洞），右侧预留 9% */
-  padding: 4.8rem 9% 4rem 19%;
+  padding: 5.5rem 10% 5rem 24%;
 }
 
 .dossier-toolstrip {
@@ -636,50 +697,50 @@ body {
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px dashed rgba(0,0,0,0.12);
-  padding-bottom: 1.2rem;
-  margin-bottom: 2.5rem;
+  padding-bottom: 1.4rem;
+  margin-bottom: 2.8rem;
 }
 .dossier-pager {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   font-family: 'ToxTypewriter', serif;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
 }
 .pager-btn {
   background: none;
   border: 1px solid #444;
   border-radius: 4px;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 .dossier-exit-btn {
   font-family: 'HeuvelGrotesk', sans-serif;
   background: none;
   border: 1px solid #333;
-  padding: 0.4rem 1.1rem;
+  padding: 0.45rem 1.3rem;
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
 }
 
 .dorm-section-block {
-  margin-bottom: 2.2rem;
+  margin-bottom: 2.6rem;
 }
 .dorm-sec-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.35rem;
+  font-size: 1.45rem; /* 标题放大 */
   letter-spacing: 0.04em;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.9rem;
   border-bottom: 1px solid rgba(0,0,0,0.12);
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.4rem;
 }
 .dorm-typewriter-text {
   font-family: 'ToxTypewriter', serif;
-  font-size: 0.94rem;
-  line-height: 1.75;
+  font-size: 1.02rem; /* 正文放大 */
+  line-height: 1.8;
   color: #2A2A2A;
 }
 
@@ -687,16 +748,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.45);
+  padding: 0.9rem 1.2rem;
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 .copy-trigger-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   opacity: 0.75;
   transition: transform 0.15s;
 }
@@ -706,8 +767,8 @@ body {
 
 .dossier-split-photo {
   display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 2rem;
+  grid-template-columns: 1fr 240px;
+  gap: 2.5rem;
   align-items: center;
 }
 .polaroid-holder {
@@ -718,7 +779,7 @@ body {
 }
 .polaroid-holder img {
   width: 100%;
-  height: 140px;
+  height: 150px;
   object-fit: cover;
 }
 .metal-clip {
@@ -752,10 +813,9 @@ body {
 }
 
 /* ==========================================================================
-   9. 手机移动端全站自适应适配 (@media max-width: 768px)
+   9. 手机移动端自适应 (@media max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
-  /* 头部适配 */
   .site-header {
     flex-direction: column;
     align-items: flex-start;
@@ -764,7 +824,6 @@ body {
   }
   .search-bar-wrap {
     width: 100%;
-    max-width: 100%;
   }
   .top-nav-links {
     width: 100%;
@@ -773,25 +832,23 @@ body {
     gap: 1.2rem;
   }
 
-  /* 主页内容流适配 */
-  .main-content {
-    padding: 1rem 1.2rem 3rem;
-    gap: 3rem;
+  .category-block-wrapper {
+    padding: 2rem 1.2rem 2.5rem;
+    border-radius: 20px;
   }
   .category-bar {
     padding: 0.8rem 1.2rem;
     font-size: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
   }
   .guide-card {
     flex: 0 0 280px;
-    padding: 1.8rem 1.5rem;
+    padding: 2.5rem 1.5rem 1.8rem;
   }
   .card-headline {
     font-size: 1.45rem;
   }
 
-  /* 散落拍立得响应式：手机端转换为自适应流式网格 */
   .recommend-scattered-zone {
     padding: 1rem 1.2rem 4rem;
   }
@@ -816,20 +873,14 @@ body {
     width: 220px;
   }
 
-  /* 底部公文袋手机适配 */
   .earth-footer-plane {
     padding: 5rem 1.5rem;
   }
   .folder-big-img {
     width: 100%;
-    max-width: 320px;
-  }
-  .folder-click-pill {
-    font-size: 0.9rem;
-    padding: 0.7rem 1.5rem;
+    max-width: 340px;
   }
 
-  /* 步骤详情页手机适配 */
   .detail-page-container {
     padding: 2rem 1.2rem 6rem;
   }
@@ -845,19 +896,12 @@ body {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  .mockup-phone-body {
-    width: 100%;
-    max-width: 280px;
-    height: 480px;
-    margin: 0 auto;
-  }
-  .mockup-photo-body {
+  .mockup-phone-body, .mockup-photo-body {
     width: 100%;
     max-width: 280px;
     margin: 0 auto;
   }
 
-  /* RECOMMEND APPS 展台手机适配 */
   .gallery-page-container {
     padding: 2rem 1.2rem;
   }
@@ -865,7 +909,6 @@ body {
     font-size: 2rem;
   }
 
-  /* 档案手机端适配：避免遮挡，纵向自适应并优化左右留白 */
   .dossier-full-viewport {
     padding: 2rem 0.5rem;
     align-items: flex-start;
@@ -874,14 +917,10 @@ body {
     min-height: 720px;
   }
   .dossier-content-surface {
-    padding: 4rem 6% 3rem 18%;
+    padding: 4.5rem 6% 3rem 20%;
   }
   .dossier-split-photo {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-  .polaroid-holder {
-    max-width: 200px;
-    margin: 0 auto;
   }
 }
