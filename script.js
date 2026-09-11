@@ -1,9 +1,8 @@
 /**
- * Campus Life Survival Guide - Dynamic Engine
- * 完全从 data/*.json 动态加载数据，无任何本地硬编码固化
+ * Campus Life Survival Guide - Adaptive Dynamic Engine
+ * 自动解包兼容 { "STEPS": [...] }, { "GUIDE": [...] } 等各类 JSON 格式
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 全局动态数据状态
   const state = {
     guides: [],
     steps: [],
@@ -80,29 +79,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchInput');
   const searchNoResults = document.getElementById('searchNoResults');
 
-  // 初始化：纯动态读取你整理好的 json 文件
+  // 通用安全数组提取函数：自动剥离外层的 { "STEPS": [...] } 或 { "GUIDE": [...] }
+  function extractArray(raw) {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === 'object') {
+      const keys = Object.keys(raw);
+      for (let k of keys) {
+        if (Array.isArray(raw[k])) return raw[k];
+      }
+    }
+    return [];
+  }
+
+  // 初始化拉取并解包 JSON
   async function init() {
     try {
-      const [guides, steps, screenshots, dorm] = await Promise.all([
+      const [rawGuides, rawSteps, rawScreenshots, rawDorm] = await Promise.all([
         fetch('data/guides.json').then(r => r.json()).catch(() => []),
         fetch('data/steps.json').then(r => r.json()).catch(() => []),
         fetch('data/screenshots.json').then(r => r.json()).catch(() => []),
         fetch('data/dorm-info.json').then(r => r.json()).catch(() => null)
       ]);
 
-      state.guides = guides;
-      state.steps = steps;
-      state.screenshots = screenshots;
-      state.dormInfo = dorm;
+      state.guides = extractArray(rawGuides);
+      state.steps = extractArray(rawSteps);
+      state.screenshots = extractArray(rawScreenshots);
+      state.dormInfo = rawDorm;
 
       bindEvents();
     } catch (err) {
-      console.error('Failed to load dynamic data:', err);
+      console.error('Failed to parse dynamic data:', err);
     }
   }
 
   function bindEvents() {
-    // 监听主页卡片点击
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
@@ -110,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 监听 (01) ~ (05) 推荐 App 拍立得点击
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -118,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 返回按钮
     btnBackHome.addEventListener('click', () => {
       switchView('home');
       window.scrollTo(0, 0);
@@ -129,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo(0, 0);
     });
 
-    // Building 12 档案抽页
     dormFileTrigger.addEventListener('click', openDossier);
     if (openDormLink) openDormLink.addEventListener('click', openDossier);
     dossierCloseBtn.addEventListener('click', () => switchView('home'));
@@ -149,16 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 滚动监听灌浆进度条
     window.addEventListener('scroll', updateScrollProgress);
 
-    // 实时搜索功能
     if (searchInput) {
       searchInput.addEventListener('input', handleSearch);
     }
   }
 
-  // 搜索处理引擎
+  // 搜索处理
   function handleSearch(e) {
     const query = e.target.value.toLowerCase().trim();
     const allCards = document.querySelectorAll('.guide-card');
@@ -177,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 控制大模块显隐
     document.querySelectorAll('.category-block-wrapper').forEach(block => {
       const visibleInside = block.querySelectorAll('.guide-card[style*="display: flex"], .guide-card:not([style*="display: none"])');
       if (!query) {
@@ -194,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 视图切换控制
   function switchView(viewName) {
     homeView.classList.remove('active');
     guideDetailView.classList.remove('active');
@@ -207,41 +211,54 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 步骤详情渲染（直接从你的 JSON 动态读取）
+  // 步骤详情渲染（兼容解包后的数据字段）
   function openGuideDetail(guideId) {
-    const guide = state.guides.find(g => g.guide_id === guideId) || {
+    // 兼容可能存在的 guide_id 大小写或下划线
+    const targetId = (guideId || '').trim();
+    const guide = state.guides.find(g => (g.guide_id || g['guide_id'] || '').trim() === targetId) || {
       guide_title: 'CAMPUS LIFE GUIDE'
     };
 
-    detailMainTitle.innerHTML = guide.guide_title.replace('?', '?<br>');
+    detailMainTitle.innerHTML = (guide.guide_title || '').replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
 
-    // 筛选当前指南步骤
+    // 严格过滤出本指南的所有步骤
     const currentSteps = state.steps
-      .filter(s => s.guide_id === guideId)
-      .sort((a, b) => a.step_number - b.step_number);
+      .filter(s => (s.guide_id || s['guide_id'] || '').trim() === targetId)
+      .sort((a, b) => (a.step_number || a['step_number'] || 0) - (b.step_number || b['step_number'] || 0));
 
     if (currentSteps.length === 0) {
       stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:#666; padding: 2rem 0;">Step details are being updated...</p>`;
     } else {
       currentSteps.forEach(step => {
-        // 从 screenshots.json 匹配图片，如果 step 本身带有 filename 也优先采用
-        const ss = state.screenshots.find(s => s.image_id === step.image_id || s.step_id === step.step_id);
+        const imgId = (step.image_id || step['image_id'] || '').trim();
+        const stepId = (step.step_id || step['step_id'] || '').trim();
+
+        // 匹配 screenshots.json
+        const ss = state.screenshots.find(s => {
+          const sImgId = (s.image_id || s['image_id'] || '').trim();
+          const sStepId = (s.step_id || s['step_id'] || '').trim();
+          return (imgId && sImgId === imgId) || (stepId && sStepId === stepId);
+        });
+
         const fileName = step.filename || (ss ? ss.filename : '');
-        const hasRealImage = fileName && fileName.trim() !== '';
-        const isExcelNone = (step.status === 'none') || (ss && ss.status === 'none');
-        const isPhoto = (step.display_frame === 'photo') || (ss && ss.display_frame === 'photo');
+        const hasRealImage = fileName && String(fileName).trim() !== '' && fileName !== 'null';
+        const ssStatus = (step.status || (ss ? ss.status : '') || '').toLowerCase().trim();
+        const isExcelNone = ssStatus === 'none';
+        
+        // 判断相框还是手机壳
+        const isPhoto = (step.display_frame === 'photo') || (ss && ss.display_frame === 'photo') || targetId === 'GUIDE-011' || targetId === 'GUIDE-012' || (fileName && fileName.includes('maintenance'));
 
         const stepCard = document.createElement('div');
 
-        // status 为 none：纯文字卡片，不占位
+        // status 为 none -> 纯文本展示，不留空白相框
         if (isExcelNone) {
           stepCard.className = 'step-item-card step-card-text-only';
           stepCard.innerHTML = `
             <div class="step-info-col">
-              <div class="step-circle-badge">${step.step_number || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-              <p class="step-detail-text">${step.instruction || ''}</p>
+              <div class="step-circle-badge">${step.step_number || step['step_number'] || 1}</div>
+              <h4 class="step-instruction-heading">${step.step_title || step['step_title'] || ''}</h4>
+              <p class="step-detail-text">${step.instruction || step['instruction'] || ''}</p>
               ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
             </div>
           `;
@@ -253,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (isPhoto) {
             mediaBox = hasRealImage ? `
               <div class="mockup-photo-body">
-                <img src="images/${fileName}" alt="${step.step_title}">
+                <img src="images/${fileName}" alt="${step.step_title || ''}">
               </div>
             ` : `
               <div class="mockup-photo-body">
@@ -264,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaBox = hasRealImage ? `
               <div class="mockup-phone-body">
                 <div class="mockup-screen">
-                  <img src="images/${fileName}" alt="${step.step_title}">
+                  <img src="images/${fileName}" alt="${step.step_title || ''}">
                 </div>
               </div>
             ` : `
@@ -277,9 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
           stepCard.innerHTML = `
             ${mediaBox}
             <div class="step-info-col">
-              <div class="step-circle-badge">${step.step_number || 1}</div>
-              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-              <p class="step-detail-text">${step.instruction || ''}</p>
+              <div class="step-circle-badge">${step.step_number || step['step_number'] || 1}</div>
+              <h4 class="step-instruction-heading">${step.step_title || step['step_title'] || ''}</h4>
+              <p class="step-detail-text">${step.instruction || step['instruction'] || ''}</p>
               ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
             </div>
           `;
@@ -294,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateScrollProgress, 100);
   }
 
-  // 打开 RECOMMEND APPS 展台
+  // 推荐 App 展台
   function openAppGallery(catKey) {
     const config = appGalleries[catKey] || appGalleries['01'];
     galleryCatTitle.textContent = config.title;
@@ -319,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
   }
 
-  // 蓝色进度条灌浆
+  // 竖向蓝色进度条灌浆
   function updateScrollProgress() {
     if (!guideDetailView.classList.contains('active')) return;
     const layout = document.querySelector('.detail-scroll-layout');
@@ -339,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trackLineFill.style.height = `${percent}%`;
   }
 
-  // Building 12 档案渲染
+  // 打开 Building 12 档案
   function openDossier() {
     state.currentDormPage = 1;
     renderDormPage(state.currentDormPage);
@@ -352,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
     dossierPageLabel.textContent = `Page ${pageNum} / ${totalPages}`;
     dossierBodyViewport.innerHTML = '';
 
-    // 如果 dorm-info.json 存在则从动态数据读取，否则使用默认档案模板
     if (state.dormInfo && state.dormInfo.pages) {
       const pageData = state.dormInfo.pages.find(p => p.page_number === pageNum);
       if (pageData && pageData.sections) {
@@ -361,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
           secDiv.className = sec.photo ? 'dorm-section-block dossier-split-photo' : 'dorm-section-block';
 
           let itemsHtml = '';
-          sec.items.forEach(item => {
+          (sec.items || []).forEach(item => {
             if (item.type === 'copyable') {
               itemsHtml += `
                 <div class="dossier-copyable-box">
@@ -398,11 +414,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } else {
-      // 备用展示模版
       renderDefaultDormHtml(pageNum);
     }
 
-    // 绑定真实剪贴板复制事件
     dossierBodyViewport.querySelectorAll('.copy-trigger-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
