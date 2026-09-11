@@ -1,9 +1,8 @@
 /**
- * Campus Life Survival Guide - Interactive Engine
- * 包含：动态 JSON 加载、中英双语切换、亮暗模式、模糊下拉搜索、长宽比相框自动嗅探
+ * Campus Life Survival Guide - Engine
+ * 包含：动态 JSON、双语切换、亮暗模式、实时下拉搜索、长宽比相框自动嗅探、面包屑分级跳转
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // 全局数据状态
   const state = {
     guides: [],
     steps: [],
@@ -11,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dormInfo: null,
     currentDormPage: 1,
     currentLang: localStorage.getItem('site_lang') || 'en',
-    currentTheme: localStorage.getItem('site_theme') || 'light'
+    currentTheme: localStorage.getItem('site_theme') || 'light',
+    currentGuideId: null
   };
 
-  // 双语字典字典表 (新功能 1)
+  // 双语字典字典表 (中英文双语无缝热切换)
   const i18n = {
     en: {
       logoTitle: "CAMPUS LIFE",
@@ -51,9 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       appCat4: "Shopping",
       appCat5: "VPN & Network",
       dossierBtn: "Building 12 Dormitory Information",
-      backToGuides: "BACK TO GUIDES",
       survivalTag: "CAMPUS SURVIVAL GUIDE",
-      backToHome: "BACK TO HOME",
       closeDossier: "CLOSE",
       searchPlaceholder: "Search guides (e.g. Cainiao, Laundry, Alipay, Delivery)...",
       noResults: "No matching guides found.",
@@ -94,9 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       appCat4: "网络购物",
       appCat5: "校园网络",
       dossierBtn: "12号楼 宿舍规章与档案",
-      backToGuides: "返回指南列表",
       survivalTag: "留学生校园生存手册",
-      backToHome: "返回主页",
       closeDossier: "关闭档案",
       searchPlaceholder: "搜索指南 (例如：菜鸟, 洗衣, 外卖, 支付宝)...",
       noResults: "未找到相关指南。",
@@ -104,10 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // RECOMMEND APPS (01) ~ (05) 展台数据
   const appGalleries = {
     '01': {
       title: '01 FOOD & DELIVERY',
+      breadcrumb: '01 food & delivery',
       apps: [
         { name: '美团', sub: 'MeiTuan', icon: 'images/meituanicon.png' },
         { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
@@ -116,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     '02': {
       title: '02 TRANSIT & MAPS',
+      breadcrumb: '02 transit & maps',
       apps: [
         { name: '高德地图', sub: 'Amap', icon: 'images/amapicon.png' },
         { name: '哈喽', sub: 'HaLou', icon: 'images/haloicon.png' }
@@ -123,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     '03': {
       title: '03 FINANCE & PAYMENTS',
+      breadcrumb: '03 finance & payments',
       apps: [
         { name: '支付宝', sub: 'Alipay', icon: 'images/alipayicon.png' },
         { name: '工商银行', sub: 'ICBC', icon: 'images/icbcicon.png' },
@@ -131,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     '04': {
       title: '04 SHOPPING',
+      breadcrumb: '04 shopping',
       apps: [
         { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
         { name: '京东', sub: 'JingDong', icon: 'images/JDIcon.png' },
@@ -139,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     '05': {
       title: '05 VPN',
+      breadcrumb: '05 vpn & network',
       apps: [
         { name: 'Skuracat', sub: '', icon: 'images/sakuracaticon.png' },
         { name: 'Ikuuu', sub: '', icon: 'images/ikuuicon.png' }
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // DOM 元素引用
+  // DOM 节点引用
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
   const appGalleryView = document.getElementById('appGalleryView');
@@ -155,14 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const detailMainTitle = document.getElementById('detailMainTitle');
   const stepsFlowContainer = document.getElementById('stepsFlowContainer');
   const trackLineFill = document.getElementById('trackLineFill');
-  const btnBackHome = document.getElementById('btnBackHome');
-  const btnBackFromGallery = document.getElementById('btnBackFromGallery');
+
+  const crumbGuideCat = document.getElementById('crumbGuideCat');
+  const crumbGuideCurrent = document.getElementById('crumbGuideCurrent');
+  const crumbGalleryCurrent = document.getElementById('crumbGalleryCurrent');
 
   const galleryCatTitle = document.getElementById('galleryCatTitle');
   const galleryCardsGrid = document.getElementById('galleryCardsGrid');
 
   const dormFileTrigger = document.getElementById('dormFileTrigger');
-  const openDormLink = document.getElementById('openDormLink');
   const dossierCloseBtn = document.getElementById('dossierCloseBtn');
   const dossierPrevBtn = document.getElementById('dossierPrevBtn');
   const dossierNextBtn = document.getElementById('dossierNextBtn');
@@ -180,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeIcon = document.getElementById('themeIcon');
   const themeLabel = document.getElementById('themeLabel');
 
-  // 通用 JSON 容错解包提取器
   async function fetchSafeJson(url) {
     try {
       const res = await fetch(url);
@@ -188,12 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
       let text = (await res.text()).trim();
       if (!text) return [];
 
-      if (text.startsWith('"') && text.includes('":[')) {
-        text = '{' + text;
-      }
-      if (text.startsWith('{') && !text.endsWith('}')) {
-        text = text + '}';
-      }
+      if (text.startsWith('"') && text.includes('":[')) text = '{' + text;
+      if (text.startsWith('{') && !text.endsWith('}')) text = text + '}';
 
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) return parsed;
@@ -209,13 +205,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 初始化入口
   async function init() {
-    // 渲染系统偏好主题与语言
     applyTheme(state.currentTheme);
     applyLanguage(state.currentLang);
 
-    // 动态拉取 JSON
     state.guides = await fetchSafeJson('data/guides.json');
     state.steps = await fetchSafeJson('data/steps.json');
     state.screenshots = await fetchSafeJson('data/screenshots.json');
@@ -233,11 +226,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
-        openGuideDetail(gid);
+        const cat = card.dataset.category || 'PACKAGES & FOOD';
+        openGuideDetail(gid, cat);
       });
     });
 
-    // 散落拍立得点击
+    // 拍立得点击
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -245,19 +239,28 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    btnBackHome.addEventListener('click', () => {
-      switchView('home');
-      window.scrollTo(0, 0);
+    // 针对所有带有 data-action="go-home" 的面包屑节点
+    document.querySelectorAll('[data-action="go-home"]').forEach(el => {
+      el.addEventListener('click', () => {
+        switchView('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     });
 
-    btnBackFromGallery.addEventListener('click', () => {
-      switchView('home');
-      window.scrollTo(0, 0);
+    // 针对面包屑中的 recommend apps 点击
+    document.querySelectorAll('[data-action="go-apps"]').forEach(el => {
+      el.addEventListener('click', () => {
+        switchView('home');
+        const appsSec = document.getElementById('apps');
+        if (appsSec) appsSec.scrollIntoView({ behavior: 'smooth' });
+      });
     });
 
-    // 档案袋
+    // 档案袋打开
     dormFileTrigger.addEventListener('click', openDossier);
-    if (openDormLink) openDormLink.addEventListener('click', openDossier);
+    document.querySelectorAll('#openDormLink').forEach(el => {
+      el.addEventListener('click', openDossier);
+    });
     dossierCloseBtn.addEventListener('click', () => switchView('home'));
 
     dossierPrevBtn.addEventListener('click', () => {
@@ -277,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', updateScrollProgress);
 
-    // 搜索实时下拉列表交互 (问题 5)
+    // 搜索实时下拉浮层
     if (searchInput) {
       searchInput.addEventListener('input', handleSearchDropdown);
       searchInput.addEventListener('focus', handleSearchDropdown);
@@ -290,26 +293,24 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // 点击空白处关闭搜索下拉
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.search-bar-wrap')) {
         searchResultsDropdown.classList.remove('open');
       }
     });
 
-    // 语言与主题切换事件 (新功能 1 & 2)
+    // 语言与主题切换
     langToggleBtn.addEventListener('click', () => {
-      const nextLang = state.currentLang === 'en' ? 'zh' : 'en';
-      applyLanguage(nextLang);
+      const next = state.currentLang === 'en' ? 'zh' : 'en';
+      applyLanguage(next);
     });
 
     themeToggleBtn.addEventListener('click', () => {
-      const nextTheme = state.currentTheme === 'light' ? 'dark' : 'light';
-      applyTheme(nextTheme);
+      const next = state.currentTheme === 'light' ? 'dark' : 'light';
+      applyTheme(next);
     });
   }
 
-  // 语言应用函数
   function applyLanguage(lang) {
     state.currentLang = lang;
     localStorage.setItem('site_lang', lang);
@@ -326,7 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.placeholder = dict.searchPlaceholder;
   }
 
-  // 主题应用函数
   function applyTheme(theme) {
     state.currentTheme = theme;
     localStorage.setItem('site_theme', theme);
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 即时下拉搜索列表 (问题 5)
+  // 搜索处理
   function handleSearchDropdown() {
     const query = searchInput.value.trim().toLowerCase();
     searchClearBtn.style.display = query ? 'block' : 'none';
@@ -356,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cards.forEach(card => {
       const gid = card.dataset.guideId;
+      const cat = card.dataset.category || '';
       const title = card.querySelector('.card-headline')?.innerText.replace(/\n/g, ' ') || '';
       const app = card.querySelector('.card-app-name')?.innerText || '';
       const desc = card.querySelector('.card-sub-desc')?.innerText || '';
@@ -363,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const fullString = `${title} ${app} ${desc} ${tags}`.toLowerCase();
       if (fullString.includes(query)) {
-        matched.push({ gid, title, app, desc });
+        matched.push({ gid, cat, title, app, desc });
       }
     });
 
@@ -378,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchResultsDropdown.innerHTML = matched.map(m => `
-      <div class="search-item-row" data-guide-id="${m.gid}">
+      <div class="search-item-row" data-guide-id="${m.gid}" data-category="${m.cat}">
         <div class="search-item-main">
           <span class="search-item-title">${m.title}</span>
           <span class="search-item-sub">${m.desc}</span>
@@ -392,8 +393,9 @@ document.addEventListener('DOMContentLoaded', () => {
     searchResultsDropdown.querySelectorAll('.search-item-row').forEach(row => {
       row.addEventListener('click', () => {
         const gid = row.dataset.guideId;
+        const cat = row.dataset.category;
         searchResultsDropdown.classList.remove('open');
-        openGuideDetail(gid);
+        openGuideDetail(gid, cat);
       });
     });
   }
@@ -410,12 +412,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 步骤详情渲染 (问题 3：自动嗅探图片长宽比，扁图自动切为相框)
-  function openGuideDetail(guideId) {
+  // 打开指南步骤详情 (问题 3 面包屑更新 + 自动切换相框)
+  function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
+    state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
     const guide = state.guides.find(g => (g.guide_id || '').trim() === targetId) || {
       guide_title: 'CAMPUS SURVIVAL'
     };
+
+    // 更新面包屑 (问题 3)
+    crumbGuideCat.textContent = categoryName.toLowerCase();
+    crumbGuideCat.onclick = () => {
+      switchView('home');
+      const targetSec = categoryName.includes('PACKAGES') ? 'packages' :
+                        categoryName.includes('MONEY') ? 'finance' : 'dorm';
+      const secEl = document.getElementById(targetSec);
+      if (secEl) secEl.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    crumbGuideCurrent.textContent = (guide.guide_title || '').toLowerCase();
 
     detailMainTitle.innerHTML = (guide.guide_title || '').replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
@@ -457,10 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           stepCard.className = 'step-item-card';
 
-          // 核心修复 (问题 3)：长宽比自适应容器
-          // 初始默认给一个容器，图片加载后如果发现 aspect-ratio < 1.4，自动切换样式为相框
           const mediaContainer = document.createElement('div');
-          mediaContainer.className = 'mockup-phone-body'; // 默认外壳
+          mediaContainer.className = 'mockup-phone-body';
 
           if (hasRealImage) {
             const screen = document.createElement('div');
@@ -469,10 +482,9 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = `images/${fileName}`;
             img.alt = step.step_title || '';
 
-            // 图像自适应嗅探
+            // 自动嗅探长宽比：偏扁图片自动切换为相框
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
-              // 如果图片是扁平的 (宽高比偏小) 或者非典型竖屏手机比例，立刻换成相框
               if (ratio < 1.45) {
                 mediaContainer.className = 'mockup-photo-body';
                 screen.className = '';
@@ -507,9 +519,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateScrollProgress, 100);
   }
 
+  // 打开展台 (更新面包屑)
   function openAppGallery(catKey) {
     const config = appGalleries[catKey] || appGalleries['01'];
     galleryCatTitle.textContent = config.title;
+    crumbGalleryCurrent.textContent = config.breadcrumb;
     galleryCardsGrid.innerHTML = '';
 
     config.apps.forEach(app => {
@@ -557,7 +571,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
   }
 
-  // 档案渲染
   function renderDormPage(pageNum) {
     const total = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
     dossierPageLabel.textContent = `Page ${pageNum} / ${total}`;
