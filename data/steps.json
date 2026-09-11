@@ -1,72 +1,507 @@
-[
-  {
-    "step_id": "GUIDE-008-S01",
-    "guide_id": "GUIDE-008",
-    "step_number": 1,
-    "step_title": "[iOS] Download the Cainiao App",
-    "instruction": "Change your App Store region to Mainland China and search for 菜鸟.",
-    "tip": null,
-    "image_id": "IMG-020",
-    "display_frame": "phone"
-  },
-  {
-    "step_id": "GUIDE-008-S02",
-    "guide_id": "GUIDE-008",
-    "step_number": 2,
-    "step_title": "[Android] Download the Cainiao App",
-    "instruction": "Open your phone's built-in app store or download via official store.",
-    "tip": null,
-    "image_id": "IMG-022",
-    "display_frame": "phone"
-  },
-  {
-    "step_id": "GUIDE-008-S03",
-    "guide_id": "GUIDE-008",
-    "step_number": 3,
-    "step_title": "Tap 菜鸟驿站 & Find Pickup Code",
-    "instruction": "Use the 取件码 (pickup code) to find your package on the shelves.",
-    "tip": null,
-    "image_id": "IMG-029",
-    "display_frame": "phone"
-  },
-  {
-    "step_id": "GUIDE-008-S04",
-    "guide_id": "GUIDE-008",
-    "step_number": 4,
-    "step_title": "Scan and Complete Pickup",
-    "instruction": "Scan the barcode or your identity code at the station exit machine.",
-    "tip": null,
-    "image_id": "IMG-031",
-    "display_frame": "photo"
-  },
-  {
-    "step_id": "GUIDE-012-S01",
-    "guide_id": "GUIDE-012",
-    "step_number": 1,
-    "step_title": "Locate the Laundry Room",
-    "instruction": "The washing machines and dryers are located around the corner of the stairs on the 1st floor.",
-    "tip": "Turn left after entering the door and go all the way to the end.",
-    "image_id": "IMG-054",
-    "display_frame": "photo"
-  },
-  {
-    "step_id": "GUIDE-012-S02",
-    "guide_id": "GUIDE-012",
-    "step_number": 2,
-    "step_title": "Put Clothes & Detergent",
-    "instruction": "Put your clothes into the washing machine and add laundry detergent.",
-    "tip": null,
-    "image_id": "IMG-055",
-    "display_frame": "photo"
-  },
-  {
-    "step_id": "GUIDE-012-S03",
-    "guide_id": "GUIDE-012",
-    "step_number": 3,
-    "step_title": "Scan WeChat QR Code",
-    "instruction": "Use WeChat on your phone to scan the QR code on the machine.",
-    "tip": null,
-    "image_id": "IMG-056",
-    "display_frame": "phone"
-  }
+"STEPS":[
+ {
+  "step_id": "GUIDE-001-S01",
+  "guide_id": "GUIDE-001",
+  "step_number": 1,
+  "step_title": "Open Alipay",
+  "image_id": "IMG-001",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S02",
+  "guide_id": "GUIDE-001",
+  "step_number": 2,
+  "step_title": "Start registration",
+  "image_id": "IMG-002",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S03",
+  "guide_id": "GUIDE-001",
+  "step_number": 3,
+  "step_title": "Enter your phone number",
+  "instruction": "Use the number you can receive SMS on",
+  "image_id": "IMG-003",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S04",
+  "guide_id": "GUIDE-001",
+  "step_number": 4,
+  "step_title": "Verify your number",
+  "image_id": "IMG-004",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S05",
+  "guide_id": "GUIDE-001",
+  "step_number": 5,
+  "step_title": "Enter your identity card number",
+  "image_id": "IMG-005",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S06",
+  "guide_id": "GUIDE-001",
+  "step_number": 6,
+  "step_title": "Enter your passport number",
+  "image_id": "IMG-006",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S07",
+  "guide_id": "GUIDE-001",
+  "step_number": 7,
+  "step_title": "Go to settings",
+  "image_id": "IMG-007",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S08",
+  "guide_id": "GUIDE-001",
+  "step_number": 8,
+  "step_title": "Go to Account and Security",
+  "image_id": "IMG-008",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-001-S09",
+  "guide_id": "GUIDE-001",
+  "step_number": 9,
+  "step_title": "Set your email and identity information",
+  "image_id": "IMG-009",
+  "optional": "no",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-002-S01",
+  "guide_id": "GUIDE-002",
+  "step_number": 1,
+  "step_title": "Click Account",
+  "image_id": "IMG-010",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-002-S02",
+  "guide_id": "GUIDE-002",
+  "step_number": 2,
+  "step_title": "Go to Bank Cards",
+  "image_id": "IMG-011",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-002-S03",
+  "guide_id": "GUIDE-002",
+  "step_number": 3,
+  "step_title": "Add Bank card",
+  "image_id": "IMG-012",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-002-S04",
+  "guide_id": "GUIDE-002",
+  "step_number": 4,
+  "step_title": "Enter your bank card number",
+  "image_id": "IMG-013",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-003-S01",
+  "guide_id": "GUIDE-003",
+  "step_number": 1,
+  "step_title": "Go to Pay\/Receive",
+  "image_id": "IMG-014",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-003-S02",
+  "guide_id": "GUIDE-003",
+  "step_number": 2,
+  "step_title": "Use the QR code to pay",
+  "image_id": "IMG-015",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-003-S03",
+  "guide_id": "GUIDE-003",
+  "step_number": 3,
+  "step_title": "Go to receive",
+  "image_id": "IMG-016",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-003-S04",
+  "guide_id": "GUIDE-003",
+  "step_number": 4,
+  "step_title": "Use the QR code to receive",
+  "image_id": "IMG-017",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-004-S01",
+  "guide_id": "GUIDE-004",
+  "step_number": 1,
+  "step_title": "Go to Transport",
+  "image_id": "IMG-018",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-004-S02",
+  "guide_id": "GUIDE-004",
+  "step_number": 2,
+  "step_title": "Use the QR code to Scan",
+  "image_id": "IMG-019",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-005-S01",
+  "guide_id": "GUIDE-005",
+  "step_number": 1,
+  "step_title": "Change your App Store region to Mainland China",
+  "image_id": "IMG-020",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-005-S02",
+  "guide_id": "GUIDE-005",
+  "step_number": 2,
+  "step_title": "Open the App Store and search for “菜鸟” or “菜鸟裹裹”",
+  "image_id": "IMG-021",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-006-S01",
+  "guide_id": "GUIDE-006",
+  "step_number": 1,
+  "step_title": "Open your phone's built-in app store, and search for “菜鸟” or “菜鸟裹裹”",
+  "image_id": "IMG-022",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-006-S02",
+  "guide_id": "GUIDE-006",
+  "step_number": 2,
+  "step_title": "If you can't find the app on your App Store, you can download a Chinese app store here: [https:\/\/microdown.yyb.qq.com\/o\/simple.jsp?from_wechat=SAFEDOWNLOAD&pkgname=com.tencent.android.qqdownloader&proxy_via=ANDROIDWXZ.NEWYYB.WX.SAFEDOWNLOAD&sd_userid=30641781594938147]",
+  "image_id": "IMG-023",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-007-S01",
+  "guide_id": "GUIDE-007",
+  "step_number": 1,
+  "step_title": "Sign in with your mobile phone number",
+  "image_id": "IMG-024",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-007-S02",
+  "guide_id": "GUIDE-007",
+  "step_number": 2,
+  "step_title": "Tap “我的” (Me) at the bottom right",
+  "image_id": "IMG-025",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-007-S03",
+  "guide_id": "GUIDE-007",
+  "step_number": 3,
+  "step_title": "Tap the Settings  icon in the top right",
+  "image_id": "IMG-026",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-007-S04",
+  "guide_id": "GUIDE-007",
+  "step_number": 4,
+  "step_title": "Open “账号与安全” (Account & Security)",
+  "image_id": "IMG-027",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-007-S05",
+  "guide_id": "GUIDE-007",
+  "step_number": 5,
+  "step_title": "From here, you can link your Taobao and Alipay accounts",
+  "image_id": "IMG-028",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-008-S01",
+  "guide_id": "GUIDE-008",
+  "step_number": 1,
+  "step_title": "Open TaoBao and tap \"菜鸟驿站\"",
+  "image_id": "IMG-029",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-008-S02",
+  "guide_id": "GUIDE-008",
+  "step_number": 2,
+  "step_title": "Use the “取件码” (pickup code) to find your package ",
+  "image_id": "IMG-030",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-008-S03",
+  "guide_id": "GUIDE-008",
+  "step_number": 3,
+  "step_title": "Scan the barcode on your package",
+  "image_id": "IMG-031",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-008-S04",
+  "guide_id": "GUIDE-008",
+  "step_number": 4,
+  "step_title": "Just scan your identity code at the machine and you're good to go",
+  "image_id": "IMG-032",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S01",
+  "guide_id": "GUIDE-009",
+  "step_number": 1,
+  "step_title": "Open WeChat",
+  "image_id": "IMG-033",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S02",
+  "guide_id": "GUIDE-009",
+  "step_number": 2,
+  "step_title": "Search for “华东师大Ecard” at the top",
+  "image_id": "IMG-034",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S03",
+  "guide_id": "GUIDE-009",
+  "step_number": 3,
+  "step_title": "Open the ECNU Ecard Mini Program",
+  "image_id": "IMG-035",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S04",
+  "guide_id": "GUIDE-009",
+  "step_number": 4,
+  "step_title": "Tap Login and enter your Campus Card ID and password",
+  "image_id": "IMG-036",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S05",
+  "guide_id": "GUIDE-009",
+  "step_number": 5,
+  "step_title": "To recharge your campus card",
+  "instruction": "Tap Recharge",
+  "image_id": "IMG-037",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S06",
+  "guide_id": "GUIDE-009",
+  "step_number": 6,
+  "step_title": "Enter the amount you want to recharge",
+  "image_id": "IMG-038",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S07",
+  "guide_id": "GUIDE-009",
+  "step_number": 7,
+  "step_title": "To recharge your dormitory electricity",
+  "instruction": "Tap Water & Electricity Top-Up",
+  "image_id": "IMG-039",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S08",
+  "guide_id": "GUIDE-009",
+  "step_number": 8,
+  "step_title": "Enter your dormitory room information, then tap Next",
+  "image_id": "IMG-040",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S09",
+  "guide_id": "GUIDE-009",
+  "step_number": 9,
+  "step_title": "Enter the amount you want to top up and complete the payment",
+  "image_id": "IMG-041",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S10",
+  "guide_id": "GUIDE-009",
+  "step_number": 10,
+  "step_title": "To open the Mini Program more quickly next time",
+  "instruction": " Tap the “···” icon in the top-right corner",
+  "image_id": "IMG-042",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-009-S11",
+  "guide_id": "GUIDE-009",
+  "step_number": 11,
+  "step_title": "Select “Add to My Mini Programs” or “Add to Home Screen” ",
+  "image_id": "IMG-043",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S1",
+  "guide_id": "GUIDE-010",
+  "step_number": 1,
+  "step_title": "Tap “外卖 ”on the home page",
+  "image_id": "IMG-044",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S2",
+  "guide_id": "GUIDE-010",
+  "step_number": 2,
+  "step_title": "Remember to update the delivery address to our dorm",
+  "image_id": "IMG-045",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S3",
+  "guide_id": "GUIDE-010",
+  "step_number": 3,
+  "step_title": "Scroll down or search for what you want to eat, then tap the yellow button to add it to your cart",
+  "image_id": "IMG-046",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S4",
+  "guide_id": "GUIDE-010",
+  "step_number": 4,
+  "step_title": "Once you're done selecting, tap “去结算” in the bottom right corner",
+  "image_id": "IMG-047",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S5",
+  "guide_id": "GUIDE-010",
+  "step_number": 5,
+  "step_title": "Make sure to select your delivery address and tap \"支付\"",
+  "instruction": "(Optional)Scroll down to find the “备注”section , where you can write down any preferences or ingredients you want to avoid",
+  "image_id": "IMG-048",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-010-S6",
+  "guide_id": "GUIDE-010",
+  "step_number": 6,
+  "step_title": "You will get a call from the delivery driver telling you where on the shelf they placed it (for example, “我放在A-7了”). ",
+  "instruction": "If you didn't catch it clearly, you can check the driver's info in the app, where they will have uploaded a photo showing the exact location.",
+  "image_id": "IMG-049",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-011-S1",
+  "guide_id": "GUIDE-011",
+  "step_number": 1,
+  "step_title": "The washing machines and dryers are located around the corner of the stairs on the 1st floor.",
+  "instruction": " Turn left after entering the door and go all the way to the end.",
+  "image_id": "IMG-050",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-011-S2",
+  "guide_id": "GUIDE-011",
+  "step_number": 2,
+  "step_title": "Put your clothes into the washing machine and add laundry detergent",
+  "image_id": "IMG-051",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-011-S3",
+  "guide_id": "GUIDE-011",
+  "step_number": 3,
+  "step_title": "Use WeChat on your phone to scan the QR code on the machine",
+  "image_id": "IMG-052",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-011-S4",
+  "guide_id": "GUIDE-011",
+  "step_number": 4,
+  "step_title": "Once successful, press the button on the machine. Make sure it has started running before you leave, and set a timer on your phone to come back and collect your laundry",
+  "instruction": "People in the dorm chat group usually remind each other to pick up their clothes. If you can't come back in time, you need to notify the group and state whether you're okay with someone else helping take your clothes out.",
+  "image_id": "IMG-053",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-011-S5",
+  "guide_id": "GUIDE-011",
+  "step_number": 5,
+  "step_title": "The dryer looks like this, and you operate it following the exact same steps",
+  "image_id": "IMG-054",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S1",
+  "guide_id": "GUIDE-012",
+  "step_number": 1,
+  "step_title": "Join the ECNU WeChat Enterprise account by following these steps: [https:\/\/eoffice.ecnu.edu.cn\/sjdpzwqywxw\/list.htm]",
+  "image_id": "IMG-055",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S2",
+  "guide_id": "GUIDE-012",
+  "step_number": 2,
+  "step_title": "Go to “Contacts” at the bottom of WeChat, find and click on “华东师范大学”",
+  "image_id": "IMG-056",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S3",
+  "guide_id": "GUIDE-012",
+  "step_number": 3,
+  "step_title": "Click on the “报修系统”",
+  "image_id": "IMG-057",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S4",
+  "guide_id": "GUIDE-012",
+  "step_number": 4,
+  "step_title": "Click on the “报修系统” at the bottom",
+  "image_id": "IMG-058",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S5",
+  "guide_id": "GUIDE-012",
+  "step_number": 5,
+  "step_title": "Click “统一认证登录”",
+  "image_id": "IMG-059",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S6",
+  "guide_id": "GUIDE-012",
+  "step_number": 6,
+  "step_title": "Click “我要报修”",
+  "image_id": "IMG-060",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-012-S7",
+  "guide_id": "GUIDE-012",
+  "step_number": 7,
+  "step_title": "Fill in details such as your dorm room number and the issue description, then submit",
+  "image_id": "IMG-061",
+  "status": "active"
+ }
 ]
