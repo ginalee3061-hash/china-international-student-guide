@@ -47,7 +47,7 @@
             {"type": "bullet", "text": "Please return them to the cabinets or take them back to your room."}
           ],
           "photo": {
-            "image": "image/kitchen.jpg",
+            "image": "images/kitchen.jpg",
             "has_clip": true,
             "rotation": 6
           }
@@ -59,7 +59,7 @@
             {"type": "bullet", "text": "Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria."}
           ],
           "photo": {
-            "image": "image/garbage.jpg",
+            "image": "images/garbage.jpg",
             "has_clip": false,
             "rotation": -4
           }
@@ -75,7 +75,7 @@
             {"type": "text", "text": "Water dispensers are located near the small staircases on the 2nd and 5th floors."}
           ],
           "photo": {
-            "image": "image/water.jpg",
+            "image": "images/water.jpg",
             "has_clip": false,
             "rotation": -3
           }
@@ -86,7 +86,7 @@
             {"type": "text", "text": "Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors."}
           ],
           "photo": {
-            "image": "image/shairdryer.jpg",
+            "image": "images/shairdryer.jpg",
             "has_clip": true,
             "rotation": 5
           }
