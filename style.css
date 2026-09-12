@@ -856,6 +856,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  width: 100%;
 }
 .step-instruction-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
@@ -879,17 +880,20 @@ body {
   display: inline-block;
 }
 
-/* 步骤文字中的可点击链接样式 */
+/* 步骤文字中的可点击链接样式（醒目高亮 + 触控优先） */
 .step-inline-link {
-  color: var(--accent-cyan);
-  text-decoration: underline;
-  word-break: break-all;
+  color: #3CB5C2 !important;
+  text-decoration: underline !important;
+  word-break: break-all !important;
   font-weight: bold;
-  cursor: pointer;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
   transition: opacity 0.2s ease;
 }
-.step-inline-link:hover {
-  opacity: 0.8;
+.step-inline-link:hover, .step-inline-link:active {
+  opacity: 0.75;
 }
 
 /* 配图在文字正下方 */
@@ -904,20 +908,27 @@ body {
   padding: 9px;
   box-shadow: 0 14px 32px rgba(0,0,0,0.16);
 }
+
+/* 手机壳屏幕核心：使用 contain 保护二维码完整显示，不裁切放大 */
 .mockup-screen {
   width: 100%;
   height: 100%;
-  background: #FFF;
+  background: #FFFFFF;
   border-radius: 29px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .mockup-screen img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain !important;
+  background: #FFFFFF;
+  display: block;
 }
 
-/* PC 端实拍与横版相框 */
+/* 实拍横版相框 */
 .mockup-photo-body {
   width: 100%;
   max-width: 480px;
@@ -1200,7 +1211,7 @@ body {
 }
 
 /* ==========================================================================
-   12. 手机端适配
+   12. 手机移动端严格防溢出与居中适配
    ========================================================================== */
 @media (max-width: 768px) {
   body { padding-bottom: 80px; }
@@ -1226,36 +1237,39 @@ body {
   .folder-big-img { width: 88vw; max-width: 360px; }
   .folder-click-pill { margin-top: 1rem; font-size: 0.85rem; padding: 0.65rem 1.4rem; }
 
+  /* 步骤详情页手机端防截断 */
   .detail-page-container { padding: 2rem 1.2rem 6rem; }
   .detail-main-title { font-size: 2.2rem; margin-bottom: 2.5rem; }
-  .detail-scroll-layout { grid-template-columns: 20px 1fr; gap: 1.2rem; }
+  
+  /* 关键：收窄左侧轨道空间，为手机模型留出充足居中位置 */
+  .detail-scroll-layout {
+    grid-template-columns: 16px 1fr !important;
+    gap: 0.8rem !important;
+  }
   
   .steps-flow-container { gap: 44px; }
   .step-top-header { margin-bottom: 12px; }
-  .step-media-box { margin-left: 0; }
-  .mockup-phone-body { width: 240px; height: 480px; margin: 0 auto; }
 
-  /* 手机端二维码/正方形图片自适应 */
-  .mockup-photo-body {
+  /* 关键：取消往右推的 48px，确保不溢出手机右侧屏幕 */
+  .step-media-box {
+    margin-left: 0 !important;
     width: 100% !important;
-    max-width: 280px !important;
-    height: auto !important;
-    background: #FFFFFF !important;
-    border-radius: 20px !important;
-    padding: 14px !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-    margin: 0 auto;
     display: flex;
-    align-items: center;
     justify-content: center;
   }
-  .mockup-photo-body img {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 280px !important;
-    object-fit: contain !important;
-    border-radius: 12px !important;
-    display: block !important;
+
+  /* 手机端手机壳尺寸自适应 */
+  .mockup-phone-body {
+    width: 220px !important;
+    height: 440px !important;
+    border-radius: 34px !important;
+    padding: 8px !important;
+    margin: 0 auto !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.14) !important;
+  }
+
+  .mockup-screen {
+    border-radius: 26px !important;
   }
 
   /* 手机端 Building 12 纯米白背景卡片 */
