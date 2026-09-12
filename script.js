@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
           link: 'https://ikuuu.top/auth/register?code=xAWw'     
         }
       ]
-    } ;
+    } 
 
   // DOM 节点引用
   const homeView = document.getElementById('homeView');
