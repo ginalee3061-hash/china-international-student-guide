@@ -1,5 +1,5 @@
 {
- "GUIDE":[
+"GUIDE":[
  {
   "guide_id": "GUIDE-001",
   "item_id": "TP-001",
@@ -95,6 +95,27 @@
   "guide_title": "Getting things fixed",
   "guide_type": "tutorial",
   "short_description": "How to submit a repair requests when things break",
+  "status": "published"
+ },
+ {
+  "guide_id": "GUIDE-013",
+  "item_id": "TR-001",
+  "guide_title": "How to Get a Ride with Amap?",
+  "guide_type": "tutorial",
+  "status": "published"
+ },
+ {
+  "guide_id": "GUIDE-014",
+  "item_id": "TR-001",
+  "guide_title": "How to Take the Metro？",
+  "guide_type": "tutorial",
+  "status": "published"
+ },
+ {
+  "guide_id": "GUIDE-015",
+  "item_id": "TR-002",
+  "guide_title": "How to Ride a Shared Bike",
+  "guide_type": "tutorial",
   "status": "published"
  }
 ]
