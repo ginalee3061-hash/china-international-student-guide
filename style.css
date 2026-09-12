@@ -21,7 +21,8 @@
 }
 @font-face {
   font-family: 'ToxTypewriter';
-  src: url('fonts/Tox Typewriter.ttf') format('truetype');
+  src: url('fonts/Tox%20Typewriter.ttf') format('truetype'),
+       url('fonts/Tox Typewriter.ttf') format('truetype');
 }
 
 /* ==========================================================================
@@ -376,7 +377,7 @@ body {
 .bar-blue { background-color: var(--bar-blue) !important; }
 .module-packages .btn-learn-more { background: var(--btn-blue) !important; }
 
-/* 模块 2：TRANSIT 绿色系 (强制高优先级显色) */
+/* 模块 2：TRANSIT 绿色系 */
 .module-transit { background-color: var(--module-transit-bg) !important; }
 .bar-transit { background-color: var(--bar-transit) !important; color: #FFF !important; }
 .module-transit .btn-learn-more { background: var(--btn-transit) !important; color: #FFF !important; }
@@ -680,7 +681,7 @@ body {
    8. 底部公文袋区域
    ========================================================================== */
 .earth-footer-plane {
-  width: 100vw;
+  width: 100%;
   background-color: var(--earth-bg);
   padding: 6rem 1.5rem 7rem;
   display: flex;
@@ -835,7 +836,7 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 14px; /* 组内紧凑 14px 紧贴截图 */
+  margin-bottom: 14px;
 }
 .step-circle-badge {
   width: 32px;
@@ -878,6 +879,19 @@ body {
   display: inline-block;
 }
 
+/* 步骤文字中的可点击链接样式 */
+.step-inline-link {
+  color: var(--accent-cyan);
+  text-decoration: underline;
+  word-break: break-all;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.step-inline-link:hover {
+  opacity: 0.8;
+}
+
 /* 配图在文字正下方 */
 .step-media-box {
   margin-left: 48px;
@@ -902,6 +916,8 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+/* PC 端实拍与横版相框 */
 .mockup-photo-body {
   width: 100%;
   max-width: 480px;
@@ -1008,7 +1024,7 @@ body {
    11. BUILDING 12 档案页
    ========================================================================== */
 .dossier-full-viewport {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   background-color: var(--earth-bg);
   display: flex;
@@ -1184,7 +1200,7 @@ body {
 }
 
 /* ==========================================================================
-   12. 手机端适配 (问题 1 彻底取消 page.png 素材，换为纯米白卡片)
+   12. 手机端适配
    ========================================================================== */
 @media (max-width: 768px) {
   body { padding-bottom: 80px; }
@@ -1219,6 +1235,29 @@ body {
   .step-media-box { margin-left: 0; }
   .mockup-phone-body { width: 240px; height: 480px; margin: 0 auto; }
 
+  /* 手机端二维码/正方形图片自适应 */
+  .mockup-photo-body {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: auto !important;
+    background: #FFFFFF !important;
+    border-radius: 20px !important;
+    padding: 14px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mockup-photo-body img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 280px !important;
+    object-fit: contain !important;
+    border-radius: 12px !important;
+    display: block !important;
+  }
+
   /* 手机端 Building 12 纯米白背景卡片 */
   .dossier-full-viewport { padding: 1.5rem 1rem 4rem; background-color: var(--earth-bg); }
   .dossier-page-bg { display: none !important; }
@@ -1240,40 +1279,4 @@ body {
   .faq-q-text { font-size: 1.05rem; }
   .faq-toggle-icon { width: 28px; height: 28px; font-size: 1.05rem; }
   .faq-answer-content { padding: 1.4rem 1.5rem; font-size: 0.92rem; border-radius: 18px; }
-}
-/* 步骤文字中的可点击链接样式 */
-.step-inline-link {
-  color: var(--accent-cyan, #3CB5C2);
-  text-decoration: underline;
-  word-break: break-all;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-.step-inline-link:hover {
-  opacity: 0.8;
-}
-
-/* 修复手机端非长条图片（如二维码、宽图）被拉长放大的问题 */
-.mockup-photo-body {
-  width: 100% !important;
-  max-width: 280px !important;
-  height: auto !important;
-  background: #FFFFFF !important;
-  border-radius: 20px !important;
-  padding: 14px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mockup-photo-body img {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 280px !important;
-  object-fit: contain !important; /* 保持原比例，完整展示二维码 */
-  border-radius: 12px !important;
-  display: block !important;
 }
