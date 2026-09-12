@@ -1294,3 +1294,100 @@ body {
   .faq-toggle-icon { width: 28px; height: 28px; font-size: 1.05rem; }
   .faq-answer-content { padding: 1.4rem 1.5rem; font-size: 0.92rem; border-radius: 18px; }
 }
+/* ==========================================================================
+   1. 解决图 2、3 撑爆屏幕的核心：强制允许长链接换行 + 限制 Flex 最小宽度
+   ========================================================================== */
+.step-item-card {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* 防止任何子元素溢出撑爆视口 */
+}
+
+.step-top-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 16px;
+  width: 100%;
+  min-width: 0; /* 关键：允许 flex 子项收缩，不被长文字撑大 */
+}
+
+.step-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 0; /* 关键：必须加 min-width: 0，否则长 URL 会撑爆整行！ */
+}
+
+.step-instruction-heading,
+.step-detail-text {
+  word-break: break-word !important; /* 强制长网址遇到边界自动换行 */
+  overflow-wrap: anywhere !important;
+}
+
+/* ==========================================================================
+   2. 解决图 1：手机壳 100% 满屏填满 (Cover)，旁边无黑边空隙
+   ========================================================================== */
+.mockup-screen {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 29px;
+  overflow: hidden;
+  position: relative;
+}
+
+.mockup-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important; /* 关键：无缝填满手机壳内部，无空隙！ */
+  display: block;
+}
+
+/* ==========================================================================
+   3. 自适应图片框（相框模式：根据图片自身比例缩放，如正方形二维码）
+   ========================================================================== */
+.mockup-photo-body {
+  width: auto !important;
+  max-width: 260px !important;
+  height: auto !important;
+  background: #FFFFFF !important;
+  border-radius: 18px !important;
+  padding: 12px !important;
+  border: 1.5px solid rgba(0,0,0,0.06) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mockup-photo-body img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 260px !important;
+  object-fit: contain !important; /* 保持图片真实比例 */
+  border-radius: 10px !important;
+  display: block;
+}
+
+/* 移动端间距与居中 */
+@media (max-width: 768px) {
+  .detail-scroll-layout {
+    grid-template-columns: 18px 1fr !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+  .step-media-box {
+    margin-left: 0 !important;
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+  }
+  .mockup-phone-body {
+    width: 220px !important;
+    height: 440px !important;
+    margin: 0 auto !important;
+  }
+}
