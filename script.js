@@ -32,12 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  // 链接自动转可点击标签工具函数
+ // 强力链接识别转换函数（兼容带中括号 [http...] 以及写在标题里的链接）
   function formatInstructionWithLinks(text) {
     if (!text) return '';
-    const urlRegex = /(https?:\/\/[^\s\]]+)/g;
-    return text.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
+    // 匹配包含中括号 [http...] 或直接 http... 的网址
+    return text.replace(/\[?(https?:\/\/[^\s\]]+)\]?/g, (match, url) => {
+      // 清理尾部可能多余的标点
+      const cleanUrl = url.replace(/[.,;!?]+$/, '');
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="step-inline-link" onclick="event.stopPropagation();">${cleanUrl}</a>`;
     });
   }
 
