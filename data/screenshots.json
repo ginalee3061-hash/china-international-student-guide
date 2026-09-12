@@ -474,5 +474,145 @@
   "step_id": "GUIDE-012-S7",
   "status": "ready"
  }
+ {
+  "image_id": "IMG-062",
+  "filename": "taxi-amap-01.jpg",
+  "guide_id": "GUIDE-013",
+  "step_id": "GUIDE-013-S1",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-063",
+  "filename": "taxi-amap-02.jpg",
+  "guide_id": "GUIDE-013",
+  "step_id": "GUIDE-013-S2",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-064",
+  "filename": "taxi-amap-03.jpg",
+  "guide_id": "GUIDE-013",
+  "step_id": "GUIDE-013-S3",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-065",
+  "filename": "taxi-amap-04.jpg",
+  "guide_id": "GUIDE-013",
+  "step_id": "GUIDE-013-S4",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-066",
+  "filename": "taxi-amap-05.jpg",
+  "guide_id": "GUIDE-013",
+  "step_id": "GUIDE-013-S5",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-067",
+  "filename": "metro-amap-01.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S1",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-068",
+  "filename": "metro-amap-02.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S2",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-069",
+  "filename": "metro-amap-03",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S3",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-070",
+  "filename": "metro-amap-04.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S4",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-071",
+  "filename": "metro-amap-05.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S5",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-072",
+  "filename": "metro-amap-06.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S6",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-073",
+  "filename": "metro-amap-07.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S7",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-074",
+  "filename": "metro-amap-08.jpg",
+  "guide_id": "GUIDE-014",
+  "step_id": "GUIDE-014-S8",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-075",
+  "filename": "halou-bike-01.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S1",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-076",
+  "filename": "halou-bike-02.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S2",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-077",
+  "filename": "halou-bike-03.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S3",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-078",
+  "filename": "halou-bike-04.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S4",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-079",
+  "filename": "halou-bike-05.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S5",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-080",
+  "filename": "halou-bike-06.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S6",
+  "status": "ready"
+ },
+ {
+  "image_id": "IMG-081",
+  "filename": "halou-bike-07.jpg",
+  "guide_id": "GUIDE-015",
+  "step_id": "GUIDE-015-S7",
+  "status": "ready"
+ }
 ]
 }
