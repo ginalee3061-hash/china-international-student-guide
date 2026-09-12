@@ -1,5 +1,6 @@
 /**
  * Campus Life Survival Guide - Complete Engine
+ * 包含：双语切换、深色模式、下拉模糊搜索、自动超链接识别、图片相框自适应
  */
 document.addEventListener('DOMContentLoaded', () => {
   const state = {
@@ -13,7 +14,34 @@ document.addEventListener('DOMContentLoaded', () => {
     currentGuideId: null
   };
 
-  // 双语字典（已加入 TRANSIT 与 FAQ）
+  // 内置 TRANSIT 步骤安全兜底
+  const TRANSIT_FALLBACK_STEPS = {
+    'GUIDE-013': [
+      { step_number: 1, step_title: 'Open Amap (高德地图)', instruction: 'Launch the Amap application on your phone.', filename: 'amapicon.png' },
+      { step_number: 2, step_title: 'Tap Ride (打车) on Home Screen', instruction: 'Select the Ride / Taxi icon on the main interface.', filename: 'amapicon.png' },
+      { step_number: 3, step_title: 'Enter your destination & confirm', instruction: 'Enter the destination, choose vehicle tiers (Economy, Taxi, Premier), and tap Call Car.', filename: 'amapicon.png' }
+    ],
+    'GUIDE-014': [
+      { step_number: 1, step_title: 'Go to Transport in Alipay', instruction: 'Open Alipay and tap the Transport icon at the top.', filename: 'alipay-metro-ios-01.png' },
+      { step_number: 2, step_title: 'Use QR code at turnstile gate', instruction: 'Scan the subway QR code directly against the gate scanner to enter and exit.', filename: 'alipay-metro-ios-02.png' }
+    ],
+    'GUIDE-015': [
+      { step_number: 1, step_title: 'Open Meituan or Hello App', instruction: 'Open either Meituan (美团) or Hello (哈啰) app.', filename: 'transitandcommute-03.png' },
+      { step_number: 2, step_title: 'Tap Bike (骑车)', instruction: 'Tap the bike icon to find nearby available shared bikes on the map.', filename: 'transitandcommute-03.png' },
+      { step_number: 3, step_title: 'Scan QR code on the handlebar', instruction: 'Align your camera with the QR code on the handlebar or lock to unlock the bike.', filename: 'transitandcommute-03.png' }
+    ]
+  };
+
+  // 链接自动转可点击标签工具函数
+  function formatInstructionWithLinks(text) {
+    if (!text) return '';
+    const urlRegex = /(https?:\/\/[^\s\]]+)/g;
+    return text.replace(urlRegex, (url) => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
+    });
+  }
+
+  // 双语字典
   const i18n = {
     en: {
       logoTitle: "CAMPUS LIFE",
@@ -31,10 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
       g008Desc: "finding pickup stations",
       g010Title: "HOW TO<br>GET MY<br>DELIVERY?",
       g010Desc: "where to grab your meal",
-      g014Title: "HOW TO GET<br>A RIDE WITH<br>AMAP",
-      g014Desc: "Call taxis & online car-hailing easily",
-      g004Title: "HOW TO<br>TAKE THE<br>METRO",
-      g004Desc: "Scan contactless QR codes at gates",
+      g013Title: "HOW TO GET<br>A RIDE WITH<br>AMAP",
+      g013Desc: "Call taxis & online car-hailing easily",
+      g014Title: "HOW TO<br>TAKE THE<br>METRO",
+      g014Desc: "Scan contactless QR codes at gates",
       g015Title: "HOW TO RIDE<br>A SHARED<br>BIKE",
       g015Desc: "Unlock street bikes with a quick scan",
       g001Title: "BANK<br>ACCOUNT<br>SETUP",
@@ -87,10 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
       g008Desc: "菜鸟驿站与取件码指南",
       g010Title: "如何取<br>我的外卖？",
       g010Desc: "美团外卖点餐与外卖架取餐",
-      g014Title: "如何使用<br>高德地图打车",
-      g014Desc: "网约车呼叫与出租车出行",
-      g004Title: "如何扫码<br>乘坐上海地铁",
-      g004Desc: "支付宝与乘车码进出站",
+      g013Title: "如何使用<br>高德地图打车",
+      g013Desc: "网约车呼叫与出租车出行",
+      g014Title: "如何扫码<br>乘坐上海地铁",
+      g014Desc: "支付宝与乘车码进出站",
       g015Title: "如何使用<br>共享单车骑行",
       g015Desc: "美团与哈啰单车扫码开锁指南",
       g001Title: "银行账户<br>开设指南",
@@ -170,12 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '05 vpn & network',
       apps: [
         { name: 'Skuracat', sub: '', icon: 'images/sakuracaticon.png' },
-        { name: 'Ikuuu', sub: '', icon: 'images/ikuuuicon.png' }
+        { name: 'Ikuuu', sub: '', icon: 'images/ikuuicon.png' }
       ]
     }
   };
 
-  // DOM 节点引用
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
   const appGalleryView = document.getElementById('appGalleryView');
@@ -217,10 +244,33 @@ document.addEventListener('DOMContentLoaded', () => {
       let text = (await res.text()).trim();
       if (!text) return [];
 
-      if (text.startsWith('"') && text.includes('":[')) text = '{' + text;
-      if (text.startsWith('{') && !text.endsWith('}')) text = text + '}';
+      if (text.startsWith('"') && text.includes('":[')) {
+        text = '{' + text;
+      }
+      text = text.replace(/,\s*([\]}])/g, '$1');
 
-      const parsed = JSON.parse(text);
+      if (!text.endsWith('}') && !text.endsWith(']')) {
+        if (text.includes('[') && !text.includes(']')) {
+          text = text + ']';
+        }
+        if (text.startsWith('{') && !text.endsWith('}')) {
+          text = text + '}';
+        }
+      } else if (text.endsWith(']') && text.startsWith('{')) {
+        text = text + '}';
+      }
+
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (err) {
+        try {
+          parsed = JSON.parse(text + ']}');
+        } catch (e2) {
+          throw err;
+        }
+      }
+
       if (Array.isArray(parsed)) return parsed;
       if (typeof parsed === 'object' && parsed !== null) {
         for (let k of Object.keys(parsed)) {
@@ -251,8 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function bindEvents() {
-    // 卡片点击
-    
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
@@ -261,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 拍立得点击
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -269,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 面包屑返回首页
     document.querySelectorAll('[data-action="go-home"]').forEach(el => {
       el.addEventListener('click', () => {
         switchView('home');
@@ -277,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 面包屑定位 App 区域
     document.querySelectorAll('[data-action="go-apps"]').forEach(el => {
       el.addEventListener('click', () => {
         switchView('home');
@@ -286,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // 档案袋打开
     if (dormFileTrigger) dormFileTrigger.addEventListener('click', openDossier);
     document.querySelectorAll('#openDormLink').forEach(el => {
       el.addEventListener('click', openDossier);
@@ -314,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', updateScrollProgress);
 
-    // 搜索实时下拉
     if (searchInput) {
       searchInput.addEventListener('input', handleSearchDropdown);
       searchInput.addEventListener('focus', handleSearchDropdown);
@@ -333,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 语言与模式切换
     if (langToggleBtn) {
       langToggleBtn.addEventListener('click', () => {
         const next = state.currentLang === 'en' ? 'zh' : 'en';
@@ -348,7 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // FAQ 手风琴展开与收起
     document.querySelectorAll('.faq-item').forEach(item => {
       const btn = item.querySelector('.faq-question-btn');
       const panel = item.querySelector('.faq-answer-panel');
@@ -467,32 +508,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'gallery') appGalleryView.classList.add('active');
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
-function formatInstructionWithLinks(text) {
-    if (!text) return '';
-    const urlRegex = /(https?:\/\/[^\s\]]+)/g;
-    return text.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
-    });
-  }
-  // 转换链接的小工具函数
-  function formatInstructionWithLinks(text) {
-    if (!text) return '';
-    const urlRegex = /(https?:\/\/[^\s\]]+)/g;
-    return text.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
-    });
-  }
 
-  // 下面紧接着是原本的代码：
-  function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
-    // ...
-  // 步骤详情渲染（先文字指令，后配图；起点对齐）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
-    const guide = state.guides.find(g => (g.guide_id || '').trim() === targetId) || {
-      guide_title: 'CAMPUS SURVIVAL'
-    };
+
+    let guideTitle = '';
+    const guide = state.guides.find(g => (g.guide_id || '').trim() === targetId);
+    if (guide && guide.guide_title) {
+      guideTitle = guide.guide_title;
+    } else {
+      if (targetId === 'GUIDE-013') guideTitle = 'How to Get a Ride with Amap';
+      else if (targetId === 'GUIDE-014') guideTitle = 'How to Take the Metro';
+      else if (targetId === 'GUIDE-015') guideTitle = 'How to Ride a Shared Bike';
+      else guideTitle = 'Campus Survival Guide';
+    }
 
     if (crumbGuideCat) {
       crumbGuideCat.textContent = categoryName.toLowerCase();
@@ -506,14 +536,18 @@ function formatInstructionWithLinks(text) {
       };
     }
 
-    if (crumbGuideCurrent) crumbGuideCurrent.textContent = (guide.guide_title || '').toLowerCase();
+    if (crumbGuideCurrent) crumbGuideCurrent.textContent = guideTitle.toLowerCase();
 
-    detailMainTitle.innerHTML = (guide.guide_title || '').replace('?', '?<br>');
+    detailMainTitle.innerHTML = guideTitle.replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
 
-    const currentSteps = state.steps
+    let currentSteps = state.steps
       .filter(s => (s.guide_id || '').trim() === targetId)
       .sort((a, b) => (Number(a.step_number) || 0) - (Number(b.step_number) || 0));
+
+    if (currentSteps.length === 0 && TRANSIT_FALLBACK_STEPS[targetId]) {
+      currentSteps = TRANSIT_FALLBACK_STEPS[targetId];
+    }
 
     if (currentSteps.length === 0) {
       stepsFlowContainer.innerHTML = `<p style="font-size:1.1rem; color:var(--text-muted); padding: 2rem 0;">Step details are being updated...</p>`;
@@ -536,19 +570,18 @@ function formatInstructionWithLinks(text) {
         const stepCard = document.createElement('div');
         stepCard.className = isExcelNone ? 'step-item-card step-card-text-only' : 'step-item-card';
 
-        // 1. 顶部标题指令区：序号与文字基线水平对齐
+        // 顶部标题 + 链接自动转换
         const headerHtml = `
           <div class="step-top-header">
             <div class="step-circle-badge">${step.step_number || 1}</div>
             <div class="step-text-wrap">
               <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-          ${step.instruction ? `<p class="step-detail-text">${formatInstructionWithLinks(step.instruction)}</p>` : ''}
+              ${step.instruction ? `<p class="step-detail-text">${formatInstructionWithLinks(step.instruction)}</p>` : ''}
               ${step.tip ? `<div class="step-tip-callout">* ${step.tip}</div>` : ''}
             </div>
           </div>
         `;
 
-        // 2. 紧接下方配图区（组内间距仅 14px）
         if (isExcelNone) {
           stepCard.innerHTML = headerHtml;
         } else {
@@ -556,19 +589,20 @@ function formatInstructionWithLinks(text) {
           mediaContainer.className = 'step-media-box';
 
           const frameBody = document.createElement('div');
-          frameBody.className = 'mockup-phone-body';
+          // 判定：二维码、维修截图或特别指定的标记为相框
+          const isPhotoDefault = step.display_frame === 'photo' || (fileName && (fileName.includes('maintenance') || fileName.includes('qrcode')));
+          frameBody.className = isPhotoDefault ? 'mockup-photo-body' : 'mockup-phone-body';
 
           if (hasRealImage) {
             const screen = document.createElement('div');
-            screen.className = 'mockup-screen';
+            screen.className = isPhotoDefault ? '' : 'mockup-screen';
             const img = document.createElement('img');
             img.src = `images/${fileName}`;
             img.alt = step.step_title || '';
 
-            // 图像自适应嗅探：偏扁则卸下手机壳，换相框
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
-              if (ratio < 1.45) {
+              if (ratio < 1.35) {
                 frameBody.className = 'mockup-photo-body';
                 screen.className = '';
               }
@@ -674,6 +708,7 @@ function formatInstructionWithLinks(text) {
           });
 
           if (sec.photo) {
+            const photoSrc = sec.photo.image.startsWith('images/') ? sec.photo.image : `images/${sec.photo.image}`;
             secDiv.innerHTML = `
               <div>
                 <h3 class="dorm-sec-heading">${sec.title}</h3>
@@ -681,7 +716,7 @@ function formatInstructionWithLinks(text) {
               </div>
               <div class="polaroid-holder" style="transform: rotate(${sec.photo.rotation || 0}deg);">
                 ${sec.photo.has_clip ? '<div class="metal-clip"></div>' : ''}
-                <img src="${sec.photo.image}" alt="${sec.title}">
+                <img src="${photoSrc}" alt="${sec.title}">
               </div>
             `;
           } else {
@@ -764,12 +799,12 @@ function formatInstructionWithLinks(text) {
           </div>
           <div class="polaroid-holder" style="transform: rotate(5deg);">
             <div class="metal-clip"></div>
-            <img src="images/kitchen.png" alt="Kitchen">
+            <img src="images/packagesandfood-01.png" alt="Kitchen">
           </div>
         </div>
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
           <div class="polaroid-holder" style="transform: rotate(-4deg);">
-            <img src="images/garbage.png" alt="Garbage">
+            <img src="images/packagesandfood-02.png" alt="Garbage">
           </div>
           <div>
             <h3 class="dorm-sec-heading">GARBAGE DISPOSAL</h3>
@@ -790,7 +825,7 @@ function formatInstructionWithLinks(text) {
             </div>
           </div>
           <div class="polaroid-holder" style="transform: rotate(-3deg);">
-            <img src="images/water.png" alt="Water Dispenser">
+            <img src="images/dormlife-01.png" alt="Water Dispenser">
           </div>
         </div>
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
@@ -802,7 +837,7 @@ function formatInstructionWithLinks(text) {
           </div>
           <div class="polaroid-holder" style="transform: rotate(6deg);">
             <div class="metal-clip"></div>
-            <img src="images/hairdryer.png" alt="Hair Dryer">
+            <img src="images/dormlife-02.png" alt="Hair Dryer">
           </div>
         </div>
       `;
