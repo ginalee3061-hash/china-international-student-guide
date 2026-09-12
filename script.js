@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '05 vpn & network',
       apps: [
         { name: 'Skuracat', sub: '', icon: 'images/sakuracaticon.png' },
-        { name: 'Ikuuu', sub: '', icon: 'images/ikuuicon.png' }
+        { name: 'Ikuuu', sub: '', icon: 'images/ikuuuicon.png' }
       ]
     }
   };
