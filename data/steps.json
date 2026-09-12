@@ -504,5 +504,183 @@
   "image_id": "IMG-061",
   "status": "active"
  }
+ {
+  "step_id": "GUIDE-013-S1",
+  "guide_id": "GUIDE-013",
+  "step_number": 1,
+  "step_title": "Open Amap",
+  "image_id": "IMG-062",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-013-S2",
+  "guide_id": "GUIDE-013",
+  "step_number": 2,
+  "step_title": "Log In with Your Phone Number",
+  "image_id": "IMG-063",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-013-S3",
+  "guide_id": "GUIDE-013",
+  "step_number": 3,
+  "step_title": "Tap “打车”",
+  "instruction": "On the Amap home screen, tap the 打车 icon at the bottom of the screen.",
+  "image_id": "IMG-064",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-013-S4",
+  "guide_id": "GUIDE-013",
+  "step_number": 4,
+  "step_title": "Enter Your Pick-Up and Drop-Off Locations",
+  "instruction": "The top field is your pick-up location — where you want the driver to pick you up.\nThe bottom field is your destination — where you want to go.(Check both locations carefully before ordering, especially if there are multiple entrances or buildings with similar names.)",
+  "image_id": "IMG-065",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-013-S5",
+  "guide_id": "GUIDE-013",
+  "step_number": 5,
+  "step_title": "Tap “立即打车”",
+  "instruction": "Note — Be Ready to Give Your Phone Number\n\nDetails:\nIn China, drivers commonly confirm your identity by asking for the last four digits of your phone number when you get into the car.\nThe driver may ask:\n“手机尾号？”\n（What are the last four digits of your phone number?）\n\nSimply reply with the last four digits of your phone number.",
+  "image_id": "IMG-066",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S1",
+  "guide_id": "GUIDE-014",
+  "step_number": 1,
+  "step_title": "Set Up Alipay First",
+  "instruction": "Before taking the metro, make sure your Alipay account is fully set up.\n\nIf you have not set it up yet, follow the Alipay guide in this section first.",
+  "image_id": "IMG-067",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S2",
+  "guide_id": "GUIDE-014",
+  "step_number": 2,
+  "step_title": "Check Your Route",
+  "instruction": "Before leaving, open a map app such as Amap (Gaode Maps) or Baidu Maps.\n\nEnter your starting point and destination, then select “Metro” or “Public Transport” as your travel option.\n\nThe app will show you:\n-  Which metro line to take\n- Which direction to travel\n- Where to transfer\n- Approximately how long the journey will take\n\nThe two metro stations closest to our dormitory are:\n- Zizhu Hi-Tech Station (紫竹高新区站) \n- Yongde Road Station (永德路站)\n（Both are on Metro Line 15）",
+  "image_id": "IMG-068",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S3",
+  "guide_id": "GUIDE-014",
+  "step_number": 3,
+  "step_title": "Enter the Station",
+  "instruction": "Follow the signs to the metro entrance and go through the security check.\nPlace your backpack and other belongings on the conveyor belt and walk through the security gate when instructed.",
+  "image_id": "IMG-069",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S4",
+  "guide_id": "GUIDE-014",
+  "step_number": 4,
+  "step_title": "Scan Your Alipay Metro Code",
+  "instruction": "After passing through security, open your Alipay Metro QR Code and scan it at the ticket gate.\nWait for the gate to open before walking through.",
+  "image_id": "IMG-070",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S5",
+  "guide_id": "GUIDE-014",
+  "step_number": 5,
+  "step_title": "Check the Direction",
+  "instruction": "Once you reach the platform, check the signs above you.\nThey will show the direction of the train\nFor example, 往XX方向 means “towards XX.”\n\nTip:\nYou can also check the previous and next stations shown on the platform signs. Compare them with the stations listed in your map app to make sure you are on the right side of the platform.",
+  "image_id": "IMG-071",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S6",
+  "guide_id": "GUIDE-014",
+  "step_number": 6,
+  "step_title": "Get Off at the Correct Station",
+  "instruction": "Pay attention to the station announcements and the electronic screens inside the train.\nThe screens and announcements will tell you which station the train is arriving at next.",
+  "image_id": "IMG-072",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S7",
+  "guide_id": "GUIDE-014",
+  "step_number": 7,
+  "step_title": "Transfer to Another Line",
+  "instruction": "If your route requires a transfer, get off the train and follow the signs showing the metro line number you need.\nFollow the transfer signs through the passageways, stairs, or elevators until you reach the platform for the next line.",
+  "image_id": "IMG-073",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-014-S8",
+  "guide_id": "GUIDE-014",
+  "step_number": 8,
+  "step_title": "Exit the Station",
+  "instruction": "When you arrive at your destination, follow the signs for Exit \/ 出口.\nCheck your map app to find the exit closest to your final destination, especially when the station has many different exits.\n\nScan your Alipay Metro Code again",
+  "image_id": "IMG-074",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S1",
+  "guide_id": "GUIDE-015",
+  "step_number": 1,
+  "step_title": "Find a Hello Bike",
+  "instruction": "Look for a Hello Bike (哈啰单车) near you.\n\nBefore unlocking the bike, quickly check whether there is any visible damage, such as a flat tire, broken brakes, or other obvious problems.\n\nIf the bike looks damaged, choose another one.",
+  "image_id": "IMG-075",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S2",
+  "guide_id": "GUIDE-015",
+  "step_number": 2,
+  "step_title": "Open the Hello Bike App",
+  "instruction": "Open the Hello Bike app and log in to your account.",
+  "image_id": "IMG-076",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S3",
+  "guide_id": "GUIDE-015",
+  "step_number": 3,
+  "step_title": "Scan the QR Code",
+  "instruction": "In the Hello Bike app, tap the Scan icon in the top-right corner and scan the QR code.\n\nYou should hear a “beep”, and the bike lock will automatically unlock.",
+  "image_id": "IMG-077",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S4",
+  "guide_id": "GUIDE-015",
+  "step_number": 4,
+  "step_title": "Adjust the Bike",
+  "instruction": "After unlocking the bike, adjust the seat height to a comfortable position.\nCheck the brakes before you start riding.\n\nOnce everything looks good, you’re ready to go!",
+  "image_id": "IMG-078",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S5",
+  "guide_id": "GUIDE-015",
+  "step_number": 5,
+  "step_title": "Park the Bike Properly",
+  "instruction": "Make sure the bike is not blocking sidewalks, entrances, or other people’s way.",
+  "image_id": "IMG-079",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S6",
+  "guide_id": "GUIDE-015",
+  "step_number": 6,
+  "step_title": "End Your Ride",
+  "instruction": "In the Hello Bike app, “按住滑块，拖到右边还车”（Slide to return the bike）\n\nThe app will show the cost of your ride. Confirm the payment to complete the rental.\n\nImportant:\nWait until you receive a successful payment\/ride completion confirmation. Only then is your bike rental officially finished.",
+  "image_id": "IMG-080",
+  "status": "active"
+ },
+ {
+  "step_id": "GUIDE-015-S7",
+  "guide_id": "GUIDE-015",
+  "step_number": 7,
+  "step_title": "Older Bikes",
+  "instruction": "Some older versions of Hello Bike may not show the “End Ride” \/ “Return Bike” option in the app.\n\nIf this happens, manually lock the bike after parking it properly.\n\nMake sure the lock is fully closed before leaving.",
+  "image_id": "IMG-081",
+  "status": "active"
+ }
 ]
 }
