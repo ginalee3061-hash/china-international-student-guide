@@ -1,6 +1,5 @@
 /**
- * Campus Life Survival Guide - Engine
- * 包含：动态 JSON、双语切换、亮暗模式、实时下拉搜索、长宽比相框自动嗅探、面包屑分级跳转
+ * Campus Life Survival Guide - Complete Engine
  */
 document.addEventListener('DOMContentLoaded', () => {
   const state = {
@@ -14,28 +13,34 @@ document.addEventListener('DOMContentLoaded', () => {
     currentGuideId: null
   };
 
-  // 双语字典字典表 (中英文双语无缝热切换)
+  // 双语字典（已加入 TRANSIT 与 FAQ）
   const i18n = {
     en: {
       logoTitle: "CAMPUS LIFE",
       navPackages: "PACKAGES",
+      navTransit: "TRANSIT",
       navFinance: "FINANCE",
       navDorm: "DORM LIFE",
       navApps: "APP DIRECTORY",
       navDormInfo: "DORM INFO",
       catPackages: "PACKAGES & FOOD",
+      catTransit: "TRANSIT & COMMUTE",
       catFinance: "MONEY & PAYMENTS",
       catDorm: "SETTLING INTO YOUR DORM LIFE",
       g008Title: "HOW TO<br>GET MY<br>PACKAGES?",
       g008Desc: "finding pickup stations",
       g010Title: "HOW TO<br>GET MY<br>DELIVERY?",
       g010Desc: "where to grab your meal",
+      g014Title: "HOW TO GET<br>A RIDE WITH<br>AMAP",
+      g014Desc: "Call taxis & online car-hailing easily",
+      g004Title: "HOW TO<br>TAKE THE<br>METRO",
+      g004Desc: "Scan contactless QR codes at gates",
+      g015Title: "HOW TO RIDE<br>A SHARED<br>BIKE",
+      g015Desc: "Unlock street bikes with a quick scan",
       g001Title: "BANK<br>ACCOUNT<br>SETUP",
       g001Desc: "Required paperwork & activation",
       g002Title: "LINKING CARD<br>TO ALIPAY",
       g002Desc: "Link your card and start paying",
-      g004Title: "HOW TO TAKE<br>METRO WITH<br>ALIPAY?",
-      g004Desc: "Scan using a QR code",
       g011Title: "DOING YOUR<br>LAUNDRY",
       g011Desc: "Quick guide to washing machines",
       g009Title: "KEEPING THE<br>POWER ON",
@@ -55,39 +60,43 @@ document.addEventListener('DOMContentLoaded', () => {
       closeDossier: "CLOSE",
       searchPlaceholder: "Search guides (e.g. Cainiao, Laundry, Alipay, Delivery)...",
       noResults: "No matching guides found.",
-      copiedToast: "Address copied to clipboard!"
-   ,
+      copiedToast: "Address copied to clipboard!",
       faqMainTitle: "Questions People<br>Often Ask",
-faqQ1: "What time is the dormitory curfew? What should I do if I return late?",
-faqA1: "The dormitory doors are locked at 11:00 PM. If you return late, check the dorm staff's phone number displayed at the front desk through the glass door and call her to open the door. After entering, you will need to register your late return.",
-faqQ2: "Can I bring visitors into the dormitory?",
-faqA2: "Yes. All visitors must register at the front desk when entering the dormitory and must leave before 10:00 PM.",
-faqQ3: "What should I do if I have a conflict with another resident?",
-faqA3: "Please contact the Dorm Leader as soon as possible for help with communication and mediation. Please avoid arguing or escalating the situation.",
-faqQ4: "What numbers should I call in an emergency?",
-faqA4: "In an emergency, call the appropriate number:<br><br>🚓 <strong>Police:</strong> 110<br>🚑 <strong>Ambulance:</strong> 120<br>🚒 <strong>Fire:</strong> 119",
-
+      faqQ1: "What time is the dormitory curfew? What should I do if I return late?",
+      faqA1: "The dormitory doors are locked at 11:00 PM. If you return late, check the dorm staff's phone number displayed at the front desk through the glass door and call her to open the door. After entering, you will need to register your late return.",
+      faqQ2: "Can I bring visitors into the dormitory?",
+      faqA2: "Yes. All visitors must register at the front desk when entering the dormitory and must leave before 10:00 PM.",
+      faqQ3: "What should I do if I have a conflict with another resident?",
+      faqA3: "Please contact the Dorm Leader as soon as possible for help with communication and mediation. Please avoid arguing or escalating the situation.",
+      faqQ4: "What numbers should I call in an emergency?",
+      faqA4: "In an emergency, call the appropriate number:<br><br>🚓 <strong>Police:</strong> 110<br>🚑 <strong>Ambulance:</strong> 120<br>🚒 <strong>Fire:</strong> 119"
     },
     zh: {
       logoTitle: "校园生活指引",
       navPackages: "快递外卖",
+      navTransit: "交通出行",
       navFinance: "金融支付",
       navDorm: "宿舍生活",
       navApps: "常用软件",
       navDormInfo: "宿舍信息",
       catPackages: "快递与外卖",
+      catTransit: "交通与出行指南",
       catFinance: "金融与支付",
       catDorm: "融入宿舍新生活",
       g008Title: "如何取<br>我的快递？",
       g008Desc: "菜鸟驿站与取件码指南",
       g010Title: "如何取<br>我的外卖？",
       g010Desc: "美团外卖点餐与外卖架取餐",
+      g014Title: "如何使用<br>高德地图打车",
+      g014Desc: "网约车呼叫与出租车出行",
+      g004Title: "如何扫码<br>乘坐上海地铁",
+      g004Desc: "支付宝与乘车码进出站",
+      g015Title: "如何使用<br>共享单车骑行",
+      g015Desc: "美团与哈啰单车扫码开锁指南",
       g001Title: "银行账户<br>开设指南",
       g001Desc: "所需证件、网点办理与激活",
       g002Title: "支付宝<br>绑定银行卡",
       g002Desc: "轻松绑定借记卡开启扫码支付",
-      g004Title: "如何用支付宝<br>乘坐上海地铁？",
-      g004Desc: "扫码乘车与交通出行",
       g011Title: "宿舍洗衣机<br>使用指南",
       g011Desc: "一楼洗衣房、烘干机与微信支付",
       g009Title: "校园卡与<br>宿舍电费充值",
@@ -107,16 +116,17 @@ faqA4: "In an emergency, call the appropriate number:<br><br>🚓 <strong>Police
       closeDossier: "关闭档案",
       searchPlaceholder: "搜索指南 (例如：菜鸟, 洗衣, 外卖, 支付宝)...",
       noResults: "未找到相关指南。",
-      copiedToast: "地址已成功复制到剪贴板！"
-  , faqMainTitle: "常见宿舍疑问解答<br>FAQ",
-faqQ1: "宿舍几点门禁？晚归怎么办？",
-faqA1: "宿舍将在 23:00 锁门。如果晚归，请透过玻璃门查看前台宿管阿姨的手机号码，并拨打电话请她帮忙开门。进入宿舍后，需要进行晚归登记。",
-faqQ2: "可以带访客进入宿舍吗？",
-faqA2: "可以，但所有访客进入宿舍时都必须在前台登记，并且必须在 22:00 前离开宿舍。",
-faqQ3: "如果和其他住户发生矛盾或冲突怎么办？",
-faqA3: "请第一时间联系楼长协助沟通和调解。请尽量避免自行争执或让冲突升级。",
-faqQ4: "遇到紧急情况应该拨打什么电话？",
-faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警 Police:</strong> 110<br>🚑 <strong>急救 Ambulance:</strong> 120<br>🚒 <strong>火警 Fire:</strong> 119",}
+      copiedToast: "地址已成功复制到剪贴板！",
+      faqMainTitle: "常见宿舍疑问解答<br>FAQ",
+      faqQ1: "宿舍几点门禁？晚归怎么办？",
+      faqA1: "宿舍将在 23:00 锁门。如果晚归，请透过玻璃门查看前台宿管阿姨的手机号码，并拨打电话请她帮忙开门。进入宿舍后，需要进行晚归登记。",
+      faqQ2: "可以带访客进入宿舍吗？",
+      faqA2: "可以，但所有访客进入宿舍时都必须在前台登记，并且必须在 22:00 前离开宿舍。",
+      faqQ3: "如果和其他住户发生矛盾或冲突怎么办？",
+      faqA3: "请第一时间联系楼长协助沟通和调解。请尽量避免自行争执或让冲突升级。",
+      faqQ4: "遇到紧急情况应该拨打什么电话？",
+      faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警 Police:</strong> 110<br>🚑 <strong>急救 Ambulance:</strong> 120<br>🚒 <strong>火警 Fire:</strong> 119"
+    }
   };
 
   const appGalleries = {
@@ -258,7 +268,7 @@ faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警
       });
     });
 
-    // 针对所有带有 data-action="go-home" 的面包屑节点
+    // 面包屑返回首页
     document.querySelectorAll('[data-action="go-home"]').forEach(el => {
       el.addEventListener('click', () => {
         switchView('home');
@@ -266,7 +276,7 @@ faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警
       });
     });
 
-    // 针对面包屑中的 recommend apps 点击
+    // 面包屑定位 App 区域
     document.querySelectorAll('[data-action="go-apps"]').forEach(el => {
       el.addEventListener('click', () => {
         switchView('home');
@@ -276,30 +286,34 @@ faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警
     });
 
     // 档案袋打开
-    dormFileTrigger.addEventListener('click', openDossier);
+    if (dormFileTrigger) dormFileTrigger.addEventListener('click', openDossier);
     document.querySelectorAll('#openDormLink').forEach(el => {
       el.addEventListener('click', openDossier);
     });
-    dossierCloseBtn.addEventListener('click', () => switchView('home'));
+    if (dossierCloseBtn) dossierCloseBtn.addEventListener('click', () => switchView('home'));
 
-    dossierPrevBtn.addEventListener('click', () => {
-      if (state.currentDormPage > 1) {
-        state.currentDormPage--;
-        renderDormPage(state.currentDormPage);
-      }
-    });
+    if (dossierPrevBtn) {
+      dossierPrevBtn.addEventListener('click', () => {
+        if (state.currentDormPage > 1) {
+          state.currentDormPage--;
+          renderDormPage(state.currentDormPage);
+        }
+      });
+    }
 
-    dossierNextBtn.addEventListener('click', () => {
-      const total = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
-      if (state.currentDormPage < total) {
-        state.currentDormPage++;
-        renderDormPage(state.currentDormPage);
-      }
-    });
+    if (dossierNextBtn) {
+      dossierNextBtn.addEventListener('click', () => {
+        const total = (state.dormInfo && state.dormInfo.pages) ? state.dormInfo.pages.length : 3;
+        if (state.currentDormPage < total) {
+          state.currentDormPage++;
+          renderDormPage(state.currentDormPage);
+        }
+      });
+    }
 
     window.addEventListener('scroll', updateScrollProgress);
 
-    // 搜索实时下拉浮层
+    // 搜索实时下拉
     if (searchInput) {
       searchInput.addEventListener('input', handleSearchDropdown);
       searchInput.addEventListener('focus', handleSearchDropdown);
@@ -318,36 +332,37 @@ faqA4: "在紧急情况下，请根据情况拨打：<br><br>🚓 <strong>报警
       }
     });
 
-    // 语言与主题切换
-    langToggleBtn.addEventListener('click', () => {
-      const next = state.currentLang === 'en' ? 'zh' : 'en';
-      applyLanguage(next);
-    });
-
-    themeToggleBtn.addEventListener('click', () => {
-      const next = state.currentTheme === 'light' ? 'dark' : 'light';
-      applyTheme(next);
-    });
-    // FAQ 手风琴展开与收起
-document.querySelectorAll('.faq-item').forEach(item => {
-  const btn = item.querySelector('.faq-question-btn');
-  const panel = item.querySelector('.faq-answer-panel');
-
-  btn.addEventListener('click', () => {
-    const isOpen = item.classList.contains('active');
-
-    // 如果希望每次只展开一个，可以取消下面两行注释：
-    // document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('active'); i.querySelector('.faq-answer-panel').style.maxHeight = null; });
-
-    if (isOpen) {
-      item.classList.remove('active');
-      panel.style.maxHeight = null;
-    } else {
-      item.classList.add('active');
-      panel.style.maxHeight = panel.scrollHeight + 'px';
+    // 语言与模式切换
+    if (langToggleBtn) {
+      langToggleBtn.addEventListener('click', () => {
+        const next = state.currentLang === 'en' ? 'zh' : 'en';
+        applyLanguage(next);
+      });
     }
-  });
-});
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const next = state.currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme(next);
+      });
+    }
+
+    // FAQ 手风琴展开与收起
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const btn = item.querySelector('.faq-question-btn');
+      const panel = item.querySelector('.faq-answer-panel');
+
+      btn.addEventListener('click', () => {
+        const isOpen = item.classList.contains('active');
+        if (isOpen) {
+          item.classList.remove('active');
+          panel.style.maxHeight = null;
+        } else {
+          item.classList.add('active');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+      });
+    });
   }
 
   function applyLanguage(lang) {
@@ -355,7 +370,7 @@ document.querySelectorAll('.faq-item').forEach(item => {
     localStorage.setItem('site_lang', lang);
     document.documentElement.setAttribute('data-lang', lang);
 
-    langLabel.textContent = lang === 'en' ? '中文' : 'EN';
+    if (langLabel) langLabel.textContent = lang === 'en' ? '中文' : 'EN';
     const dict = i18n[lang];
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -363,7 +378,7 @@ document.querySelectorAll('.faq-item').forEach(item => {
       if (dict[key]) el.innerHTML = dict[key];
     });
 
-    searchInput.placeholder = dict.searchPlaceholder;
+    if (searchInput) searchInput.placeholder = dict.searchPlaceholder;
   }
 
   function applyTheme(theme) {
@@ -371,19 +386,20 @@ document.querySelectorAll('.faq-item').forEach(item => {
     localStorage.setItem('site_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
 
-    if (theme === 'dark') {
-      themeIcon.textContent = '☀️';
-      themeLabel.textContent = 'LIGHT';
-    } else {
-      themeIcon.textContent = '🌙';
-      themeLabel.textContent = 'DARK';
+    if (themeIcon && themeLabel) {
+      if (theme === 'dark') {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'LIGHT';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'DARK';
+      }
     }
   }
 
-  // 搜索处理
   function handleSearchDropdown() {
     const query = searchInput.value.trim().toLowerCase();
-    searchClearBtn.style.display = query ? 'block' : 'none';
+    if (searchClearBtn) searchClearBtn.style.display = query ? 'block' : 'none';
 
     if (!query) {
       searchResultsDropdown.classList.remove('open');
@@ -451,7 +467,7 @@ document.querySelectorAll('.faq-item').forEach(item => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 打开指南步骤详情 (问题 3 面包屑更新 + 自动切换相框)
+  // 步骤详情渲染（先文字指令，后配图；起点对齐）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
@@ -459,17 +475,19 @@ document.querySelectorAll('.faq-item').forEach(item => {
       guide_title: 'CAMPUS SURVIVAL'
     };
 
-    // 更新面包屑 (问题 3)
-    crumbGuideCat.textContent = categoryName.toLowerCase();
-    crumbGuideCat.onclick = () => {
-      switchView('home');
-      const targetSec = categoryName.includes('PACKAGES') ? 'packages' :
-                        categoryName.includes('MONEY') ? 'finance' : 'dorm';
-      const secEl = document.getElementById(targetSec);
-      if (secEl) secEl.scrollIntoView({ behavior: 'smooth' });
-    };
+    if (crumbGuideCat) {
+      crumbGuideCat.textContent = categoryName.toLowerCase();
+      crumbGuideCat.onclick = () => {
+        switchView('home');
+        const targetSec = categoryName.includes('PACKAGES') ? 'packages' :
+                          categoryName.includes('TRANSIT') ? 'transit' :
+                          categoryName.includes('MONEY') ? 'finance' : 'dorm';
+        const secEl = document.getElementById(targetSec);
+        if (secEl) secEl.scrollIntoView({ behavior: 'smooth' });
+      };
+    }
 
-    crumbGuideCurrent.textContent = (guide.guide_title || '').toLowerCase();
+    if (crumbGuideCurrent) crumbGuideCurrent.textContent = (guide.guide_title || '').toLowerCase();
 
     detailMainTitle.innerHTML = (guide.guide_title || '').replace('?', '?<br>');
     stepsFlowContainer.innerHTML = '';
@@ -497,22 +515,29 @@ document.querySelectorAll('.faq-item').forEach(item => {
         const isExcelNone = ssStatus === 'none';
 
         const stepCard = document.createElement('div');
+        stepCard.className = isExcelNone ? 'step-item-card step-card-text-only' : 'step-item-card';
 
-        if (isExcelNone) {
-          stepCard.className = 'step-item-card step-card-text-only';
-          stepCard.innerHTML = `
-            <div class="step-info-col">
-              <div class="step-circle-badge">${step.step_number || 1}</div>
+        // 1. 顶部标题指令区：序号与文字基线水平对齐
+        const headerHtml = `
+          <div class="step-top-header">
+            <div class="step-circle-badge">${step.step_number || 1}</div>
+            <div class="step-text-wrap">
               <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-              <p class="step-detail-text">${step.instruction || ''}</p>
-              ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
+              ${step.instruction ? `<p class="step-detail-text">${step.instruction}</p>` : ''}
+              ${step.tip ? `<div class="step-tip-callout">* ${step.tip}</div>` : ''}
             </div>
-          `;
-        } else {
-          stepCard.className = 'step-item-card';
+          </div>
+        `;
 
+        // 2. 紧接下方配图区（组内间距仅 14px）
+        if (isExcelNone) {
+          stepCard.innerHTML = headerHtml;
+        } else {
           const mediaContainer = document.createElement('div');
-          mediaContainer.className = 'mockup-phone-body';
+          mediaContainer.className = 'step-media-box';
+
+          const frameBody = document.createElement('div');
+          frameBody.className = 'mockup-phone-body';
 
           if (hasRealImage) {
             const screen = document.createElement('div');
@@ -521,32 +546,24 @@ document.querySelectorAll('.faq-item').forEach(item => {
             img.src = `images/${fileName}`;
             img.alt = step.step_title || '';
 
-            // 自动嗅探长宽比：偏扁图片自动切换为相框
+            // 图像自适应嗅探：偏扁则卸下手机壳，换相框
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
               if (ratio < 1.45) {
-                mediaContainer.className = 'mockup-photo-body';
+                frameBody.className = 'mockup-photo-body';
                 screen.className = '';
               }
             };
 
             screen.appendChild(img);
-            mediaContainer.appendChild(screen);
+            frameBody.appendChild(screen);
           } else {
-            mediaContainer.innerHTML = `<div class="mockup-photo-placeholder">[ Step Preview Pending ]</div>`;
+            frameBody.innerHTML = `<div class="mockup-photo-placeholder">[ Step Preview Pending ]</div>`;
           }
 
-          const infoCol = document.createElement('div');
-          infoCol.className = 'step-info-col';
-          infoCol.innerHTML = `
-            <div class="step-circle-badge">${step.step_number || 1}</div>
-            <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-            <p class="step-detail-text">${step.instruction || ''}</p>
-            ${step.tip ? `<p class="step-detail-text" style="margin-top:0.5rem; color:#888;">* ${step.tip}</p>` : ''}
-          `;
-
+          mediaContainer.appendChild(frameBody);
+          stepCard.innerHTML = headerHtml;
           stepCard.appendChild(mediaContainer);
-          stepCard.appendChild(infoCol);
         }
 
         stepsFlowContainer.appendChild(stepCard);
@@ -558,11 +575,10 @@ document.querySelectorAll('.faq-item').forEach(item => {
     setTimeout(updateScrollProgress, 100);
   }
 
-  // 打开展台 (更新面包屑)
   function openAppGallery(catKey) {
     const config = appGalleries[catKey] || appGalleries['01'];
     galleryCatTitle.textContent = config.title;
-    crumbGalleryCurrent.textContent = config.breadcrumb;
+    if (crumbGalleryCurrent) crumbGalleryCurrent.textContent = config.breadcrumb;
     galleryCardsGrid.innerHTML = '';
 
     config.apps.forEach(app => {
