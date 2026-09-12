@@ -1,5 +1,4 @@
-{
- "ITEM":[
+{"ITEM":[
  {
   "item_id": "TP-001",
   "category_id": "CAT-002",
@@ -81,6 +80,20 @@
   "name": "Report for repairs",
   "chinese_name": "报修",
   "item_type": "Dorm facilities ",
+  "status": "active"
+ },
+ {
+  "item_id": "TR-001",
+  "category_id": "CAT-006",
+  "name": "Amap",
+  "chinese_name": "高德地图",
+  "status": "active"
+ },
+ {
+  "item_id": "TR-002",
+  "category_id": "CAT-006",
+  "name": "Halou",
+  "chinese_name": "哈喽",
   "status": "active"
  }
 ]
