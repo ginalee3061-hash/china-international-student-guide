@@ -56,7 +56,7 @@
           "title": "GARBAGE DISPOSAL",
           "items": [
             {"type": "bullet", "text": "The kitchen trash bins are for food waste only."},
-            {"type": "bullet", "text": "Trash from your room must be taken to the public garbage station located between Building 14 and the cafeteria."}
+            {"type": "bullet", "text": "Trash from your room must be taken to the public garbage station located between Building 14 and the canteen."}
           ],
           "photo": {
             "image": "images/garbage.jpg",
@@ -83,7 +83,7 @@
         {
           "title": "HAIR DRYER ROOMS",
           "items": [
-            {"type": "text", "text": "Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors."}
+            {"type": "text", "text": "Hair dryer rooms are located near the small staircases on the 2nd, 3rd, 4th, 5th and 6th floors."}
           ],
           "photo": {
             "image": "images/hairdryer.jpg",
