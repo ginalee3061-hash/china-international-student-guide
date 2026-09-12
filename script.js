@@ -1,6 +1,5 @@
 /**
  * Campus Life Survival Guide - Complete Engine
- * 包含：双语切换、深色模式、下拉模糊搜索、自动超链接识别、图片相框自适应
  */
 document.addEventListener('DOMContentLoaded', () => {
   const state = {
@@ -32,12 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
- // 强力链接识别转换函数（兼容带中括号 [http...] 以及写在标题里的链接）
+  // 强力链接识别转换函数（兼容带中括号 [http...] 以及写在标题里的链接）
   function formatInstructionWithLinks(text) {
     if (!text) return '';
-    // 匹配包含中括号 [http...] 或直接 http... 的网址
     return text.replace(/\[?(https?:\/\/[^\s\]]+)\]?/g, (match, url) => {
-      // 清理尾部可能多余的标点
       const cleanUrl = url.replace(/[.,;!?]+$/, '');
       return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="step-inline-link" onclick="event.stopPropagation();">${cleanUrl}</a>`;
     });
@@ -205,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // DOM 节点引用
   const homeView = document.getElementById('homeView');
   const guideDetailView = document.getElementById('guideDetailView');
   const appGalleryView = document.getElementById('appGalleryView');
@@ -239,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeIcon = document.getElementById('themeIcon');
   const themeLabel = document.getElementById('themeLabel');
 
+  // 自愈 JSON 解析器
   async function fetchSafeJson(url) {
     try {
       const res = await fetch(url);
@@ -511,6 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
+  // 步骤详情渲染（长图进手机壳满屏Cover，方图/横图进自适应相框）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
@@ -572,13 +572,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepCard = document.createElement('div');
         stepCard.className = isExcelNone ? 'step-item-card step-card-text-only' : 'step-item-card';
 
-        // 顶部标题 + 链接自动转换
+        // 标题与说明文字：全部经过链接识别转换
+        const renderedTitle = formatInstructionWithLinks(step.step_title || '');
+        const renderedInstruction = formatInstructionWithLinks(step.instruction || '');
+
         const headerHtml = `
           <div class="step-top-header">
             <div class="step-circle-badge">${step.step_number || 1}</div>
             <div class="step-text-wrap">
-              <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-              ${step.instruction ? `<p class="step-detail-text">${formatInstructionWithLinks(step.instruction)}</p>` : ''}
+              <h4 class="step-instruction-heading">${renderedTitle}</h4>
+              ${step.instruction ? `<p class="step-detail-text">${renderedInstruction}</p>` : ''}
               ${step.tip ? `<div class="step-tip-callout">* ${step.tip}</div>` : ''}
             </div>
           </div>
@@ -591,28 +594,40 @@ document.addEventListener('DOMContentLoaded', () => {
           mediaContainer.className = 'step-media-box';
 
           const frameBody = document.createElement('div');
-          // 判定：二维码、维修截图或特别指定的标记为相框
-          const isPhotoDefault = step.display_frame === 'photo' || (fileName && (fileName.includes('maintenance') || fileName.includes('qrcode')));
-          frameBody.className = isPhotoDefault ? 'mockup-photo-body' : 'mockup-phone-body';
 
           if (hasRealImage) {
-            const screen = document.createElement('div');
-            screen.className = isPhotoDefault ? '' : 'mockup-screen';
             const img = document.createElement('img');
             img.src = `images/${fileName}`;
             img.alt = step.step_title || '';
 
+            const screen = document.createElement('div');
+
+            // 图像自适应嗅探
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
+              // 宽高比小于 1.35 说明是方图或横图（如二维码），切换为自适应相框
               if (ratio < 1.35) {
                 frameBody.className = 'mockup-photo-body';
-                screen.className = '';
+                frameBody.innerHTML = '';
+                frameBody.appendChild(img);
+              } else {
+                // 细长手机长截图，保持黑色手机壳，填满屏幕
+                frameBody.className = 'mockup-phone-body';
+                screen.className = 'mockup-screen';
+                screen.innerHTML = '';
+                screen.appendChild(img);
+                frameBody.innerHTML = '';
+                frameBody.appendChild(screen);
               }
             };
 
+            // 默认初始挂载
+            frameBody.className = 'mockup-phone-body';
+            screen.className = 'mockup-screen';
             screen.appendChild(img);
             frameBody.appendChild(screen);
           } else {
+            frameBody.className = 'mockup-phone-body';
             frameBody.innerHTML = `<div class="mockup-photo-placeholder">[ Step Preview Pending ]</div>`;
           }
 
