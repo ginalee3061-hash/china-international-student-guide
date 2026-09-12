@@ -1392,4 +1392,42 @@ body {
     height: 440px !important;
     margin: 0 auto !important;
   }
+   
+}
+/* 展台应用独立单元与下方注册链接 */
+.app-exhibit-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-signup-link-box {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px 2px;
+}
+
+/* 前面小标题使用 Minecraftia 像素字体 */
+.app-signup-label {
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.72rem;
+  color: #E85A4F; /* 醒目红棕/点缀色，亦可改为 #111 */
+  letter-spacing: 0.05em;
+}
+
+/* 链接本体样式 */
+.app-signup-url {
+  font-family: 'AlteHaasGroteskRegular', sans-serif;
+  font-size: 0.78rem;
+  color: var(--accent-cyan, #3CB5C2);
+  text-decoration: underline;
+  word-break: break-all;
+  transition: opacity 0.2s ease;
+}
+.app-signup-url:hover {
+  opacity: 0.75;
 }
