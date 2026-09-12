@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       catDorm: "SETTLING INTO YOUR DORM LIFE",
       g008Title: "HOW TO<br>GET MY<br>PACKAGES?",
       g008Desc: "finding pickup stations",
-      g010Title: "HOW TO<br>GET MY<br>DELIVERY?",
+      g010Title: "HOW TO<br>GET MY<br>FOOD DELIVERY?",
       g010Desc: "where to grab your meal",
       g013Title: "HOW TO GET<br>A RIDE WITH<br>AMAP",
       g013Desc: "Call taxis & online car-hailing easily",
