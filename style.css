@@ -1371,5 +1371,158 @@ body {
     padding: 1.4rem 1.5rem;
     font-size: 0.92rem;
     border-radius: 18px;
+  }/* ==========================================================================
+   TRANSIT 模块配色与阅读动线重构（先指令后图片 + 差异化间距）
+   ========================================================================== */
+:root {
+  --module-transit-bg: #E3D1A6;  /* 暖金琥珀底色 */
+  --bar-transit: #7D5728;        /* 深咖焦糖顶条 */
+  --btn-transit: #C49F66;        /* 协调大地色按钮 */
+}
+
+[data-theme="dark"] {
+  --module-transit-bg: #3B3322;
+  --bar-transit: #70522B;
+  --btn-transit: #8C6A3D;
+}
+
+.module-transit {
+  background-color: var(--module-transit-bg);
+}
+.bar-transit {
+  background-color: var(--bar-transit);
+}
+.module-transit .btn-learn-more {
+  background: var(--btn-transit);
+}
+
+/* 动线优化：组间大间距 56px 断句 */
+.steps-flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 56px; 
+}
+
+/* 步骤单体卡片：自上而下 */
+.step-item-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+}
+
+/* 步骤顶部栏：数字与标题同一行对齐，距离下方截图仅 14px */
+.step-top-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 14px; 
+}
+
+/* 数字圆球锚定在首行起点 */
+.step-circle-badge {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+
+.step-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.step-instruction-heading {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  color: var(--text-dark);
+}
+
+.step-detail-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.step-tip-callout {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #8A7240;
+  background: rgba(222, 200, 154, 0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #C49F66;
+  display: inline-block;
+}
+
+/* 配图区域：位于文字指令正下方 */
+.step-media-box {
+  margin-left: 48px; 
+}
+
+.mockup-phone-body {
+  width: 250px;
+  height: 500px;
+  background: #111;
+  border-radius: 38px;
+  padding: 9px;
+  box-shadow: 0 14px 32px rgba(0,0,0,0.16);
+}
+.mockup-screen {
+  width: 100%;
+  height: 100%;
+  background: #FFF;
+  border-radius: 29px;
+  overflow: hidden;
+}
+.mockup-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mockup-photo-body {
+  width: 100%;
+  max-width: 480px;
+  background: #FFF;
+  border-radius: 16px;
+  padding: 12px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+}
+.mockup-photo-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+
+/* 手机端间距适配 */
+@media (max-width: 768px) {
+  .steps-flow-container {
+    gap: 44px;
   }
+  .step-top-header {
+    margin-bottom: 12px;
+  }
+  .step-media-box {
+    margin-left: 0;
+  }
+  .mockup-phone-body {
+    width: 240px;
+    height: 480px;
+    margin: 0 auto;
+  }
+}
 }
