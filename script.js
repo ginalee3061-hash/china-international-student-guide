@@ -320,8 +320,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const cat = card.dataset.category || 'PACKAGES & FOOD';
         openGuideDetail(gid, cat);
       });
+      
     });
+// 悬浮罗盘菜单交互 (FAB)
+    const fabContainer = document.getElementById('fabNavContainer');
+    const fabTrigger = document.getElementById('fabMainTrigger');
+    const fabDormLink = document.getElementById('fabDormLink');
 
+    if (fabTrigger && fabContainer) {
+      // 点击圆盘切换展开/收起
+      fabTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fabContainer.classList.toggle('open');
+      });
+
+      // 点击外部区域自动关闭菜单
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#fabNavContainer')) {
+          fabContainer.classList.remove('open');
+        }
+      });
+
+      // 点击菜单跳转项后平滑滚动并收起
+      document.querySelectorAll('[data-action="go-section"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchView('home');
+          fabContainer.classList.remove('open');
+          const targetId = link.getAttribute('href').replace('#', '');
+          const targetSec = document.getElementById(targetId);
+          if (targetSec) {
+            targetSec.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // 点击菜单里的 DORM INFO 打开档案页
+      if (fabDormLink) {
+        fabDormLink.addEventListener('click', () => {
+          fabContainer.classList.remove('open');
+          openDossier();
+        });
+      }
+    }
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
