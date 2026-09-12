@@ -208,8 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
           icon: 'images/ikuuuicon.png',
           link: 'https://ikuuu.top/auth/register?code=xAWw'     
         }
-      ]
-    } 
+   ]
+  }
+};
+
+// DOM 节点引用
 
   // DOM 节点引用
   const homeView = document.getElementById('homeView');
