@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '04 shopping',
       apps: [
         { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
-        { name: '京东', sub: 'JingDong', icon: 'images/JDIcon.png' },
+        { name: '京东', sub: 'JingDong', icon: 'images/jdIcon.png' },
         { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
       ]
     },
@@ -745,12 +745,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="polaroid-holder" style="transform: rotate(5deg);">
             <div class="metal-clip"></div>
-            <img src="images/packagesandfood-01.png" alt="Kitchen">
+            <img src="images/kitchen.png" alt="Kitchen">
           </div>
         </div>
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
           <div class="polaroid-holder" style="transform: rotate(-4deg);">
-            <img src="images/packagesandfood-02.png" alt="Garbage">
+            <img src="images/garbage.png" alt="Garbage">
           </div>
           <div>
             <h3 class="dorm-sec-heading">GARBAGE DISPOSAL</h3>
@@ -771,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
           <div class="polaroid-holder" style="transform: rotate(-3deg);">
-            <img src="images/dormlife-01.png" alt="Water Dispenser">
+            <img src="images/water.png" alt="Water Dispenser">
           </div>
         </div>
         <div class="dorm-section-block dossier-split-photo" style="margin-top: 2.5rem;">
@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="polaroid-holder" style="transform: rotate(6deg);">
             <div class="metal-clip"></div>
-            <img src="images/dormlife-02.png" alt="Hair Dryer">
+            <img src="images/hairdryer.png" alt="Hair Dryer">
           </div>
         </div>
       `;
