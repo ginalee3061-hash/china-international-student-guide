@@ -992,7 +992,7 @@ body {
 .gallery-cards-grid {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 3.5rem;
 }
@@ -1398,7 +1398,7 @@ body {
 .app-exhibit-item-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 
@@ -1415,14 +1415,15 @@ body {
 .app-signup-label {
   font-family: 'Minecraftia', monospace;
   font-size: 0.72rem;
-  color: #E85A4F; /* 醒目红棕/点缀色，亦可改为 #111 */
+  color: #4B4F56; 
   letter-spacing: 0.05em;
 }
 
 /* 链接本体样式 */
 .app-signup-url {
-  font-family: 'AlteHaasGroteskRegular', sans-serif;
+  font-family: 'AlteHaasGroteskRegular', -apple-system, sans-serif;
   font-size: 0.78rem;
+  line-height: 1.4;
   color: var(--accent-cyan, #3CB5C2);
   text-decoration: underline;
   word-break: break-all;
