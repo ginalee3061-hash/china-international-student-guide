@@ -86,7 +86,7 @@
             {"type": "text", "text": "Hair dryer rooms are located near the small staircases on the 2nd, 4th, and 6th floors."}
           ],
           "photo": {
-            "image": "images/shairdryer.jpg",
+            "image": "images/hairdryer.jpg",
             "has_clip": true,
             "rotation": 5
           }
