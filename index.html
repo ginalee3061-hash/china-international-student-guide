@@ -20,14 +20,14 @@
         </div>
 
         <!-- 语言与深色模式切换纽扣 (对齐修复) -->
-        <div class="header-controls">
-          <button class="ctrl-pill-btn" id="langToggleBtn" title="Switch Language">
+      <div class="header-controls">
+          <button class="ctrl-pill-btn" id="langToggleBtn" aria-label="Toggle Language">
             <span class="ctrl-icon">🌐</span>
-            <span id="langLabel">中文</span>
+            <span class="btn-text-full" id="langLabel">中文</span>
           </button>
-          <button class="ctrl-pill-btn" id="themeToggleBtn" title="Toggle Theme">
+          <button class="ctrl-pill-btn" id="themeToggleBtn" aria-label="Toggle Theme">
             <span class="ctrl-icon" id="themeIcon">🌙</span>
-            <span id="themeLabel">DARK</span>
+            <span class="btn-text-full" id="themeLabel">DARK</span>
           </button>
         </div>
       </div>
@@ -306,17 +306,22 @@
       </div>
     </footer>
 
-    <!-- 问题 4：下滑时一直保留在底部的浮动导航条 (Floating Bottom Nav Bar) -->
-    <nav class="floating-bottom-nav">
-      <div class="floating-nav-track">
-        <a href="#packages" class="nav-pill active" data-i18n="navPackages">PACKAGES</a>
-        <a href="#finance" class="nav-pill" data-i18n="navFinance">FINANCE</a>
-        <a href="#dorm" class="nav-pill" data-i18n="navDorm">DORM LIFE</a>
-        <a href="#apps" class="nav-pill" data-i18n="navApps">APP DIRECTORY</a>
-        <a href="#transit" class="nav-pill" data-i18n="navTransit">TRANSIT</a>
-        <a href="javascript:void(0)" class="nav-pill highlight-pill" id="openDormLink" data-i18n="navDormInfo">DORM INFO</a>
-      </div>
-    </nav>
+  <!-- 移动端悬浮快捷菜单 (FAB) / 桌面端自适应 -->
+  <div class="fab-nav-container" id="fabNavContainer">
+    <div class="fab-menu-card" id="fabMenuCard">
+      <a href="#packages" class="fab-menu-item" data-action="go-section" data-i18n="navPackages">PACKAGES</a>
+      <a href="#transit" class="fab-menu-item" data-action="go-section" data-i18n="navTransit">TRANSIT</a>
+      <a href="#finance" class="fab-menu-item" data-action="go-section" data-i18n="navFinance">FINANCE</a>
+      <a href="#dorm" class="fab-menu-item" data-action="go-section" data-i18n="navDorm">DORM LIFE</a>
+      <a href="#apps" class="fab-menu-item" data-action="go-section" data-i18n="navApps">APP DIRECTORY</a>
+      <button class="fab-menu-item fab-dossier-link" id="fabDormLink" data-i18n="navDormInfo">DORM INFO</button>
+    </div>
+    <button class="fab-main-trigger" id="fabMainTrigger" aria-label="Quick Navigation">
+      <span class="fab-icon-default">🧭</span>
+      <span class="fab-icon-close">✕</span>
+    </button>
+  </div>
+    
   </div>
 
 
