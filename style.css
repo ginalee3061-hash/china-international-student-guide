@@ -25,7 +25,7 @@
 }
 
 /* ==========================================================================
-   2. 主题色彩变量 (Light / Dark)
+   2. 主题色彩系统 (四大模块 + Dark Mode)
    ========================================================================== */
 :root {
   --bg-sand: #FAF7F2;
@@ -34,14 +34,22 @@
   --card-bg: #FFFFFF;
   --search-border: #DFD9CE;
   
+  /* 模块 1：粉蓝 */
   --module-packages-bg: #98B6CD;
   --bar-blue: #4A6E86;
   --btn-blue: #86A8BF;
 
+  /* 模块 2：TRANSIT 最新绿色系 (鼠尾草绿/松木绿) */
+  --module-transit-bg: #9EBA9C;
+  --bar-transit: #476545;
+  --btn-transit: #6F946D;
+
+  /* 模块 3：烟粉豆沙 */
   --module-finance-bg: #CF9D9D;
   --bar-rose: #7D4949;
   --btn-rose: #BF8787;
 
+  /* 模块 4：抹茶暖灰绿 */
   --module-dorm-bg: #C7C39E;
   --bar-sage: #6E6845;
   --btn-sage: #B3AE84;
@@ -53,12 +61,12 @@
   
   --dropdown-bg: #FFFFFF;
   --dropdown-hover: #F3EFE9;
-  
   --nav-bar-bg: rgba(250, 247, 242, 0.88);
   --crumb-sep-color: #9CA3AF;
   --crumb-link-hover: #111111;
 }
 
+/* 深色模式 Dark Mode */
 [data-theme="dark"] {
   --bg-sand: #161719;
   --text-dark: #F3F4F6;
@@ -69,6 +77,11 @@
   --module-packages-bg: #2B3A45;
   --bar-blue: #3E5A6E;
   --btn-blue: #4E6E85;
+
+  /* 深色模式下的 TRANSIT 绿色系 */
+  --module-transit-bg: #2A3B29;
+  --bar-transit: #3D553C;
+  --btn-transit: #4E6D4C;
 
   --module-finance-bg: #443232;
   --bar-rose: #6E4646;
@@ -84,7 +97,6 @@
 
   --dropdown-bg: #222428;
   --dropdown-hover: #2E3137;
-  
   --nav-bar-bg: rgba(22, 23, 25, 0.88);
   --crumb-sep-color: #6B7280;
   --crumb-link-hover: #FFFFFF;
@@ -103,7 +115,7 @@ body {
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   transition: background-color 0.25s ease, color 0.25s ease;
-  padding-bottom: 90px; /* 留出底部浮动 Bar 的避让高度 */
+  padding-bottom: 90px;
 }
 
 .page-view {
@@ -116,7 +128,7 @@ body {
 }
 
 /* ==========================================================================
-   3. 顶部 Header 与 按钮排版 (问题 2：严格统一高度、字体与基线对齐)
+   3. 顶部 Header 与 按钮严格对齐
    ========================================================================== */
 .site-header {
   max-width: 1400px;
@@ -158,7 +170,6 @@ body {
   border-radius: 4px;
 }
 
-/* 问题 2 修复：严格对齐、同一字体、相同高宽排布的控制按钮 */
 .header-controls {
   display: flex;
   align-items: center;
@@ -172,7 +183,6 @@ body {
   color: var(--text-dark);
   border: 1.5px solid var(--search-border);
   border-radius: 20px;
-  /* 解决字体不一：统一采用 HeuvelGrotesk，中英文排版一致对齐 */
   font-family: 'HeuvelGrotesk', -apple-system, sans-serif;
   font-size: 0.8rem;
   font-weight: bold;
@@ -292,7 +302,7 @@ body {
 }
 
 /* ==========================================================================
-   4. 问题 4 修复：下滑时一直吸附在底部的浮动导航条 (Floating Bottom Nav Bar)
+   4. 浮动吸底导航条 (Floating Bottom Nav Bar)
    ========================================================================== */
 .floating-bottom-nav {
   position: fixed;
@@ -343,7 +353,7 @@ body {
 }
 
 /* ==========================================================================
-   5. 卡片大模块排版
+   5. 四大色彩分类大模块
    ========================================================================== */
 .main-content {
   display: flex;
@@ -360,14 +370,31 @@ body {
   margin: 0 auto;
   overflow: visible !important;
 }
-.module-packages { background-color: var(--module-packages-bg); }
-.module-finance { background-color: var(--module-finance-bg); }
-.module-dorm { background-color: var(--module-dorm-bg); }
+
+/* 模块 1：粉蓝 */
+.module-packages { background-color: var(--module-packages-bg) !important; }
+.bar-blue { background-color: var(--bar-blue) !important; }
+.module-packages .btn-learn-more { background: var(--btn-blue) !important; }
+
+/* 模块 2：TRANSIT 绿色系 (强制高优先级显色) */
+.module-transit { background-color: var(--module-transit-bg) !important; }
+.bar-transit { background-color: var(--bar-transit) !important; color: #FFF !important; }
+.module-transit .btn-learn-more { background: var(--btn-transit) !important; color: #FFF !important; }
+
+/* 模块 3：烟粉豆沙 */
+.module-finance { background-color: var(--module-finance-bg) !important; }
+.bar-rose { background-color: var(--bar-rose) !important; }
+.module-finance .btn-learn-more { background: var(--btn-rose) !important; }
+
+/* 模块 4：抹茶暖灰绿 */
+.module-dorm { background-color: var(--module-dorm-bg) !important; }
+.bar-sage { background-color: var(--bar-sage) !important; }
+.module-dorm .btn-learn-more { background: var(--btn-sage) !important; }
 
 .category-bar {
   border-radius: 8px;
   padding: 0.95rem 2rem;
-  color: #FFF;
+  color: #FFF !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -377,9 +404,7 @@ body {
   margin-bottom: 3.5rem;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
-.bar-blue { background-color: var(--bar-blue); }
-.bar-rose { background-color: var(--bar-rose); }
-.bar-sage { background-color: var(--bar-sage); }
+.category-bar span { color: #FFF !important; }
 
 .cards-row {
   display: flex;
@@ -451,7 +476,6 @@ body {
   line-height: 1.35;
 }
 .btn-learn-more {
-  background: var(--btn-blue);
   color: #FFF;
   border: none;
   font-family: 'HeuvelGrotesk', sans-serif;
@@ -464,16 +488,14 @@ body {
   transition: opacity 0.2s;
 }
 .btn-learn-more:hover { opacity: 0.9; }
-.module-finance .btn-learn-more { background: var(--btn-rose); }
-.module-dorm .btn-learn-more { background: var(--btn-sage); }
 
 /* ==========================================================================
-   6. RECOMMEND APPS 散落舞台与大公文袋
+   6. RECOMMEND APPS 散落展台
    ========================================================================== */
 .recommend-scattered-zone {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem 6rem;
+  padding: 3rem 2rem 5rem;
   position: relative;
 }
 .scattered-intro {
@@ -535,6 +557,128 @@ body {
 .pin-04 { bottom: 20px; left: 42%; transform: rotate(-2deg); }
 .pin-05 { bottom: 80px; right: 8%; transform: rotate(3deg); }
 
+/* ==========================================================================
+   7. FAQ 常见问题模块 (1:1 还原设计图手风琴)
+   ========================================================================== */
+.faq-section-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.faq-header-center {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.faq-pill-badge {
+  display: inline-block;
+  font-family: 'HeuvelGrotesk', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: #383B3D;
+  background-color: #E2E6DF;
+  padding: 0.45rem 1.4rem;
+  border-radius: 30px;
+  margin-bottom: 1.5rem;
+}
+.faq-serif-title {
+  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
+  font-size: 2.8rem;
+  line-height: 1.15;
+  font-weight: 400;
+  color: var(--text-dark);
+  letter-spacing: -0.01em;
+}
+.faq-accordion-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.faq-item {
+  width: 100%;
+  border-radius: 26px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.faq-question-btn {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  padding: 1.5rem 2rem;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  text-align: left;
+  transition: all 0.25s ease;
+}
+.faq-question-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.faq-q-text {
+  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  line-height: 1.35;
+  font-weight: 400;
+}
+.faq-toggle-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(128, 128, 128, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'AlteHaasGroteskRegular', sans-serif;
+  font-size: 1.2rem;
+  color: #555;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.faq-answer-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+.faq-answer-content {
+  margin-top: 0.75rem;
+  background-color: #E8EDE4;
+  color: #2D332D;
+  padding: 1.8rem 2.2rem;
+  border-radius: 22px;
+  font-family: 'AlteHaasGroteskRegular', -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+.faq-item.active .faq-toggle-icon {
+  background: #222;
+  color: #FFF;
+  transform: rotate(45deg);
+}
+.faq-item.active .faq-answer-panel {
+  opacity: 1;
+}
+
+[data-theme="dark"] .faq-pill-badge { background-color: #2D332D; color: #CFD6CE; }
+[data-theme="dark"] .faq-question-btn { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.06); }
+[data-theme="dark"] .faq-toggle-icon { background: rgba(255, 255, 255, 0.1); color: #DDD; }
+[data-theme="dark"] .faq-item.active .faq-toggle-icon { background: #EEE; color: #111; }
+[data-theme="dark"] .faq-answer-content { background-color: #272C25; color: #DDE3DA; }
+
+/* ==========================================================================
+   8. 底部公文袋区域
+   ========================================================================== */
 .earth-footer-plane {
   width: 100vw;
   background-color: var(--earth-bg);
@@ -561,7 +705,6 @@ body {
   display: block;
   filter: drop-shadow(0 14px 35px rgba(0,0,0,0.3));
 }
-
 .folder-click-pill {
   margin-top: 1.4rem;
   background: var(--earth-btn-bg);
@@ -583,8 +726,13 @@ body {
 }
 
 /* ==========================================================================
-   7. 问题 3：新页面顶部现代面包屑路径导航 (Breadcrumb)
+   9. 步骤详情流 (先指令后配图 + 差异化间距断句)
    ========================================================================== */
+.detail-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2.5rem 8rem;
+}
 .detail-breadcrumb-bar {
   display: flex;
   align-items: center;
@@ -593,7 +741,6 @@ body {
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(128,128,128,0.15);
 }
-
 .breadcrumb-trail {
   display: flex;
   align-items: center;
@@ -602,7 +749,6 @@ body {
   font-size: 0.88rem;
   letter-spacing: 0.04em;
 }
-
 .crumb-link {
   color: var(--text-muted);
   cursor: pointer;
@@ -613,35 +759,12 @@ body {
   color: var(--crumb-link-hover);
   text-decoration: underline;
 }
-
-.crumb-sep {
-  color: var(--crumb-sep-color);
-  font-size: 0.85rem;
-  user-select: none;
-}
-
-.crumb-current {
-  color: var(--text-dark);
-  font-weight: bold;
-}
-
-/* 档案深色背景上的面包屑 */
-.dossier-crumb-bar {
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-  margin-bottom: 1.8rem;
-  max-width: 1060px;
-  width: 100%;
-}
-.light-crumb { color: rgba(255,255,255,0.7) !important; }
-.light-crumb:hover { color: #FFF !important; }
-.light-sep { color: rgba(255,255,255,0.4) !important; }
-.light-current { color: #FFF !important; }
-
-/* 步骤详情页样式 */
-.detail-page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 2.5rem 8rem;
+.crumb-sep { color: var(--crumb-sep-color); font-size: 0.85rem; }
+.crumb-current { color: var(--text-dark); font-weight: bold; }
+.detail-guide-tag {
+  font-family: 'Minecraftia', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 .detail-main-title {
   font-family: 'AlteHaasGroteskBold', sans-serif;
@@ -690,35 +813,88 @@ body {
   transition: height 0.1s ease-out;
 }
 
+/* 动线：组间 56px 大间距 */
 .steps-flow-container {
   display: flex;
   flex-direction: column;
-  gap: 4.5rem;
+  gap: 56px;
 }
 .step-item-card {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 3rem;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  max-width: 660px;
 }
 .step-item-card.step-card-text-only {
-  grid-template-columns: 1fr;
-  max-width: 680px;
+  max-width: 660px;
 }
 
+/* 步骤顶部栏：数字与标题同一水平行 */
+.step-top-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 14px; /* 组内紧凑 14px 紧贴截图 */
+}
+.step-circle-badge {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+.step-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.step-instruction-heading {
+  font-family: 'AlteHaasGroteskBold', sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  color: var(--text-dark);
+}
+.step-detail-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.step-tip-callout {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #8A7240;
+  background: rgba(222, 200, 154, 0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #C49F66;
+  display: inline-block;
+}
+
+/* 配图在文字正下方 */
+.step-media-box {
+  margin-left: 48px;
+}
 .mockup-phone-body {
-  width: 260px;
-  height: 520px;
+  width: 250px;
+  height: 500px;
   background: #111;
-  border-radius: 40px;
-  padding: 10px;
-  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+  border-radius: 38px;
+  padding: 9px;
+  box-shadow: 0 14px 32px rgba(0,0,0,0.16);
 }
 .mockup-screen {
   width: 100%;
   height: 100%;
   background: #FFF;
-  border-radius: 30px;
+  border-radius: 29px;
   overflow: hidden;
 }
 .mockup-screen img {
@@ -726,27 +902,24 @@ body {
   height: 100%;
   object-fit: cover;
 }
-
 .mockup-photo-body {
-  width: 280px;
+  width: 100%;
+  max-width: 480px;
   background: #FFF;
   border-radius: 16px;
   padding: 12px;
   border: 1.5px solid rgba(0,0,0,0.08);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
 }
 .mockup-photo-body img {
   width: 100%;
   height: auto;
   border-radius: 10px;
   display: block;
-  object-fit: contain;
 }
-
 .mockup-screen-placeholder, .mockup-photo-placeholder {
   width: 100%;
-  height: 100%;
-  min-height: 260px;
+  min-height: 240px;
   background: rgba(128,128,128,0.08);
   border: 2px dashed rgba(128,128,128,0.25);
   display: flex;
@@ -759,33 +932,8 @@ body {
   padding: 1rem;
 }
 
-.step-circle-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--accent-cyan);
-  color: #FFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-.step-instruction-heading {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.4rem;
-  line-height: 1.3;
-  margin-bottom: 0.6rem;
-}
-.step-detail-text {
-  color: var(--text-muted);
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
 /* ==========================================================================
-   8. 视图 3：RECOMMEND APPS 展台
+   10. 推荐应用展台独立页
    ========================================================================== */
 .gallery-page-container {
   max-width: 1200px;
@@ -854,13 +1002,10 @@ body {
   font-size: 1.05rem;
   color: #000;
 }
-.app-exhibit-arrow {
-  font-size: 0.9rem;
-  color: #000;
-}
+.app-exhibit-arrow { font-size: 0.9rem; color: #000; }
 
 /* ==========================================================================
-   9. 视图 4：BUILDING 12 档案页 (电脑端保留素材，手机端纯米白无素材)
+   11. BUILDING 12 档案页
    ========================================================================== */
 .dossier-full-viewport {
   width: 100vw;
@@ -871,6 +1016,16 @@ body {
   align-items: center;
   padding: 3rem 1.5rem 6rem;
 }
+.dossier-crumb-bar {
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 1.8rem;
+  max-width: 1060px;
+  width: 100%;
+}
+.light-crumb { color: rgba(255,255,255,0.7) !important; }
+.light-crumb:hover { color: #FFF !important; }
+.light-sep { color: rgba(255,255,255,0.4) !important; }
+.light-current { color: #FFF !important; }
 
 .dossier-sheet-wrapper {
   position: relative;
@@ -879,8 +1034,6 @@ body {
   min-height: 980px;
   overflow: hidden;
 }
-
-/* 电脑端底图 */
 .dossier-page-bg {
   width: 100%;
   height: 100%;
@@ -890,14 +1043,11 @@ body {
   z-index: 1;
   pointer-events: none;
 }
-
 .dossier-content-surface {
   position: relative;
   z-index: 2;
   padding: 6rem 12% 5rem 23%;
 }
-
-/* 优雅翻页工具条 */
 .dossier-toolstrip {
   display: flex;
   justify-content: space-between;
@@ -906,7 +1056,6 @@ body {
   padding-bottom: 1.2rem;
   margin-bottom: 2.8rem;
 }
-
 .dossier-pager-badge {
   display: flex;
   align-items: center;
@@ -915,7 +1064,6 @@ body {
   padding: 4px 10px;
   border-radius: 30px;
   gap: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 .pager-step-btn {
   background: #FFF;
@@ -940,7 +1088,6 @@ body {
   min-width: 90px;
   text-align: center;
 }
-
 .dossier-exit-capsule {
   background: rgba(255, 255, 255, 0.75);
   border: 1.5px solid rgba(0, 0, 0, 0.15);
@@ -956,12 +1103,8 @@ body {
   gap: 0.4rem;
   transition: all 0.2s ease;
 }
-.dossier-exit-capsule:hover {
-  background: #000;
-  color: #FFF;
-}
+.dossier-exit-capsule:hover { background: #000; color: #FFF; }
 .exit-cross { font-size: 0.9rem; }
-
 .dorm-section-block { margin-bottom: 2.6rem; }
 .dorm-sec-heading {
   font-family: 'AlteHaasGroteskBold', sans-serif;
@@ -978,7 +1121,6 @@ body {
   line-height: 1.8;
   color: #2A2A2A;
 }
-
 .dossier-copyable-box {
   display: flex;
   justify-content: space-between;
@@ -998,7 +1140,6 @@ body {
   transition: transform 0.15s;
 }
 .copy-trigger-btn:hover { transform: scale(1.15); }
-
 .dossier-split-photo {
   display: grid;
   grid-template-columns: 1fr 240px;
@@ -1011,11 +1152,7 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
   position: relative;
 }
-.polaroid-holder img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
+.polaroid-holder img { width: 100%; height: 150px; object-fit: cover; }
 .metal-clip {
   position: absolute;
   top: -12px;
@@ -1047,483 +1184,60 @@ body {
 }
 
 /* ==========================================================================
-   10. 手机移动端自适应 (问题 1 核心修复：取消底图素材，换纯米白卡片)
+   12. 手机端适配 (问题 1 彻底取消 page.png 素材，换为纯米白卡片)
    ========================================================================== */
 @media (max-width: 768px) {
-  body {
-    padding-bottom: 80px;
-  }
-  .site-header {
-    padding: 1.2rem 1.2rem 0.8rem;
-    gap: 1.2rem;
-  }
+  body { padding-bottom: 80px; }
+  .site-header { padding: 1.2rem 1.2rem 0.8rem; gap: 1.2rem; }
   .search-bar-wrap { max-width: 100%; }
 
-  .main-content {
-    padding: 0 1rem 3rem;
-    gap: 2.5rem;
-  }
-  .category-block-wrapper {
-    padding: 2.2rem 1.2rem 2.5rem;
-    border-radius: 24px;
-  }
-  .category-bar {
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    margin-bottom: 2.8rem;
-  }
-  .guide-card {
-    flex: 0 0 280px;
-    padding: 2.5rem 1.4rem 1.8rem;
-  }
+  .main-content { padding: 0 1rem 3rem; gap: 2.5rem; }
+  .category-block-wrapper { padding: 2.2rem 1.2rem 2.5rem; border-radius: 24px; }
+  .category-bar { padding: 0.8rem 1.2rem; font-size: 1rem; margin-bottom: 2.8rem; }
+  .guide-card { flex: 0 0 280px; padding: 2.5rem 1.4rem 1.8rem; }
   .card-headline { font-size: 1.45rem; }
 
-  /* 浮动 Bar 手机端紧凑设计 */
-  .floating-bottom-nav {
-    bottom: 12px;
-    padding: 5px 6px;
-    max-width: 95vw;
-  }
-  .nav-pill {
-    font-size: 0.72rem;
-    padding: 0.42rem 0.9rem;
-  }
+  .floating-bottom-nav { bottom: 12px; padding: 5px 6px; max-width: 95vw; }
+  .nav-pill { font-size: 0.72rem; padding: 0.42rem 0.9rem; }
 
   .recommend-scattered-zone { padding: 1rem 1.2rem 4rem; }
-  .scattered-stage {
-    min-height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-  }
-  .scattered-title-box {
-    position: static;
-    transform: none;
-    margin-bottom: 1rem;
-  }
+  .scattered-stage { min-height: auto; display: flex; flex-direction: column; gap: 2rem; align-items: center; }
+  .scattered-title-box { position: static; transform: none; margin-bottom: 1rem; }
   .scattered-heading { font-size: 2.2rem; }
-  .pin-card {
-    position: static !important;
-    transform: none !important;
-    width: 230px;
-  }
+  .pin-card { position: static !important; transform: none !important; width: 230px; }
 
   .earth-footer-plane { padding: 4.5rem 1rem 5.5rem; }
-  .folder-big-img {
-    width: 88vw;
-    max-width: 360px;
-  }
-  .folder-click-pill {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    padding: 0.65rem 1.4rem;
-  }
+  .folder-big-img { width: 88vw; max-width: 360px; }
+  .folder-click-pill { margin-top: 1rem; font-size: 0.85rem; padding: 0.65rem 1.4rem; }
 
   .detail-page-container { padding: 2rem 1.2rem 6rem; }
-  .detail-main-title {
-    font-size: 2.2rem;
-    margin-bottom: 2.5rem;
-  }
-  .detail-scroll-layout {
-    grid-template-columns: 20px 1fr;
-    gap: 1.2rem;
-  }
-  .step-item-card {
-    grid-template-columns: 1fr;
-    gap: 1.4rem;
-  }
-  .mockup-phone-body, .mockup-photo-body {
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
-  /* ========================================================================
-     核心修复 (问题 1)：手机版直接取消 page.png 素材，换为优雅全米白背景纯色
-     ======================================================================== */
-  .dossier-full-viewport {
-    padding: 1.5rem 1rem 4rem;
-    background-color: var(--earth-bg);
-  }
+  .detail-main-title { font-size: 2.2rem; margin-bottom: 2.5rem; }
+  .detail-scroll-layout { grid-template-columns: 20px 1fr; gap: 1.2rem; }
   
-  /* 彻底隐藏 page.png 图片素材 */
-  .dossier-page-bg {
-    display: none !important;
-  }
+  .steps-flow-container { gap: 44px; }
+  .step-top-header { margin-bottom: 12px; }
+  .step-media-box { margin-left: 0; }
+  .mockup-phone-body { width: 240px; height: 480px; margin: 0 auto; }
 
-  /* 档案纸张本体：转为纯色质感卡片容器 */
+  /* 手机端 Building 12 纯米白背景卡片 */
+  .dossier-full-viewport { padding: 1.5rem 1rem 4rem; background-color: var(--earth-bg); }
+  .dossier-page-bg { display: none !important; }
   .dossier-sheet-wrapper {
     min-height: auto;
     width: 100%;
-    background-color: #FCFAF6; /* 全米白纯色背景 */
+    background-color: #FCFAF6;
     border-radius: 20px;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
-    padding: 0;
   }
+  .dossier-content-surface { padding: 2.2rem 1.5rem 3rem !important; }
+  .dossier-toolstrip { margin-bottom: 2rem; padding-bottom: 1rem; }
+  .dossier-split-photo { grid-template-columns: 1fr; gap: 1.5rem; }
+  .polaroid-holder { max-width: 200px; margin: 0 auto; }
 
-  /* 内边距规整居中，不偏靠任何死角 */
-  .dossier-content-surface {
-    padding: 2.2rem 1.5rem 3rem !important;
-  }
-
-  .dossier-toolstrip {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-  }
-
-  .dossier-split-photo {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  .polaroid-holder {
-    max-width: 200px;
-    margin: 0 auto;
-  }
-}
-/* ==========================================================================
-   FAQ 模块样式 (1:1 还原设计图)
-   ========================================================================== */
-.faq-section-wrapper {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 5rem 1.5rem 6rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.faq-header-center {
-  text-align: center;
-  margin-bottom: 3.5rem;
-}
-
-/* 顶部 F.A.Q 小胶囊药丸 */
-.faq-pill-badge {
-  display: inline-block;
-  font-family: 'HeuvelGrotesk', -apple-system, sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.25em;
-  font-weight: 600;
-  color: #383B3D;
-  background-color: #E2E6DF;
-  padding: 0.45rem 1.4rem;
-  border-radius: 30px;
-  margin-bottom: 1.5rem;
-}
-
-/* Questions People Often Ask 衬线大标题 */
-.faq-serif-title {
-  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
-  font-size: 2.8rem;
-  line-height: 1.15;
-  font-weight: 400;
-  color: var(--text-dark);
-  letter-spacing: -0.01em;
-}
-
-/* 手风琴列表 */
-.faq-accordion-list {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.faq-item {
-  width: 100%;
-  border-radius: 26px;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* 默认折叠状态的白色胶囊按钮 */
-.faq-question-btn {
-  width: 100%;
-  background: var(--card-bg);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  padding: 1.5rem 2rem;
-  border-radius: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  text-align: left;
-  transition: all 0.25s ease;
-}
-
-.faq-question-btn:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-/* 问题文字（衬线质感） */
-.faq-q-text {
-  font-family: 'Playfair Display', Georgia, "Times New Roman", 'AlteHaasGroteskBold', serif;
-  font-size: 1.25rem;
-  color: var(--text-dark);
-  line-height: 1.35;
-  font-weight: 400;
-}
-
-/* 右侧 + / ✕ 圆形小按钮 */
-.faq-toggle-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: rgba(128, 128, 128, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'AlteHaasGroteskRegular', sans-serif;
-  font-size: 1.2rem;
-  color: #555;
-  transition: all 0.25s ease;
-  user-select: none;
-}
-
-/* 答案抽屉面板 */
-.faq-answer-panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-  opacity: 0;
-}
-
-/* 展开后的答案浅绿/橄榄米色内嵌卡片（严格还原图 1） */
-.faq-answer-content {
-  margin-top: 0.75rem;
-  background-color: #E8EDE4;
-  color: #2D332D;
-  padding: 1.8rem 2.2rem;
-  border-radius: 22px;
-  font-family: 'AlteHaasGroteskRegular', -apple-system, sans-serif;
-  font-size: 1rem;
-  line-height: 1.65;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-}
-
-/* 激活展开状态 */
-.faq-item.active .faq-question-btn {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-}
-
-.faq-item.active .faq-toggle-icon {
-  background: #222;
-  color: #FFF;
-  transform: rotate(45deg); /* + 旋转变 ✕ */
-}
-
-.faq-item.active .faq-answer-panel {
-  opacity: 1;
-}
-
-/* ---------------- 深色模式自适应 (Dark Mode) ---------------- */
-[data-theme="dark"] .faq-pill-badge {
-  background-color: #2D332D;
-  color: #CFD6CE;
-}
-
-[data-theme="dark"] .faq-question-btn {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .faq-toggle-icon {
-  background: rgba(255, 255, 255, 0.1);
-  color: #DDD;
-}
-
-[data-theme="dark"] .faq-item.active .faq-toggle-icon {
-  background: #EEE;
-  color: #111;
-}
-
-[data-theme="dark"] .faq-answer-content {
-  background-color: #272C25;
-  color: #DDE3DA;
-}
-
-/* ---------------- 手机移动端适配 ---------------- */
-@media (max-width: 768px) {
-  .faq-section-wrapper {
-    padding: 3.5rem 1.2rem 4.5rem;
-  }
-  .faq-serif-title {
-    font-size: 2.1rem;
-  }
-  .faq-question-btn {
-    padding: 1.2rem 1.4rem;
-    border-radius: 20px;
-  }
-  .faq-q-text {
-    font-size: 1.05rem;
-  }
-  .faq-toggle-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 1.05rem;
-  }
-  .faq-answer-content {
-    padding: 1.4rem 1.5rem;
-    font-size: 0.92rem;
-    border-radius: 18px;
-  }/* ==========================================================================
-   TRANSIT 模块配色与阅读动线重构（先指令后图片 + 差异化间距）
-   ========================================================================== */
-:root {
-  --module-transit-bg: #E3D1A6;  /* 暖金琥珀底色 */
-  --bar-transit: #7D5728;        /* 深咖焦糖顶条 */
-  --btn-transit: #C49F66;        /* 协调大地色按钮 */
-}
-
-[data-theme="dark"] {
-  --module-transit-bg: #3B3322;
-  --bar-transit: #70522B;
-  --btn-transit: #8C6A3D;
-}
-
-.module-transit {
-  background-color: var(--module-transit-bg);
-}
-.bar-transit {
-  background-color: var(--bar-transit);
-}
-.module-transit .btn-learn-more {
-  background: var(--btn-transit);
-}
-
-/* 动线优化：组间大间距 56px 断句 */
-.steps-flow-container {
-  display: flex;
-  flex-direction: column;
-  gap: 56px; 
-}
-
-/* 步骤单体卡片：自上而下 */
-.step-item-card {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  max-width: 660px;
-}
-
-/* 步骤顶部栏：数字与标题同一行对齐，距离下方截图仅 14px */
-.step-top-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 14px; 
-}
-
-/* 数字圆球锚定在首行起点 */
-.step-circle-badge {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 50%;
-  background: var(--accent-cyan);
-  color: #FFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 0.95rem;
-  margin-top: 2px;
-}
-
-.step-text-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.step-instruction-heading {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.35rem;
-  line-height: 1.25;
-  color: var(--text-dark);
-}
-
-.step-detail-text {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-.step-tip-callout {
-  margin-top: 4px;
-  font-size: 0.85rem;
-  color: #8A7240;
-  background: rgba(222, 200, 154, 0.2);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border-left: 3px solid #C49F66;
-  display: inline-block;
-}
-
-/* 配图区域：位于文字指令正下方 */
-.step-media-box {
-  margin-left: 48px; 
-}
-
-.mockup-phone-body {
-  width: 250px;
-  height: 500px;
-  background: #111;
-  border-radius: 38px;
-  padding: 9px;
-  box-shadow: 0 14px 32px rgba(0,0,0,0.16);
-}
-.mockup-screen {
-  width: 100%;
-  height: 100%;
-  background: #FFF;
-  border-radius: 29px;
-  overflow: hidden;
-}
-.mockup-screen img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mockup-photo-body {
-  width: 100%;
-  max-width: 480px;
-  background: #FFF;
-  border-radius: 16px;
-  padding: 12px;
-  border: 1.5px solid rgba(0,0,0,0.08);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-}
-.mockup-photo-body img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  display: block;
-}
-
-/* 手机端间距适配 */
-@media (max-width: 768px) {
-  .steps-flow-container {
-    gap: 44px;
-  }
-  .step-top-header {
-    margin-bottom: 12px;
-  }
-  .step-media-box {
-    margin-left: 0;
-  }
-  .mockup-phone-body {
-    width: 240px;
-    height: 480px;
-    margin: 0 auto;
-  }
-}
-   
+  .faq-section-wrapper { padding: 3.5rem 1.2rem 4.5rem; }
+  .faq-serif-title { font-size: 2.1rem; }
+  .faq-question-btn { padding: 1.2rem 1.4rem; border-radius: 20px; }
+  .faq-q-text { font-size: 1.05rem; }
+  .faq-toggle-icon { width: 28px; height: 28px; font-size: 1.05rem; }
+  .faq-answer-content { padding: 1.4rem 1.5rem; font-size: 0.92rem; border-radius: 18px; }
 }
