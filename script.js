@@ -192,15 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
       ]
     },
-    '05': {
+   '05': {
       title: '05 VPN',
       breadcrumb: '05 vpn & network',
       apps: [
-        { name: 'Skuracat', sub: '', icon: 'images/sakuracaticon.png' },
-        { name: 'Ikuuu', sub: '', icon: 'images/ikuuuicon.png' }
+        { 
+          name: 'Skuracat', 
+          sub: '', 
+          icon: 'images/sakuracaticon.png',
+          link: 'https://114514-sakuracat.com/register?code=fvhEWVeT' 
+        },
+        { 
+          name: 'Ikuuu', 
+          sub: '', 
+          icon: 'images/ikuuuicon.png',
+          link: 'https://ikuuu.top/auth/register?code=xAWw'     
+        }
       ]
-    }
-  };
+    } ;
 
   // DOM 节点引用
   const homeView = document.getElementById('homeView');
