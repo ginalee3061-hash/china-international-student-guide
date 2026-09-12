@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       apps: [
         { name: '美团', sub: 'MeiTuan', icon: 'images/meituanicon.png' },
         { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
-        { name: '京东', sub: 'JingDong', icon: 'images/JDIcon.png' }
+        { name: '京东', sub: 'JingDong', icon: 'images/jdicon.png' }
       ]
     },
     '02': {
