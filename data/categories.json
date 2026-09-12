@@ -1,4 +1,5 @@
-{"CATEGORIES":[
+{
+"CATEGORIES":[
  {
   "category_id": "CAT-001",
   "category_name": "packages&food",
@@ -7,7 +8,7 @@
  },
  {
   "category_id": "CAT-002",
-  "category_name": "payment&transport",
+  "category_name": "payment",
   "display_name": "Money & Payment",
   "description": "Payments, banking and money",
   "status": "active"
@@ -31,6 +32,11 @@
   "category_name": "dorm2",
   "display_name": "Dorm info",
   "description": "Dormitory information and rules",
+  "status": "active"
+ },
+ {
+  "category_id": "CAT-006",
+  "category_name": "transit",
   "status": "active"
  }
 ]
