@@ -474,6 +474,18 @@ function formatInstructionWithLinks(text) {
       return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
     });
   }
+  // 转换链接的小工具函数
+  function formatInstructionWithLinks(text) {
+    if (!text) return '';
+    const urlRegex = /(https?:\/\/[^\s\]]+)/g;
+    return text.replace(urlRegex, (url) => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="step-inline-link">${url}</a>`;
+    });
+  }
+
+  // 下面紧接着是原本的代码：
+  function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
+    // ...
   // 步骤详情渲染（先文字指令，后配图；起点对齐）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
@@ -530,7 +542,7 @@ function formatInstructionWithLinks(text) {
             <div class="step-circle-badge">${step.step_number || 1}</div>
             <div class="step-text-wrap">
               <h4 class="step-instruction-heading">${step.step_title || ''}</h4>
-             ${step.instruction ? `<p class="step-detail-text">${formatInstructionWithLinks(step.instruction)}</p>` : ''}
+          ${step.instruction ? `<p class="step-detail-text">${formatInstructionWithLinks(step.instruction)}</p>` : ''}
               ${step.tip ? `<div class="step-tip-callout">* ${step.tip}</div>` : ''}
             </div>
           </div>
