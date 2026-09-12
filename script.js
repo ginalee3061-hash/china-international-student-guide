@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '04 shopping',
       apps: [
         { name: '淘宝', sub: 'TaoBao', icon: 'images/taobaoicon.png' },
-        { name: '京东', sub: 'JingDong', icon: 'images/jdIcon.png' },
+        { name: '京东', sub: 'JingDong', icon: 'images/jdicon.png' },
         { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
       ]
     },
