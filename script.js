@@ -661,6 +661,10 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryCardsGrid.innerHTML = '';
 
     config.apps.forEach(app => {
+      // 外层包裹容器（用于卡片和下方链接垂直对齐）
+      const itemWrapper = document.createElement('div');
+      itemWrapper.className = 'app-exhibit-item-wrapper';
+
       const card = document.createElement('div');
       card.className = 'app-exhibit-card';
       card.innerHTML = `
@@ -672,7 +676,20 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="app-exhibit-arrow">▶</span>
         </div>
       `;
-      galleryCardsGrid.appendChild(card);
+      itemWrapper.appendChild(card);
+
+      // 如果配置了注册链接，则在下方追加 link 条目
+      if (app.link) {
+        const linkBox = document.createElement('div');
+        linkBox.className = 'app-signup-link-box';
+        linkBox.innerHTML = `
+          <span class="app-signup-label">SIGNUP LINK:</span>
+          <a href="${app.link}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.link}</a>
+        `;
+        itemWrapper.appendChild(linkBox);
+      }
+
+      galleryCardsGrid.appendChild(itemWrapper);
     });
 
     switchView('gallery');
