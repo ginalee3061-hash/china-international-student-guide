@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
           name: 'Campus WIFI', 
           sub: '', 
           icon: 'images/campuswifi.png', 
-          download_url: 'https://eoffice.ecnu.edu.cn/VPNlj/list.html'      
+          download_url: 'https://eoffice.ecnu.edu.cn/VPNlj/list.htm'      
         }
       ]
     }
