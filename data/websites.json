@@ -1,0 +1,42 @@
+[
+  {
+    "id": "WEB-01",
+    "title": "ECNU Portal (公共数据库)",
+    "url": "https://portal2023.ecnu.edu.cn/",
+    "icon": "portal-icon.png",
+    "category": "Academic",
+    "description": "华东师范大学综合门户与公共数据中心，面向全校师生的一站式服务平台。",
+    "features": [
+      "选课与课表查询",
+      "成绩查询与学分绩点核算",
+      "学杂费线上缴纳",
+      "电子成绩单及各类在读证明开具"
+    ]
+  },
+  {
+    "id": "WEB-02",
+    "title": "ECNU VPN & Campus Network (校园网络与VPN服务)",
+    "url": "https://eoffice.ecnu.edu.cn/VPNlj/list.htm",
+    "icon": "campuswifi.png",
+    "category": "Network & Access",
+    "description": "华东师范大学校园网及校外远程安全访问指导平台。",
+    "features": [
+      "校外远程访问校内核心业务系统与资源",
+      "访问图书馆知网、外文数据库等电子资源",
+      "全平台客户端安装包下载与网络配置指南"
+    ]
+  },
+  {
+    "id": "WEB-03",
+    "title": "ECNU Course Live & Playback (课堂直播与回放平台)",
+    "url": "http://courses.ecnu.edu.cn",
+    "icon": "courses.png",
+    "category": "Live & Video Playback",
+    "description": "华东师范大学课堂教学音视频中心，提供同步直播与课堂实录回放。",
+    "features": [
+      "课堂实时直播与课程实录点播回放",
+      "AI 智能语音转写实时字幕",
+      "课件 PPT 高清放大与同步画中画查看"
+    ]
+  }
+]
