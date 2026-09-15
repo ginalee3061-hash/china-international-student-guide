@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     guides: [],
     steps: [],
     screenshots: [],
+    websites: [],
     dormInfo: null,
     currentDormPage: 1,
     currentLang: localStorage.getItem('site_lang') || 'en',
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  // 强力链接识别转换函数（兼容带中括号 [http...] 以及写在标题里的链接）
+  // 强力链接识别转换函数
   function formatInstructionWithLinks(text) {
     if (!text) return '';
     return text.replace(/\[?(https?:\/\/[^\s\]]+)\]?/g, (match, url) => {
@@ -171,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '02 transit & maps',
       apps: [
         { name: '高德地图', sub: 'Amap', icon: 'images/amapicon.png' },
-        { name: '哈喽', sub: 'HaLou', icon: 'images/haloicon.png' }
+        { name: '哈啰', sub: 'Hello', icon: 'images/haloicon.png' }
       ]
     },
     '03': {
@@ -192,27 +193,31 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
       ]
     },
-   '05': {
+    '05': {
       title: '05 VPN',
       breadcrumb: '05 vpn & network',
       apps: [
         { 
           name: 'Skuracat', 
           sub: '', 
-          icon: 'images/sakuracaticon.png',
-          link: 'https://114514-sakuracat.com/register?code=fvhEWVeT' 
+          icon: 'images/sakuracaticon.png', 
+          signup_url: 'https://114514-sakuracat.com/register?code=fvhEWVeT' 
         },
         { 
           name: 'Ikuuu', 
           sub: '', 
-          icon: 'images/ikuuuicon.png',
-          link: 'https://ikuuu.top/auth/register?code=xAWw'     
+          icon: 'images/ikuuuicon.png', 
+          signup_url: 'https://ikuuu.top/auth/register?code=xAWw'      
+        },
+        { 
+          name: 'Campus WIFI', 
+          sub: '', 
+          icon: 'images/campuswifi.png', 
+          download_url: 'https://eoffice.ecnu.edu.cn/VPNlj/list.html'      
         }
-   ]
-  }
-};
-
-// DOM 节点引用
+      ]
+    }
+  };
 
   // DOM 节点引用
   const homeView = document.getElementById('homeView');
@@ -301,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(state.currentTheme);
     applyLanguage(state.currentLang);
 
+    // 1. 统一加载现有数据
     state.guides = await fetchSafeJson('data/guides.json');
     state.steps = await fetchSafeJson('data/steps.json');
     state.screenshots = await fetchSafeJson('data/screenshots.json');
@@ -310,38 +316,68 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dRes.ok) state.dormInfo = await dRes.json();
     } catch (e) {}
 
+    // 2. 加载 Useful Websites 数据并初次渲染
+    try {
+      const resWeb = await fetch('data/websites.json');
+      if (resWeb.ok) {
+        state.websites = await resWeb.json();
+        renderWebsites('list');
+      }
+    } catch (e) {
+      console.warn('Websites data load skipped:', e);
+    }
+
     bindEvents();
   }
 
   function bindEvents() {
+    // 指南卡片点击
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
         const cat = card.dataset.category || 'PACKAGES & FOOD';
         openGuideDetail(gid, cat);
       });
-      
     });
-// 悬浮罗盘菜单交互 (FAB)
+
+    // Useful Websites 双视图切换按钮独立绑定
+    const btnList = document.getElementById('viewListBtn');
+    const btnCard = document.getElementById('viewCardBtn');
+    const webContainer = document.getElementById('websitesContainer');
+
+    if (btnList && btnCard && webContainer) {
+      btnList.addEventListener('click', () => {
+        btnList.classList.add('active');
+        btnCard.classList.remove('active');
+        webContainer.className = 'websites-display-container list-mode';
+        renderWebsites('list');
+      });
+
+      btnCard.addEventListener('click', () => {
+        btnCard.classList.add('active');
+        btnList.classList.remove('active');
+        webContainer.className = 'websites-display-container card-mode';
+        renderWebsites('card');
+      });
+    }
+
+    // 悬浮罗盘菜单交互 (FAB)
     const fabContainer = document.getElementById('fabNavContainer');
     const fabTrigger = document.getElementById('fabMainTrigger');
     const fabDormLink = document.getElementById('fabDormLink');
 
     if (fabTrigger && fabContainer) {
-      // 点击圆盘切换展开/收起
       fabTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
         fabContainer.classList.toggle('open');
       });
 
-      // 点击外部区域自动关闭菜单
       document.addEventListener('click', (e) => {
         if (!e.target.closest('#fabNavContainer')) {
           fabContainer.classList.remove('open');
         }
       });
 
-      // 点击菜单跳转项后平滑滚动并收起
       document.querySelectorAll('[data-action="go-section"]').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
@@ -355,7 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // 点击菜单里的 DORM INFO 打开档案页
       if (fabDormLink) {
         fabDormLink.addEventListener('click', () => {
           fabContainer.classList.remove('open');
@@ -363,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     }
+
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -475,6 +511,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (searchInput) searchInput.placeholder = dict.searchPlaceholder;
+    
+    // 语言切换后重新渲染网站模块以更新场景翻译
+    const webContainer = document.getElementById('websitesContainer');
+    if (webContainer && state.websites.length > 0) {
+      const mode = webContainer.classList.contains('card-mode') ? 'card' : 'list';
+      renderWebsites(mode);
+    }
   }
 
   function applyTheme(theme) {
@@ -563,7 +606,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 步骤详情渲染（长图进手机壳满屏Cover，方图/横图进自适应相框）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
@@ -625,7 +667,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepCard = document.createElement('div');
         stepCard.className = isExcelNone ? 'step-item-card step-card-text-only' : 'step-item-card';
 
-        // 标题与说明文字：全部经过链接识别转换
         const renderedTitle = formatInstructionWithLinks(step.step_title || '');
         const renderedInstruction = formatInstructionWithLinks(step.instruction || '');
 
@@ -645,7 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           const mediaContainer = document.createElement('div');
           mediaContainer.className = 'step-media-box';
-
           const frameBody = document.createElement('div');
 
           if (hasRealImage) {
@@ -655,16 +695,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const screen = document.createElement('div');
 
-            // 图像自适应嗅探
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
-              // 宽高比小于 1.35 说明是方图或横图（如二维码），切换为自适应相框
               if (ratio < 1.35) {
                 frameBody.className = 'mockup-photo-body';
                 frameBody.innerHTML = '';
                 frameBody.appendChild(img);
               } else {
-                // 细长手机长截图，保持黑色手机壳，填满屏幕
                 frameBody.className = 'mockup-phone-body';
                 screen.className = 'mockup-screen';
                 screen.innerHTML = '';
@@ -674,7 +711,6 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             };
 
-            // 默认初始挂载
             frameBody.className = 'mockup-phone-body';
             screen.className = 'mockup-screen';
             screen.appendChild(img);
@@ -705,7 +741,6 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryCardsGrid.innerHTML = '';
 
     config.apps.forEach(app => {
-      // 外层包裹容器（用于卡片和下方链接垂直对齐）
       const itemWrapper = document.createElement('div');
       itemWrapper.className = 'app-exhibit-item-wrapper';
 
@@ -722,14 +757,22 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       itemWrapper.appendChild(card);
 
-      // 如果配置了注册链接，则在下方追加 link 条目
-      if (app.link) {
+      if (app.signup_url || app.download_url) {
         const linkBox = document.createElement('div');
         linkBox.className = 'app-signup-link-box';
-        linkBox.innerHTML = `
-          <span class="app-signup-label">SIGNUP LINK:</span>
-          <a href="${app.link}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.link}</a>
-        `;
+
+        if (app.signup_url) {
+          linkBox.innerHTML += `
+            <span class="app-signup-label">SIGNUP LINK:</span>
+            <a href="${app.signup_url}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.signup_url}</a>
+          `;
+        }
+        if (app.download_url) {
+          linkBox.innerHTML += `
+            <span class="app-signup-label" style="margin-top: 4px;">DOWNLOAD LINK:</span>
+            <a href="${app.download_url}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.download_url}</a>
+          `;
+        }
         itemWrapper.appendChild(linkBox);
       }
 
@@ -928,6 +971,47 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
+    }
+  }
+
+  // 动态渲染 Useful Websites
+  function renderWebsites(mode) {
+    const container = document.getElementById('websitesContainer');
+    if (!container || !state.websites) return;
+
+    const isZh = state.currentLang === 'zh';
+
+    if (mode === 'list') {
+      container.innerHTML = state.websites.map((site, index) => `
+        <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-list-item">
+          <div class="website-list-left">
+            <span class="website-list-num">${String(index + 1).padStart(2, '0')}.</span>
+            <img src="${site.icon}" alt="" class="website-list-icon" onerror="this.style.display='none'">
+            <span class="website-list-title">${site.name}</span>
+          </div>
+          <span class="website-list-arrow">›</span>
+        </a>
+      `).join('');
+    } else {
+      container.innerHTML = state.websites.map(site => {
+        const desc = isZh ? (site.desc_zh || site.desc_en) : site.desc_en;
+        const useCase = isZh ? (site.use_case_zh || site.use_case_en) : site.use_case_en;
+        const headerBg = site.color || '#3B82F6';
+
+        return `
+          <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-feature-card">
+            <div class="feature-card-header" style="background: ${headerBg};">
+              <img src="${site.icon}" alt="" class="feature-card-icon" onerror="this.style.display='none'">
+            </div>
+            <div class="feature-card-body">
+              <span class="feature-card-category">${site.category || 'TOOL'}</span>
+              <h3 class="feature-card-title">${site.name}</h3>
+              <p class="feature-card-desc">${desc}</p>
+              ${useCase ? `<div class="feature-card-usecase"><strong>When to use:</strong> ${useCase}</div>` : ''}
+            </div>
+          </a>
+        `;
+      }).join('');
     }
   }
 

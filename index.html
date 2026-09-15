@@ -42,6 +42,30 @@
     </header>
 
     <main class="main-content">
+      <!-- USEFUL WEBSITES 模块 -->
+<section class="useful-websites-section" id="usefulWebsites">
+  <div class="websites-section-header">
+    <div>
+      <h2 class="websites-main-heading">Useful Websites</h2>
+      <p class="websites-sub-heading">Essential university systems and public resources for international students</p>
+    </div>
+
+    <!-- 视图切换胶囊开关 -->
+    <div class="view-switch-capsule">
+      <button class="view-switch-btn active" id="viewListBtn" aria-label="List View">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        <span>List</span>
+      </button>
+      <button class="view-switch-btn" id="viewCardBtn" aria-label="Card Grid View">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Cards</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 动态挂载容器（通过类名 list-mode / card-mode 切换视觉呈现） -->
+  <div class="websites-display-container list-mode" id="websitesContainer"></div>
+</section>
       
       <!-- 01 PACKAGES & FOOD 模块 -->
       <section class="category-block-wrapper module-packages" id="packages">
