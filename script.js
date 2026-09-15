@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     guides: [],
     steps: [],
     screenshots: [],
+    websites: [],
     dormInfo: null,
     currentDormPage: 1,
     currentLang: localStorage.getItem('site_lang') || 'en',
@@ -305,16 +306,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function init() {
     applyTheme(state.currentTheme);
-    applyLanguage(state.currentLang);
+  applyLanguage(state.currentLang);
 
-    state.guides = await fetchSafeJson('data/guides.json');
-    state.steps = await fetchSafeJson('data/steps.json');
-    state.screenshots = await fetchSafeJson('data/screenshots.json');
+  // 1. 统一加载现有数据
+  state.guides = await fetchSafeJson('data/guides.json');
+  state.steps = await fetchSafeJson('data/steps.json');
+  state.screenshots = await fetchSafeJson('data/screenshots.json');
 
-    try {
-      const dRes = await fetch('data/dorm-info.json');
-      if (dRes.ok) state.dormInfo = await dRes.json();
-    } catch (e) {}
+  try {
+    const dRes = await fetch('data/dorm-info.json');
+    if (dRes.ok) state.dormInfo = await dRes.json();
+  } catch (e) {}
+
+  // 2. 加载 Useful Websites 数据并初次渲染
+  try {
+    const resWeb = await fetch('data/websites.json');
+    if (resWeb.ok) {
+      state.websites = await resWeb.json();
+      renderWebsites('list'); // 默认呈现清单模式
+    }
+  } catch (e) {
+    console.warn('Websites data load skipped:', e);
+  }
 
     bindEvents();
   }
@@ -325,6 +338,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const gid = card.dataset.guideId;
         const cat = card.dataset.category || 'PACKAGES & FOOD';
         openGuideDetail(gid, cat);
+        // Useful Websites 双视图切换按钮
+    const btnList = document.getElementById('viewListBtn');
+    const btnCard = document.getElementById('viewCardBtn');
+    const webContainer = document.getElementById('websitesContainer');
+
+    if (btnList && btnCard && webContainer) {
+      btnList.addEventListener('click', () => {
+        btnList.classList.add('active');
+        btnCard.classList.remove('active');
+        webContainer.className = 'websites-display-container list-mode';
+        renderWebsites('list');
+      });
+
+      btnCard.addEventListener('click', () => {
+        btnCard.classList.add('active');
+        btnList.classList.remove('active');
+        webContainer.className = 'websites-display-container card-mode';
+        renderWebsites('card');
+      });
+    }
       });
       
     });
@@ -1172,3 +1205,43 @@ document.addEventListener('DOMContentLoaded', () => {
     padding: 0.9rem 1.1rem;
   }
 }
+// 动态渲染 Useful Websites (支持清单/卡片切换及双语)
+  function renderWebsites(mode) {
+    const container = document.getElementById('websitesContainer');
+    if (!container || !state.websites) return;
+
+    const isZh = state.currentLang === 'zh';
+
+    if (mode === 'list') {
+      container.innerHTML = state.websites.map((site, index) => `
+        <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-list-item">
+          <div class="website-list-left">
+            <span class="website-list-num">${String(index + 1).padStart(2, '0')}.</span>
+            <img src="${site.icon}" alt="" class="website-list-icon" onerror="this.style.display='none'">
+            <span class="website-list-title">${site.name}</span>
+          </div>
+          <span class="website-list-arrow">›</span>
+        </a>
+      `).join('');
+    } else {
+      container.innerHTML = state.websites.map(site => {
+        const desc = isZh ? (site.desc_zh || site.desc_en) : site.desc_en;
+        const useCase = isZh ? (site.use_case_zh || site.use_case_en) : site.use_case_en;
+        const headerBg = site.color || '#3B82F6';
+
+        return `
+          <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-feature-card">
+            <div class="feature-card-header" style="background: ${headerBg};">
+              <img src="${site.icon}" alt="" class="feature-card-icon" onerror="this.style.display='none'">
+            </div>
+            <div class="feature-card-body">
+              <span class="feature-card-category">${site.category || 'TOOL'}</span>
+              <h3 class="feature-card-title">${site.name}</h3>
+              <p class="feature-card-desc">${desc}</p>
+              ${useCase ? `<div class="feature-card-usecase"><strong>When to use:</strong> ${useCase}</div>` : ''}
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+  }
