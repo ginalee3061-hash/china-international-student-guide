@@ -873,7 +873,7 @@ body {
   white-space: pre-line !important; /* 关键：保留 JSON 里的所有回车换行符 */
 }
  
-}
+
 .step-tip-callout {
   margin-top: 4px;
   font-size: 0.85rem;
