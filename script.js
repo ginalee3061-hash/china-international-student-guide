@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  // 强力链接识别转换函数（兼容带中括号 [http...] 以及写在标题里的链接）
+  // 强力链接识别转换函数
   function formatInstructionWithLinks(text) {
     if (!text) return '';
     return text.replace(/\[?(https?:\/\/[^\s\]]+)\]?/g, (match, url) => {
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb: '02 transit & maps',
       apps: [
         { name: '高德地图', sub: 'Amap', icon: 'images/amapicon.png' },
-        { name: '哈喽', sub: 'HaLou', icon: 'images/haloicon.png' }
+        { name: '哈啰', sub: 'Hello', icon: 'images/haloicon.png' }
       ]
     },
     '03': {
@@ -193,33 +193,31 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: '菜鸟', sub: 'CaiNiao', icon: 'images/cainiaoicon.png' }
       ]
     },
-   '05': {
+    '05': {
       title: '05 VPN',
       breadcrumb: '05 vpn & network',
       apps: [
         { 
           name: 'Skuracat', 
           sub: '', 
-          icon: 'images/sakuracaticon.png',
-          link: 'https://114514-sakuracat.com/register?code=fvhEWVeT' 
+          icon: 'images/sakuracaticon.png', 
+          signup_url: 'https://114514-sakuracat.com/register?code=fvhEWVeT' 
         },
         { 
           name: 'Ikuuu', 
           sub: '', 
-          icon: 'images/ikuuuicon.png',
-          link: 'https://ikuuu.top/auth/register?code=xAWw'     
+          icon: 'images/ikuuuicon.png', 
+          signup_url: 'https://ikuuu.top/auth/register?code=xAWw'      
         },
-         { 
+        { 
           name: 'Campus WIFI', 
           sub: '', 
-          icon: 'images/campuswifi.png',
-          link: 'https://eoffice.ecnu.edu.cn/VPNlj/list.html'     
+          icon: 'images/campuswifi.png', 
+          download_url: 'https://eoffice.ecnu.edu.cn/VPNlj/list.html'      
         }
-   ]
-  }
-};
-
-// DOM 节点引用
+      ]
+    }
+  };
 
   // DOM 节点引用
   const homeView = document.getElementById('homeView');
@@ -306,39 +304,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function init() {
     applyTheme(state.currentTheme);
-  applyLanguage(state.currentLang);
+    applyLanguage(state.currentLang);
 
-  // 1. 统一加载现有数据
-  state.guides = await fetchSafeJson('data/guides.json');
-  state.steps = await fetchSafeJson('data/steps.json');
-  state.screenshots = await fetchSafeJson('data/screenshots.json');
+    // 1. 统一加载现有数据
+    state.guides = await fetchSafeJson('data/guides.json');
+    state.steps = await fetchSafeJson('data/steps.json');
+    state.screenshots = await fetchSafeJson('data/screenshots.json');
 
-  try {
-    const dRes = await fetch('data/dorm-info.json');
-    if (dRes.ok) state.dormInfo = await dRes.json();
-  } catch (e) {}
+    try {
+      const dRes = await fetch('data/dorm-info.json');
+      if (dRes.ok) state.dormInfo = await dRes.json();
+    } catch (e) {}
 
-  // 2. 加载 Useful Websites 数据并初次渲染
-  try {
-    const resWeb = await fetch('data/websites.json');
-    if (resWeb.ok) {
-      state.websites = await resWeb.json();
-      renderWebsites('list'); // 默认呈现清单模式
+    // 2. 加载 Useful Websites 数据并初次渲染
+    try {
+      const resWeb = await fetch('data/websites.json');
+      if (resWeb.ok) {
+        state.websites = await resWeb.json();
+        renderWebsites('list');
+      }
+    } catch (e) {
+      console.warn('Websites data load skipped:', e);
     }
-  } catch (e) {
-    console.warn('Websites data load skipped:', e);
-  }
 
     bindEvents();
   }
 
   function bindEvents() {
+    // 指南卡片点击
     document.querySelectorAll('.guide-card').forEach(card => {
       card.addEventListener('click', () => {
         const gid = card.dataset.guideId;
         const cat = card.dataset.category || 'PACKAGES & FOOD';
         openGuideDetail(gid, cat);
-        // Useful Websites 双视图切换按钮
+      });
+    });
+
+    // Useful Websites 双视图切换按钮独立绑定
     const btnList = document.getElementById('viewListBtn');
     const btnCard = document.getElementById('viewCardBtn');
     const webContainer = document.getElementById('websitesContainer');
@@ -358,29 +360,24 @@ document.addEventListener('DOMContentLoaded', () => {
         renderWebsites('card');
       });
     }
-      });
-      
-    });
-// 悬浮罗盘菜单交互 (FAB)
+
+    // 悬浮罗盘菜单交互 (FAB)
     const fabContainer = document.getElementById('fabNavContainer');
     const fabTrigger = document.getElementById('fabMainTrigger');
     const fabDormLink = document.getElementById('fabDormLink');
 
     if (fabTrigger && fabContainer) {
-      // 点击圆盘切换展开/收起
       fabTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
         fabContainer.classList.toggle('open');
       });
 
-      // 点击外部区域自动关闭菜单
       document.addEventListener('click', (e) => {
         if (!e.target.closest('#fabNavContainer')) {
           fabContainer.classList.remove('open');
         }
       });
 
-      // 点击菜单跳转项后平滑滚动并收起
       document.querySelectorAll('[data-action="go-section"]').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
@@ -394,7 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // 点击菜单里的 DORM INFO 打开档案页
       if (fabDormLink) {
         fabDormLink.addEventListener('click', () => {
           fabContainer.classList.remove('open');
@@ -402,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     }
+
     document.querySelectorAll('.pin-card').forEach(card => {
       card.addEventListener('click', () => {
         const catKey = card.dataset.appCat;
@@ -514,6 +511,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (searchInput) searchInput.placeholder = dict.searchPlaceholder;
+    
+    // 语言切换后重新渲染网站模块以更新场景翻译
+    const webContainer = document.getElementById('websitesContainer');
+    if (webContainer && state.websites.length > 0) {
+      const mode = webContainer.classList.contains('card-mode') ? 'card' : 'list';
+      renderWebsites(mode);
+    }
   }
 
   function applyTheme(theme) {
@@ -602,7 +606,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewName === 'dossier') dormDossierView.classList.add('active');
   }
 
-  // 步骤详情渲染（长图进手机壳满屏Cover，方图/横图进自适应相框）
   function openGuideDetail(guideId, categoryName = 'PACKAGES & FOOD') {
     state.currentGuideId = guideId;
     const targetId = (guideId || '').trim();
@@ -664,7 +667,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepCard = document.createElement('div');
         stepCard.className = isExcelNone ? 'step-item-card step-card-text-only' : 'step-item-card';
 
-        // 标题与说明文字：全部经过链接识别转换
         const renderedTitle = formatInstructionWithLinks(step.step_title || '');
         const renderedInstruction = formatInstructionWithLinks(step.instruction || '');
 
@@ -684,7 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           const mediaContainer = document.createElement('div');
           mediaContainer.className = 'step-media-box';
-
           const frameBody = document.createElement('div');
 
           if (hasRealImage) {
@@ -694,16 +695,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const screen = document.createElement('div');
 
-            // 图像自适应嗅探
             img.onload = () => {
               const ratio = img.naturalHeight / img.naturalWidth;
-              // 宽高比小于 1.35 说明是方图或横图（如二维码），切换为自适应相框
               if (ratio < 1.35) {
                 frameBody.className = 'mockup-photo-body';
                 frameBody.innerHTML = '';
                 frameBody.appendChild(img);
               } else {
-                // 细长手机长截图，保持黑色手机壳，填满屏幕
                 frameBody.className = 'mockup-phone-body';
                 screen.className = 'mockup-screen';
                 screen.innerHTML = '';
@@ -713,7 +711,6 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             };
 
-            // 默认初始挂载
             frameBody.className = 'mockup-phone-body';
             screen.className = 'mockup-screen';
             screen.appendChild(img);
@@ -744,7 +741,6 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryCardsGrid.innerHTML = '';
 
     config.apps.forEach(app => {
-      // 外层包裹容器（用于卡片和下方链接垂直对齐）
       const itemWrapper = document.createElement('div');
       itemWrapper.className = 'app-exhibit-item-wrapper';
 
@@ -761,8 +757,6 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       itemWrapper.appendChild(card);
 
-      // 如果配置了注册链接，则在下方追加 link 条目
-    // 渲染链接容器
       if (app.signup_url || app.download_url) {
         const linkBox = document.createElement('div');
         linkBox.className = 'app-signup-link-box';
@@ -980,232 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function showToast(msg) {
-    toastPopup.textContent = msg;
-    toastPopup.classList.add('show');
-    setTimeout(() => toastPopup.classList.remove('show'), 2000);
-  }
-
-  init();
-});
-/* ==========================================================================
-   Useful Websites 模块样式 (List 清单 & Card 卡片双视图)
-   ========================================================================== */
-.useful-websites-section {
-  max-width: 1200px;
-  margin: 1.5rem auto 3rem;
-  padding: 0 1rem;
-}
-
-.websites-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 2px solid var(--text-dark);
-}
-
-.websites-main-heading {
-  font-family: 'AlteHaasGroteskBold', -apple-system, sans-serif;
-  font-size: 1.7rem;
-  line-height: 1.1;
-  color: var(--text-dark);
-}
-
-.websites-sub-heading {
-  font-size: 0.86rem;
-  color: var(--text-muted);
-  margin-top: 0.35rem;
-}
-
-/* 切换胶囊按钮组 */
-.view-switch-capsule {
-  display: inline-flex;
-  background: rgba(128, 128, 128, 0.12);
-  padding: 3px;
-  border-radius: 30px;
-  gap: 3px;
-}
-
-.view-switch-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-family: 'HeuvelGrotesk', sans-serif;
-  font-size: 0.76rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.view-switch-btn.active {
-  background: var(--card-bg);
-  color: var(--text-dark);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* ---------------- 视图 1：清单模式 (图 3 风格) ---------------- */
-.websites-display-container.list-mode {
-  display: flex;
-  flex-direction: column;
-  background: var(--card-bg);
-  border: 2px solid var(--text-dark);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-}
-
-.website-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 1.6rem;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
-  text-decoration: none;
-  color: var(--text-dark);
-  transition: background 0.15s ease;
-}
-
-.website-list-item:last-child {
-  border-bottom: none;
-}
-
-.website-list-item:hover {
-  background: rgba(128, 128, 128, 0.05);
-}
-
-.website-list-left {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.website-list-num {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  min-width: 26px;
-}
-
-.website-list-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  object-fit: contain;
-}
-
-.website-list-title {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.02rem;
-}
-
-.website-list-arrow {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-/* ---------------- 视图 2：功能卡片模式 (图 4 风格) ---------------- */
-.websites-display-container.card-mode {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.6rem;
-}
-
-.website-feature-card {
-  background: var(--card-bg);
-  border: 2px solid var(--text-dark);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: var(--text-dark);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.website-feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-}
-
-.feature-card-header {
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.feature-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #FFF;
-  padding: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.feature-card-body {
-  padding: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.feature-card-category {
-  font-family: 'Minecraftia', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-}
-
-.feature-card-title {
-  font-family: 'AlteHaasGroteskBold', sans-serif;
-  font-size: 1.18rem;
-  line-height: 1.2;
-}
-
-.feature-card-desc {
-  font-size: 0.86rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.feature-card-usecase {
-  margin-top: auto;
-  padding-top: 0.8rem;
-  border-top: 1px dashed rgba(128, 128, 128, 0.2);
-  font-size: 0.78rem;
-  color: #2F6F4E; /* 墨绿色突出使用场景 */
-  line-height: 1.4;
-}
-
-/* 移动端响应式微调 */
-@media (max-width: 768px) {
-  .useful-websites-section {
-    padding: 0 0.8rem;
-  }
-  .websites-section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.9rem;
-  }
-  .websites-display-container.card-mode {
-    grid-template-columns: 1fr;
-  }
-  .website-list-item {
-    padding: 0.9rem 1.1rem;
-  }
-}
-// 动态渲染 Useful Websites (支持清单/卡片切换及双语)
+  // 动态渲染 Useful Websites
   function renderWebsites(mode) {
     const container = document.getElementById('websitesContainer');
     if (!container || !state.websites) return;
@@ -1245,3 +1014,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
     }
   }
+
+  function showToast(msg) {
+    toastPopup.textContent = msg;
+    toastPopup.classList.add('show');
+    setTimeout(() => toastPopup.classList.remove('show'), 2000);
+  }
+
+  init();
+});
