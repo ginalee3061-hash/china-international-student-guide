@@ -3,7 +3,7 @@
     "id": "WEB-01",
     "title": "ECNU Portal (公共数据库)",
     "url": "https://portal2023.ecnu.edu.cn/",
-    "icon": "portal-icon.png",
+    "icon": "images/portal-icon.png",
     "category": "Academic",
     "description": "华东师范大学综合门户与公共数据中心，面向全校师生的一站式服务平台。",
     "features": [
@@ -17,7 +17,7 @@
     "id": "WEB-02",
     "title": "ECNU VPN & Campus Network (校园网络与VPN服务)",
     "url": "https://eoffice.ecnu.edu.cn/VPNlj/list.htm",
-    "icon": "campuswifi.png",
+    "icon": "images/campuswifi.png",
     "category": "Network & Access",
     "description": "华东师范大学校园网及校外远程安全访问指导平台。",
     "features": [
@@ -30,7 +30,7 @@
     "id": "WEB-03",
     "title": "ECNU Course Live & Playback (课堂直播与回放平台)",
     "url": "http://courses.ecnu.edu.cn",
-    "icon": "courses.png",
+    "icon": "images/courses.png",
     "category": "Live & Video Playback",
     "description": "华东师范大学课堂教学音视频中心，提供同步直播与课堂实录回放。",
     "features": [
