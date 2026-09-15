@@ -207,6 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
           sub: '', 
           icon: 'images/ikuuuicon.png',
           link: 'https://ikuuu.top/auth/register?code=xAWw'     
+        },
+         { 
+          name: 'Campus WIFI', 
+          sub: '', 
+          icon: 'images/campuswifi.png',
+          link: 'https://eoffice.ecnu.edu.cn/VPNlj/list.html'     
         }
    ]
   }
@@ -723,13 +729,23 @@ document.addEventListener('DOMContentLoaded', () => {
       itemWrapper.appendChild(card);
 
       // 如果配置了注册链接，则在下方追加 link 条目
-      if (app.link) {
+    // 渲染链接容器
+      if (app.signup_url || app.download_url) {
         const linkBox = document.createElement('div');
         linkBox.className = 'app-signup-link-box';
-        linkBox.innerHTML = `
-          <span class="app-signup-label">SIGNUP LINK:</span>
-          <a href="${app.link}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.link}</a>
-        `;
+
+        if (app.signup_url) {
+          linkBox.innerHTML += `
+            <span class="app-signup-label">SIGNUP LINK:</span>
+            <a href="${app.signup_url}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.signup_url}</a>
+          `;
+        }
+        if (app.download_url) {
+          linkBox.innerHTML += `
+            <span class="app-signup-label" style="margin-top: 4px;">DOWNLOAD LINK:</span>
+            <a href="${app.download_url}" target="_blank" rel="noopener noreferrer" class="app-signup-url">${app.download_url}</a>
+          `;
+        }
         itemWrapper.appendChild(linkBox);
       }
 
