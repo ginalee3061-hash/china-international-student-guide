@@ -975,51 +975,75 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 动态渲染 Useful Websites
-  function renderWebsites(mode) {
-    const container = document.getElementById('websitesContainer');
-    if (!container || !state.websites) return;
+  // 动态渲染 Useful Websites (修复 undefined，兼容所有命名)
+function renderWebsites(mode) {
+const container = document.getElementById('websitesContainer');
+if (!container || !state.websites || state.websites.length === 0) return;
 
-    const isZh = state.currentLang === 'zh';
+const isZh = state.currentLang === 'zh';
 
-    if (mode === 'list') {
-      container.innerHTML = state.websites.map((site, index) => `
-        <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-list-item">
-          <div class="website-list-left">
-            <span class="website-list-num">${String(index + 1).padStart(2, '0')}.</span>
-            <img src="${site.icon}" alt="" class="website-list-icon" onerror="this.style.display='none'">
-            <span class="website-list-title">${site.name}</span>
-          </div>
-          <span class="website-list-arrow">›</span>
-        </a>
-      `).join('');
-    } else {
-      container.innerHTML = state.websites.map(site => {
-        const desc = isZh ? (site.desc_zh || site.desc_en) : site.desc_en;
-        const useCase = isZh ? (site.use_case_zh || site.use_case_en) : site.use_case_en;
-        const headerBg = site.color || '#3B82F6';
+if (mode === 'list') {
+  container.innerHTML = state.websites.map((site, index) => {
+    // 依次读取可能的字段名，绝对不会再出现 undefined
+    const titleText = isZh 
+      ? (site.title_zh || site.title || site.name || '常用网站')
+      : (site.title_en || site.title || site.name || 'Website');
+    const siteUrl = site.url || site.link || '#';
+    const iconHtml = site.icon 
+      ? `<img src="${site.icon}" alt="" class="website-list-icon" onerror="this.outerHTML='<span class=\\'website-fallback-badge\\'>🌐</span>'">` 
+      : `<span class="website-fallback-badge">🌐</span>`;
 
-        return `
-          <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="website-feature-card">
-            <div class="feature-card-header" style="background: ${headerBg};">
-              <img src="${site.icon}" alt="" class="feature-card-icon" onerror="this.style.display='none'">
-            </div>
-            <div class="feature-card-body">
-              <span class="feature-card-category">${site.category || 'TOOL'}</span>
-              <h3 class="feature-card-title">${site.name}</h3>
-              <p class="feature-card-desc">${desc}</p>
-              ${useCase ? `<div class="feature-card-usecase"><strong>When to use:</strong> ${useCase}</div>` : ''}
-            </div>
-          </a>
-        `;
-      }).join('');
+    return `
+      <a href="${siteUrl}" target="_blank" rel="noopener noreferrer" class="website-list-item">
+        <div class="website-list-left">
+          <span class="website-list-num">${String(index + 1).padStart(2, '0')}.</span>
+          ${iconHtml}
+          <span class="website-list-title">${titleText}</span>
+        </div>
+        <span class="website-list-arrow">›</span>
+      </a>
+    `;
+  }).join('');
+} else {
+  container.innerHTML = state.websites.map(site => {
+    const titleText = isZh 
+      ? (site.title_zh || site.title || site.name || '常用网站')
+      : (site.title_en || site.title || site.name || 'Website');
+    const siteUrl = site.url || site.link || '#';
+    const descText = isZh 
+      ? (site.description_zh || site.description || site.desc_zh || site.desc_en || '')
+      : (site.description_en || site.description || site.desc_en || '');
+    const features = isZh 
+      ? (site.features_zh || site.features || [])
+      : (site.features_en || site.features || []);
+    const headerBg = site.color || '#3B82F6';
+
+    let featuresHtml = '';
+    if (Array.isArray(features) && features.length > 0) {
+      const featureLabel = isZh ? '主要功能及使用场景：' : 'Key Features & Use Cases:';
+      featuresHtml = `
+        <div class="feature-card-usecase" style="border-top: 1px dashed rgba(128,128,128,0.2); padding-top: 0.8rem; margin-top: auto;">
+          <strong style="display:block; margin-bottom: 5px; font-size: 0.78rem;">${featureLabel}</strong>
+          <ul style="padding-left: 1.15rem; margin: 0; font-size: 0.78rem; line-height: 1.55;">
+            ${features.map(f => `<li>${f}</li>`).join('')}
+          </ul>
+        </div>
+      `;
     }
-  }
 
-  function showToast(msg) {
-    toastPopup.textContent = msg;
-    toastPopup.classList.add('show');
-    setTimeout(() => toastPopup.classList.remove('show'), 2000);
-  }
-
-  init();
-});
+    return `
+      <a href="${siteUrl}" target="_blank" rel="noopener noreferrer" class="website-feature-card">
+        <div class="feature-card-header" style="background: ${headerBg};">
+          <img src="${site.icon}" alt="" class="feature-card-icon" onerror="this.outerHTML='<span class=\\'feature-fallback-badge\\'>🌐</span>'">
+        </div>
+        <div class="feature-card-body">
+          <span class="feature-card-category">${site.category || 'PORTAL'}</span>
+          <h3 class="feature-card-title">${titleText}</h3>
+          <p class="feature-card-desc">${descText}</p>
+          ${featuresHtml}
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+}
